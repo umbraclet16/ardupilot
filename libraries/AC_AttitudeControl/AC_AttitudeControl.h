@@ -319,7 +319,7 @@ protected:
     // estimated attitude to the reference (setpoint) attitude used in the attitude
     // controller, in radians in the vehicle body frame of reference. Formerly
     // _angle_bf_error.
-    Vector3f            _att_error_rot_vec_rad;
+    Vector3f            _att_error_rot_vec_rad;		//# 轴角表示: vector = 旋转方向向量(i,j,k)*旋转角度.
 
     // This represents the angular velocity of the reference (setpoint) attitude used in
     // the attitude controller as 321-intrinsic euler angle derivatives, in radians per
@@ -329,11 +329,11 @@ protected:
     // This represents the angular velocity of the reference (setpoint) attitude used in
     // the attitude controller as an angular velocity vector, in radians per second in
     // the reference attitude frame. Formerly _rate_bf_desired.
-    Vector3f            _att_target_ang_vel_rads;
+    Vector3f            _att_target_ang_vel_rads;	//# in ref frame!
 
     // This represents the reference (setpoint) angular velocity used in the angular
     // velocity controller, in radians per second. Formerly _rate_bf_target.
-    Vector3f            _ang_vel_target_rads;
+    Vector3f            _ang_vel_target_rads;		//# in bf!!!
 
     // throttle provided as input to attitude controller.  This does not include angle boost.
     // Used only for logging.

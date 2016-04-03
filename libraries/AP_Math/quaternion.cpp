@@ -48,7 +48,7 @@ void Quaternion::rotation_matrix(Matrix3f &m) const
 // return the rotation matrix equivalent for this quaternion
 // Thanks to Martin John Baker
 // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
-void Quaternion::from_rotation_matrix(const Matrix3f &m)
+void Quaternion::from_rotation_matrix(const Matrix3f &m)	//#
 {
     const float &m00 = m.a.x;
     const float &m11 = m.b.y;
@@ -102,7 +102,7 @@ void Quaternion::earth_to_body(Vector3f &v) const
 }
 
 // create a quaternion from Euler angles
-void Quaternion::from_euler(float roll, float pitch, float yaw)
+void Quaternion::from_euler(float roll, float pitch, float yaw)	//#
 {
     float cr2 = cosf(roll*0.5f);
     float cp2 = cosf(pitch*0.5f);
@@ -159,13 +159,17 @@ void Quaternion::rotate(const Vector3f &v)
     (*this) *= r;
 }
 
+<<<<<<< HEAD
 void Quaternion::to_axis_angle(Vector3f &v)
 {
+=======
+void Quaternion::to_axis_angle(Vector3f &v) {	//# 四元数->轴角表示[v=旋转向量(i,j,k)*旋转角度](轴角表示无法合并两个旋转,必须转换为旋转矩阵或quat)
+>>>>>>> Comments20160401
     float l = sqrt(sq(q2)+sq(q3)+sq(q4));
     v = Vector3f(q2,q3,q4);
     if (l >= 1.0e-12f) {
         v /= l;
-        v *= wrap_PI(2.0f * atan2f(l,q1));
+        v *= wrap_PI(2.0f * atan2f(l,q1));	//# q1 = cos(angle/2), q1^2+l^2 = 1, => 2*atan(l,q1) = 2*atan(tan(angle/2)) = angle.
     }
 }
 
@@ -223,25 +227,25 @@ void Quaternion::rotate_fast(const Vector3f &v)
 }
 
 // get euler roll angle
-float Quaternion::get_euler_roll() const
+float Quaternion::get_euler_roll() const	//#
 {
     return (atan2f(2.0f*(q1*q2 + q3*q4), 1 - 2.0f*(q2*q2 + q3*q3)));
 }
 
 // get euler pitch angle
-float Quaternion::get_euler_pitch() const
+float Quaternion::get_euler_pitch() const	//#
 {
     return safe_asin(2.0f*(q1*q3 - q4*q2));
 }
 
 // get euler yaw angle
-float Quaternion::get_euler_yaw() const
+float Quaternion::get_euler_yaw() const		//#
 {
     return atan2f(2.0f*(q1*q4 + q2*q3), 1 - 2.0f*(q3*q3 + q4*q4));
 }
 
 // create eulers from a quaternion
-void Quaternion::to_euler(float &roll, float &pitch, float &yaw) const
+void Quaternion::to_euler(float &roll, float &pitch, float &yaw) const	//#
 {
     roll = get_euler_roll();
     pitch = get_euler_pitch();
@@ -278,8 +282,7 @@ void Quaternion::normalize(void)
     }
 }
 
-Quaternion Quaternion::operator*(const Quaternion &v) const
-{
+Quaternion Quaternion::operator*(const Quaternion &v) const {	//# q1*q2: first rotate q2, then q1.
     Quaternion ret;
     const float &w1 = q1;
     const float &x1 = q2;
