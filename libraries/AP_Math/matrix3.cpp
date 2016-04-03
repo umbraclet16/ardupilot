@@ -24,7 +24,7 @@
 // create a rotation matrix given some euler angles
 // this is based on http://gentlenav.googlecode.com/files/EulerAngles.pdf
 template <typename T>
-void Matrix3<T>::from_euler(float roll, float pitch, float yaw)
+void Matrix3<T>::from_euler(float roll, float pitch, float yaw)	//# bf->ef rotation matrix.
 {
     float cp = cosf(pitch);
     float sp = sinf(pitch);
@@ -47,7 +47,7 @@ void Matrix3<T>::from_euler(float roll, float pitch, float yaw)
 // calculate euler angles from a rotation matrix
 // this is based on http://gentlenav.googlecode.com/files/EulerAngles.pdf
 template <typename T>
-void Matrix3<T>::to_euler(float *roll, float *pitch, float *yaw) const
+void Matrix3<T>::to_euler(float *roll, float *pitch, float *yaw) const	//#
 {
     if (pitch != NULL) {
         *pitch = -safe_asin(c.x);

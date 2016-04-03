@@ -65,7 +65,7 @@ public:
     }
 
     // return rotation matrix representing rotaton from body to earth axes
-    const Matrix3f &get_rotation_body_to_ned(void) const {
+    const Matrix3f &get_rotation_body_to_ned(void) const {	//# bf->ef rotation matrix.
         return _body_dcm_matrix;
     }
 
@@ -135,7 +135,7 @@ private:
     // primary representation of attitude of board used for all inertial calculations
     Matrix3f _dcm_matrix;
 
-    // primary representation of attitude of flight vehicle body
+    // primary representation of attitude of flight vehicle body	//# i.e. bf->ef rotation matrix!!!
     Matrix3f _body_dcm_matrix;
 
     Vector3f _omega_P;                          // accel Omega proportional correction

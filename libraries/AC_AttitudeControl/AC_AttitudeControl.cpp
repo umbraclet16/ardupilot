@@ -77,7 +77,7 @@ void AC_AttitudeControl::set_dt(float delta_sec)
     _pid_rate_yaw.set_dt(_dt);
 }
 
-void AC_AttitudeControl::relax_bf_rate_controller()
+void AC_AttitudeControl::relax_bf_rate_controller()	//# 设参考角速率为当前角速率，清空PID控制器的I，p,q,r=>dphi,dtheta,dpsi(i.e. bf->ef).
 {
     // Set reference angular velocity used in angular velocity controller equal
     // to the input angular velocity and reset the angular velocity integrators.
@@ -90,6 +90,7 @@ void AC_AttitudeControl::relax_bf_rate_controller()
     // Write euler derivatives derived from vehicle angular velocity to
     // _att_target_euler_rate_rads. This resets the state of the input shapers.
     ang_vel_to_euler_rate(Vector3f(_ahrs.roll,_ahrs.pitch,_ahrs.yaw), _ang_vel_target_rads, _att_target_euler_rate_rads);
+							//# i.e. ang_vel: p,q,r. ==> euler_rate: derivatives of phi, theta, and psi.
 }
 
 void AC_AttitudeControl::shift_ef_yaw_target(float yaw_shift_cd)
@@ -97,7 +98,7 @@ void AC_AttitudeControl::shift_ef_yaw_target(float yaw_shift_cd)
     _att_target_euler_rad.z = wrap_2PI(_att_target_euler_rad.z + radians(yaw_shift_cd*0.01f));
 }
 
-void AC_AttitudeControl::input_euler_angle_roll_pitch_euler_rate_yaw_smooth(float euler_roll_angle_cd, float euler_pitch_angle_cd, float euler_yaw_rate_cds, float smoothing_gain)
+void AC_AttitudeControl::input_euler_angle_roll_pitch_euler_rate_yaw_smooth(float euler_roll_angle_cd, float euler_pitch_angle_cd, float euler_yaw_rate_cds, float smoothing_gain)		// 姿态控制器 1
 {
     // Convert from centidegrees on public interface to radians
     float euler_roll_angle_rad = radians(euler_roll_angle_cd*0.01f);
@@ -110,25 +111,30 @@ void AC_AttitudeControl::input_euler_angle_roll_pitch_euler_rate_yaw_smooth(floa
     // Add roll trim to compensate tail rotor thrust in heli (will return zero on multirotors)
     euler_roll_angle_rad += get_roll_trim_rad();
 
-    if ((get_accel_roll_max_radss() > 0.0f) && _rate_bf_ff_enabled) {
+    		//# 1. 更新参考目标角度_att_target_euler_rad(ef)和参考目标角速度_att_target_euler_rate_rads(ef).
+		//# (注意函数的输入参数:roll&pitch为目标角度, yaw为目标角速度.)
+		//# roll&pitch:若有角加速度限幅和前馈使能,则使用sqrt_controller()计算参考目标角速度,然后更新参考目标角度(含前馈项[目标角速度*dt]);
+		//# 		否则直接设函数输入参数为目标角度,目标角速度为0.
+		//# yaw:若有角加速度限幅,则对输入的目标角速度限幅；然后更新目标角度(含前馈项). 
+    if ((get_accel_roll_max_radss() > 0.0f) && _rate_bf_ff_enabled) {	//# 1.1 用两拍参考目标角度之差计算参考目标角速度,然后用前馈量更新参考目标角度.
         // When roll acceleration limiting and feedforward are enabled, the sqrt controller is used to compute an euler roll-axis
         // angular velocity that will cause the euler roll angle to smoothly stop at the input angle with limited deceleration
-        // and an exponential decay specified by smoothing_gain at the end.
+        // and an exponential decay specified by smoothing_gain at the end.			//# 计算参考目标角速度_att_target_euler_rate_rads(ef).
         float euler_rate_desired_rads = sqrt_controller(euler_roll_angle_rad-_att_target_euler_rad.x, smoothing_gain, get_accel_roll_max_radss());
 
-        // Acceleration is limited directly to smooth the beginning of the curve.
+        // Acceleration is limited directly to smooth the beginning of the curve.	//# 参考目标角速度(ef)限幅,从而角加速度得到限幅.
         float rate_change_limit_rads = get_accel_roll_max_radss() * _dt;
         _att_target_euler_rate_rads.x = constrain_float(euler_rate_desired_rads, _att_target_euler_rate_rads.x-rate_change_limit_rads, _att_target_euler_rate_rads.x+rate_change_limit_rads);
 
         // The output rate is used to update the attitude target euler angles and is fed forward into the rate controller.
-        update_att_target_roll(_att_target_euler_rate_rads.x, AC_ATTITUDE_RATE_STAB_ROLL_OVERSHOOT_ANGLE_MAX_RAD);
-    } else {
+        update_att_target_roll(_att_target_euler_rate_rads.x, AC_ATTITUDE_RATE_STAB_ROLL_OVERSHOOT_ANGLE_MAX_RAD);//#参考目标角速度作为前馈项更新目标角度
+    } else {					//# 1.2 直接用函数输入角度替换上一拍参考目标角度,参考目标角速度为0(i.e.无前馈项[目标角速度*dt]和限幅)
         // When acceleration limiting and feedforward are not enabled, the target roll euler angle is simply set to the
         // input value and the feedforward rate is zeroed.
-        _att_target_euler_rad.x = euler_roll_angle_rad;
+        _att_target_euler_rad.x = euler_roll_angle_rad;	
         _att_target_euler_rate_rads.x = 0;
     }
-    _att_target_euler_rad.x = constrain_float(_att_target_euler_rad.x, -get_tilt_limit_rad(), get_tilt_limit_rad());
+    _att_target_euler_rad.x = constrain_float(_att_target_euler_rad.x, -get_tilt_limit_rad(), get_tilt_limit_rad());	//# 最大倾角限幅.
 
     if ((get_accel_pitch_max_radss() > 0.0f) && _rate_bf_ff_enabled) {
         // When pitch acceleration limiting and feedforward are enabled, the sqrt controller is used to compute an euler pitch-axis
@@ -148,7 +154,7 @@ void AC_AttitudeControl::input_euler_angle_roll_pitch_euler_rate_yaw_smooth(floa
     }
     _att_target_euler_rad.y = constrain_float(_att_target_euler_rad.y, -get_tilt_limit_rad(), get_tilt_limit_rad());
 
-    if (get_accel_yaw_max_radss() > 0.0f) {
+    if (get_accel_yaw_max_radss() > 0.0f) {//# yaw通道不判断前馈使能，都加入前馈项[目标角速度*dt](因为函数输入控制量为角速度yaw rate!).
         // When yaw acceleration limiting is enabled, the yaw input shaper constrains angular acceleration about the yaw axis, slewing
         // the output rate towards the input rate.
         float rate_change_limit_rads = get_accel_yaw_max_radss() * _dt;
@@ -163,6 +169,8 @@ void AC_AttitudeControl::input_euler_angle_roll_pitch_euler_rate_yaw_smooth(floa
         update_att_target_yaw(_att_target_euler_rate_rads.z, AC_ATTITUDE_RATE_STAB_YAW_OVERSHOOT_ANGLE_MAX_RAD);
     }
 
+    		//# 2.参考目标角速度由惯性系ef(_att_target_euler_rate_rads)==>参考系rf(_att_target_ang_vel_rads).
+		//# ef: phi_d',theta_d',psi_d' ==> bf: p_d,q_d,r_d.
     // Convert euler angle derivative of desired attitude into a body-frame angular velocity vector for feedforward
     if (_rate_bf_ff_enabled) {
         euler_rate_to_ang_vel(_att_target_euler_rad, _att_target_euler_rate_rads, _att_target_ang_vel_rads);
@@ -170,6 +178,7 @@ void AC_AttitudeControl::input_euler_angle_roll_pitch_euler_rate_yaw_smooth(floa
         euler_rate_to_ang_vel(_att_target_euler_rad, Vector3f(0,0,_att_target_euler_rate_rads.z), _att_target_ang_vel_rads);
     }
 
+    		//# 3. 调用姿态控制器.计算控制器目标角速度_ang_vel_target_rads(bf).
     // Call attitude controller
     attitude_controller_run_euler(_att_target_euler_rad, _att_target_ang_vel_rads);
 }
@@ -347,6 +356,9 @@ void AC_AttitudeControl::input_att_quat_bf_ang_vel(const Quaternion& att_target_
     ang_vel_to_euler_rate(Vector3f(_ahrs.roll,_ahrs.pitch,_ahrs.yaw), _ang_vel_target_rads, _att_target_euler_rate_rads);
 }
 
+			//# 欧拉角姿态控制器: 计算控制器目标角速度_ang_vel_target_rads(bf).
+			//# IN: 参考目标角度_att_target_euler_rad(ef)和参考目标角速度_att_target_ang_vel_rads(rf);
+			//# 参考目标角度_att_target_euler_rad(ef)转换为四元数,再调用四元数的姿态控制器.
 void AC_AttitudeControl::attitude_controller_run_euler(const Vector3f& att_target_euler_rad, const Vector3f& att_target_ang_vel_rads)
 {
     // Compute quaternion target attitude
@@ -357,27 +369,37 @@ void AC_AttitudeControl::attitude_controller_run_euler(const Vector3f& att_targe
     attitude_controller_run_quat(att_target_quat, att_target_ang_vel_rads);
 }
 
+			//# 四元数姿态控制器: 计算控制器目标角速度_ang_vel_target_rads.
+			//# IN: 参考目标角度的四元数(ef)和参考目标角速度向量(rf). OUT:控制器目标角速度_angle_vel_target_rads(bf).
+			//# 1.角度误差_att_error_rot_vec_rad -> sqrt_controller()/P -> 控制器目标角速度_angle_vec_target_rads(bf).
+			//# 2.+前馈项：参考目标角速度_att_target_ang_vel_rads(rf->bf).
 void AC_AttitudeControl::attitude_controller_run_quat(const Quaternion& att_target_quat, const Vector3f& att_target_ang_vel_rads)
 {
     // Update euler attitude target and angular velocity target
-    att_target_quat.to_euler(_att_target_euler_rad.x,_att_target_euler_rad.y,_att_target_euler_rad.z);
+    att_target_quat.to_euler(_att_target_euler_rad.x,_att_target_euler_rad.y,_att_target_euler_rad.z);//# 把目标角度的四元数转回欧拉角,写入类成员变量
     _att_target_ang_vel_rads = att_target_ang_vel_rads;
 
     // Retrieve quaternion vehicle attitude
     // TODO add _ahrs.get_quaternion()
     Quaternion att_vehicle_quat;
-    att_vehicle_quat.from_rotation_matrix(_ahrs.get_rotation_body_to_ned());
+    att_vehicle_quat.from_rotation_matrix(_ahrs.get_rotation_body_to_ned());	//# 获得表示机体姿态的四元数(ef).
+    			//# bf->ef的旋转矩阵转换为四元数(i.e.机体实际欧拉角的四元数).
+    			//### 关于方向:
+			//# 考虑二维情况,设机体相对地面有一顺时针角度,机体系到地面系的旋转矩阵将平面内某一位置在机体系中的坐标转换到地面系中的坐标.
+			//# 注意到这一位置在地面系中的坐标与其在机体系中的坐标相比,也有一顺时针角度,
+			//# 从而说明: 机体系到地面系的旋转矩阵可以描述机体相对于地面的角度,即其姿态.
+			//### 结论: a->b的旋转矩阵可表示a相对于b的姿态!!
 
     // Compute attitude error
-    (att_vehicle_quat.inverse()*att_target_quat).to_axis_angle(_att_error_rot_vec_rad);
+    (att_vehicle_quat.inverse()*att_target_quat).to_axis_angle(_att_error_rot_vec_rad);	//# 0.计算角度误差,存入_att_error_rot_vec_rad(bf).
 
     // Compute the angular velocity target from the attitude error
-    update_ang_vel_target_from_att_error();
+    update_ang_vel_target_from_att_error();		//# 1.角度误差_att_error_rot_vec_rad(bf) ==> 控制器目标角速度_ang_vel_target_rads(bf)
 
     // Add the angular velocity feedforward, rotated into vehicle frame
     Matrix3f Trv;
     get_rotation_reference_to_vehicle(Trv);
-    _ang_vel_target_rads += Trv * _att_target_ang_vel_rads;
+    _ang_vel_target_rads += Trv * _att_target_ang_vel_rads;//# 2.参考目标角速度(_att_target_ang_vel_rads)rf->bf,作为前馈项并入控制器目标角速度(bf).
 }
 
 void AC_AttitudeControl::rate_controller_run()
@@ -387,6 +409,7 @@ void AC_AttitudeControl::rate_controller_run()
     _motors.set_yaw(rate_bf_to_motor_yaw(_ang_vel_target_rads.z));
 }
 
+				//# 运动方程组	ef:dphi,dtheta,dpsi ==> bf:p,q,r.(参数1,2作为输入,3作为输出)
 void AC_AttitudeControl::euler_rate_to_ang_vel(const Vector3f& euler_rad, const Vector3f& euler_rate_rads, Vector3f& ang_vel_rads)
 {
     float sin_theta = sinf(euler_rad.y);
@@ -399,6 +422,7 @@ void AC_AttitudeControl::euler_rate_to_ang_vel(const Vector3f& euler_rad, const 
     ang_vel_rads.z = -sin_phi * euler_rate_rads.y + cos_theta * cos_phi * euler_rate_rads.z;
 }
 
+				//# 运动方程组  ang_vel: p,q,r. ==> euler_rate: derivatives of phi, theta, and psi.
 bool AC_AttitudeControl::ang_vel_to_euler_rate(const Vector3f& euler_rad, const Vector3f& ang_vel_rads, Vector3f& euler_rate_rads)
 {
     float sin_theta = sinf(euler_rad.y);
@@ -417,7 +441,7 @@ bool AC_AttitudeControl::ang_vel_to_euler_rate(const Vector3f& euler_rad, const 
     return true;
 }
 
-void AC_AttitudeControl::update_att_target_roll(float euler_roll_rate_rads, float overshoot_max_rad)
+void AC_AttitudeControl::update_att_target_roll(float euler_roll_rate_rads, float overshoot_max_rad)//# 目标角度=实际角度+限幅后的误差+目标角速度*dt.
 {
     // Compute constrained angle error
     float angle_error = constrain_float(wrap_PI(_att_target_euler_rad.x - _ahrs.roll), -overshoot_max_rad, overshoot_max_rad);
@@ -430,7 +454,7 @@ void AC_AttitudeControl::update_att_target_roll(float euler_roll_rate_rads, floa
     _att_target_euler_rad.x = wrap_PI(_att_target_euler_rad.x);
 }
 
-void AC_AttitudeControl::update_att_target_pitch(float euler_pitch_rate_rads, float overshoot_max_rad)
+void AC_AttitudeControl::update_att_target_pitch(float euler_pitch_rate_rads, float overshoot_max_rad)//# 目标角度=实际角度+限幅后的误差+目标角速度*dt.
 {
     // Compute constrained angle error
     float angle_error = constrain_float(wrap_PI(_att_target_euler_rad.y - _ahrs.pitch), -overshoot_max_rad, overshoot_max_rad);
@@ -443,7 +467,7 @@ void AC_AttitudeControl::update_att_target_pitch(float euler_pitch_rate_rads, fl
     _att_target_euler_rad.y = wrap_PI(_att_target_euler_rad.y);
 }
 
-void AC_AttitudeControl::update_att_target_yaw(float euler_yaw_rate_rads, float overshoot_max_rad)
+void AC_AttitudeControl::update_att_target_yaw(float euler_yaw_rate_rads, float overshoot_max_rad)//# 目标角度=实际角度+限幅后的误差+目标角速度*dt.
 {
     // Compute constrained angle error
     float angle_error = constrain_float(wrap_PI(_att_target_euler_rad.z - _ahrs.yaw), -overshoot_max_rad, overshoot_max_rad);
@@ -467,7 +491,8 @@ void AC_AttitudeControl::integrate_bf_rate_error_to_angle_errors()
     _att_error_rot_vec_rad.z = constrain_float(_att_error_rot_vec_rad.z, -AC_ATTITUDE_RATE_STAB_ACRO_OVERSHOOT_ANGLE_MAX_RAD, AC_ATTITUDE_RATE_STAB_ACRO_OVERSHOOT_ANGLE_MAX_RAD);
 }
 
-void AC_AttitudeControl::update_ang_vel_target_from_att_error()
+			//# 角度误差_att_error_rot_vec_rad(bf) ==> 目标角速度_ang_vel_target_rads(bf)
+void AC_AttitudeControl::update_ang_vel_target_from_att_error()	//# 角加速度限幅时用sqrt_controller,否则用P控制.	前馈????
 {
     // Compute the roll angular velocity demand from the roll angle error
     if (_att_ctrl_use_accel_limit && _accel_roll_max > 0.0f) {
@@ -490,14 +515,14 @@ void AC_AttitudeControl::update_ang_vel_target_from_att_error()
         _ang_vel_target_rads.z = _p_angle_yaw.kP() * _att_error_rot_vec_rad.z;
     }
 
-    // Add feedforward term that attempts to ensure that the copter yaws about the reference
+    // Add feedforward term that attempts to ensure that the copter yaws about the reference		//# ?????
     // Z axis, rather than the vehicle body Z axis.
     // NOTE: This is a small-angle approximation.
     _ang_vel_target_rads.x += _att_error_rot_vec_rad.y * _ahrs.get_gyro().z;
     _ang_vel_target_rads.y += -_att_error_rot_vec_rad.x * _ahrs.get_gyro().z;
 }
 
-float AC_AttitudeControl::rate_bf_to_motor_roll(float rate_target_rads)
+float AC_AttitudeControl::rate_bf_to_motor_roll(float rate_target_rads)		//# rate error -> PID -> motor.(I with preconditions.)
 {
     float current_rate_rads = _ahrs.get_gyro().x;
     float rate_error_rads = rate_target_rads - current_rate_rads;
@@ -520,7 +545,7 @@ float AC_AttitudeControl::rate_bf_to_motor_roll(float rate_target_rads)
     return constrain_float(output, -AC_ATTITUDE_RATE_RP_CONTROLLER_OUT_MAX, AC_ATTITUDE_RATE_RP_CONTROLLER_OUT_MAX);
 }
 
-float AC_AttitudeControl::rate_bf_to_motor_pitch(float rate_target_rads)
+float AC_AttitudeControl::rate_bf_to_motor_pitch(float rate_target_rads)		//& rate error -> PID -> motor.(I with preconditions.)
 {
     float current_rate_rads = _ahrs.get_gyro().y;
     float rate_error_rads = rate_target_rads - current_rate_rads;
@@ -543,7 +568,7 @@ float AC_AttitudeControl::rate_bf_to_motor_pitch(float rate_target_rads)
     return constrain_float(output, -AC_ATTITUDE_RATE_RP_CONTROLLER_OUT_MAX, AC_ATTITUDE_RATE_RP_CONTROLLER_OUT_MAX);
 }
 
-float AC_AttitudeControl::rate_bf_to_motor_yaw(float rate_target_rads)
+float AC_AttitudeControl::rate_bf_to_motor_yaw(float rate_target_rads)		//& rate error -> PID -> motor.(I with preconditions.)
 {
     float current_rate_rads = _ahrs.get_gyro().z;
     float rate_error_rads = rate_target_rads - current_rate_rads;
@@ -613,7 +638,8 @@ void AC_AttitudeControl::set_throttle_out_unstabilized(float throttle_in, bool r
     _angle_boost = 0;
 }
 
-float AC_AttitudeControl::sqrt_controller(float error, float p, float second_ord_lim)
+			//# constrain second derivative???
+float AC_AttitudeControl::sqrt_controller(float error, float p, float second_ord_lim)	//# 分段函数,linear_dist范围内为比例控制,超出范围比例系数逐渐变小
 {
     if (second_ord_lim < 0.0f || is_zero(second_ord_lim) || is_zero(p)) {
         return error*p;
@@ -630,29 +656,30 @@ float AC_AttitudeControl::sqrt_controller(float error, float p, float second_ord
     }
 }
 
-void AC_AttitudeControl::get_rotation_vehicle_to_ned(Matrix3f& m)
+void AC_AttitudeControl::get_rotation_vehicle_to_ned(Matrix3f& m)	//# bf->ef rotation matrix.
 {
     m = _ahrs.get_rotation_body_to_ned();
 }
 
-void AC_AttitudeControl::get_rotation_ned_to_vehicle(Matrix3f& m)
+void AC_AttitudeControl::get_rotation_ned_to_vehicle(Matrix3f& m)	//#
 {
     get_rotation_vehicle_to_ned(m);
     m = m.transposed();
 }
 
+					//# _att_target_euler_rad ==> (ref->ef rotation matrix). (可表示目标角度相对地面系的姿态!)
 void AC_AttitudeControl::get_rotation_reference_to_ned(Matrix3f& m)
 {
     m.from_euler(_att_target_euler_rad.x,_att_target_euler_rad.y,_att_target_euler_rad.z);
 }
 
-void AC_AttitudeControl::get_rotation_ned_to_reference(Matrix3f& m)
+void AC_AttitudeControl::get_rotation_ned_to_reference(Matrix3f& m)	//#
 {
     get_rotation_reference_to_ned(m);
     m = m.transposed();
 }
 
-void AC_AttitudeControl::get_rotation_vehicle_to_reference(Matrix3f& m)
+void AC_AttitudeControl::get_rotation_vehicle_to_reference(Matrix3f& m)	//# vehicle->ned->ref
 {
     Matrix3f Tvn;
     Matrix3f Tnr;
@@ -661,7 +688,7 @@ void AC_AttitudeControl::get_rotation_vehicle_to_reference(Matrix3f& m)
     m = Tnr * Tvn;
 }
 
-void AC_AttitudeControl::get_rotation_reference_to_vehicle(Matrix3f& m)
+void AC_AttitudeControl::get_rotation_reference_to_vehicle(Matrix3f& m)	//#
 {
     get_rotation_vehicle_to_reference(m);
     m = m.transposed();

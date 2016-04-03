@@ -202,13 +202,13 @@ void AC_PID::operator() (float p, float i, float d, float imaxval, float input_f
 }
 
 // calc_filt_alpha - recalculate the input filter alpha
-float AC_PID::get_filt_alpha() const
+float AC_PID::get_filt_alpha() const	//# what is alpha???
 {
     if (is_zero(_filt_hz)) {
         return 1.0f;
     }
 
     // calculate alpha
-    float rc = 1/(M_2PI*_filt_hz);
-    return _dt / (_dt + rc);
+    float rc = 1/(M_2PI*_filt_hz);	//# cut frequency omega_c = 2*PI*f, rc = 1/omega_c = 1/(2*PI*f)
+    return _dt / (_dt + rc);		//# LPF transfer func: 1/(1+rc*s)
 }
