@@ -126,7 +126,7 @@ void Quaternion::from_vector312(float roll ,float pitch, float yaw)
     from_rotation_matrix(m);
 }
 
-void Quaternion::from_axis_angle(Vector3f v) {
+void Quaternion::from_axis_angle(Vector3f v) {	//#
     float theta = v.length();
     if(theta < 1.0e-12f) {
         q1 = 1.0f;
@@ -137,7 +137,7 @@ void Quaternion::from_axis_angle(Vector3f v) {
     from_axis_angle(v,theta);
 }
 
-void Quaternion::from_axis_angle(const Vector3f &axis, float theta) {
+void Quaternion::from_axis_angle(const Vector3f &axis, float theta) {	//#
     if(theta < 1.0e-12f) {
         q1 = 1.0f;
         q2=q3=q4=0.0f;
@@ -150,7 +150,7 @@ void Quaternion::from_axis_angle(const Vector3f &axis, float theta) {
     q4 = axis.z * st2;
 }
 
-void Quaternion::rotate(const Vector3f &v) {
+void Quaternion::rotate(const Vector3f &v) {	//#
     Quaternion r;
     r.from_axis_angle(v);
     (*this) *= r;

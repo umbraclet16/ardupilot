@@ -97,7 +97,7 @@ void AC_PosControl::set_dt(float delta_sec)
 }
 
 /// set_dt_xy - sets time delta in seconds for horizontal controller (i.e. 50hz = 0.02)
-void AC_PosControl::set_dt_xy(float dt_xy)
+void AC_PosControl::set_dt_xy(float dt_xy)		//#
 {
     _dt_xy = dt_xy;
     _pi_vel_xy.set_dt(dt_xy);
@@ -107,7 +107,7 @@ void AC_PosControl::set_dt_xy(float dt_xy)
 /// To-Do: call this in the main code as part of flight mode initialisation
 ///     calc_leash_length_z should be called afterwards
 ///     speed_down should be a negative number
-void AC_PosControl::set_speed_z(float speed_down, float speed_up)
+void AC_PosControl::set_speed_z(float speed_down, float speed_up)	//#
 {
     // ensure speed_down is always negative
     speed_down = -fabsf(speed_down);
@@ -121,7 +121,7 @@ void AC_PosControl::set_speed_z(float speed_down, float speed_up)
 }
 
 /// set_accel_z - set vertical acceleration in cm/s/s
-void AC_PosControl::set_accel_z(float accel_cmss)
+void AC_PosControl::set_accel_z(float accel_cmss)	//#
 {
     if (fabsf(_accel_z_cms-accel_cmss) > 1.0f) {
         _accel_z_cms = accel_cmss;
@@ -134,7 +134,7 @@ void AC_PosControl::set_accel_z(float accel_cmss)
 ///     should be called continuously (with dt set to be the expected time between calls)
 ///     actual position target will be moved no faster than the speed_down and speed_up
 ///     target will also be stopped if the motors hit their limits or leash length is exceeded
-void AC_PosControl::set_alt_target_with_slew(float alt_cm, float dt)
+void AC_PosControl::set_alt_target_with_slew(float alt_cm, float dt)		//# 更新_pos_target.z.	Only called in control_rtl.cpp
 {
     float alt_change = alt_cm-_pos_target.z;
 
@@ -157,7 +157,7 @@ void AC_PosControl::set_alt_target_with_slew(float alt_cm, float dt)
 ///     should be called continuously (with dt set to be the expected time between calls)
 ///     actual position target will be moved no faster than the speed_down and speed_up
 ///     target will also be stopped if the motors hit their limits or leash length is exceeded
-void AC_PosControl::set_alt_target_from_climb_rate(float climb_rate_cms, float dt, bool force_descend)
+void AC_PosControl::set_alt_target_from_climb_rate(float climb_rate_cms, float dt, bool force_descend)	//# 更新_pos_target.z和_vel_desired.z
 {
     // adjust desired alt if motors have not hit their limits
     // To-Do: add check of _limit.pos_down?
@@ -224,7 +224,7 @@ void AC_PosControl::set_alt_target_from_climb_rate_ff(float climb_rate_cms, floa
 /// add_takeoff_climb_rate - adjusts alt target up or down using a climb rate in cm/s
 ///     should be called continuously (with dt set to be the expected time between calls)
 ///     almost no checks are performed on the input
-void AC_PosControl::add_takeoff_climb_rate(float climb_rate_cms, float dt)
+void AC_PosControl::add_takeoff_climb_rate(float climb_rate_cms, float dt)	//# 更新_pos_target.z
 {
     _pos_target.z += climb_rate_cms * dt;
 }
@@ -333,7 +333,7 @@ void AC_PosControl::update_z_controller()
 
 /// calc_leash_length - calculates the vertical leash lengths from maximum speed, acceleration
 ///     called by pos_to_rate_z if z-axis speed or accelerations are changed
-void AC_PosControl::calc_leash_length_z()
+void AC_PosControl::calc_leash_length_z()	//#
 {
     if (_flags.recalc_leash_z) {
         _leash_up_z = calc_leash_length(_speed_up_cms, _accel_z_cms, _p_pos_z.kP());
@@ -971,6 +971,7 @@ void AC_PosControl::lean_angles_to_accel(float& accel_x_cmss, float& accel_y_cms
     accel_y_cmss = (GRAVITY_MSS * 100) * (-(_ahrs.sin_yaw() * _ahrs.sin_pitch() / MAX(_ahrs.cos_pitch(),0.5f)) + _ahrs.cos_yaw() * _ahrs.sin_roll() / MAX(_ahrs.cos_roll(),0.5f));
 }
 
+			//# speed为横轴,leash_length为纵轴,横坐标在accel/kP以内为线性,斜率k1=1/kP;以外为非线性(斜率变大(k2=speed/accel>1/kP)).
 /// calc_leash_length - calculates the horizontal leash length given a maximum speed, acceleration and position kP gain
 float AC_PosControl::calc_leash_length(float speed_cms, float accel_cms, float kP) const
 {
@@ -978,12 +979,12 @@ float AC_PosControl::calc_leash_length(float speed_cms, float accel_cms, float k
 
     // sanity check acceleration and avoid divide by zero
     if (accel_cms <= 0.0f) {
-        accel_cms = POSCONTROL_ACCELERATION_MIN;
+        accel_cms = POSCONTROL_ACCELERATION_MIN;	//# 50cm/s/s
     }
 
     // avoid divide by zero
     if (kP <= 0.0f) {
-        return POSCONTROL_LEASH_LENGTH_MIN;
+        return POSCONTROL_LEASH_LENGTH_MIN;	//# 100cm
     }
 
     // calculate leash length
