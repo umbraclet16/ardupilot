@@ -353,7 +353,7 @@ bool Copter::pre_arm_checks(bool display_failure)
 }
 
 // perform pre_arm_rc_checks checks and set ap.pre_arm_rc_check flag
-void Copter::pre_arm_rc_checks()
+void Copter::pre_arm_rc_checks()	//#
 {
     // exit immediately if we've already successfully performed the pre-arm rc check
     if (ap.pre_arm_rc_check) {
