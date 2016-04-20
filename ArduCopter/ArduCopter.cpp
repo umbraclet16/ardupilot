@@ -108,7 +108,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK(check_dynamic_flight,  50,     75),
 #endif
     SCHED_TASK(update_notify,         50,     90),
-    SCHED_TASK(one_hz_loop,            1,    100),
+    SCHED_TASK(one_hz_loop,            1,    100),	//# update_arming_checks()
     SCHED_TASK(ekf_check,             10,     75),
     SCHED_TASK(landinggear_update,    10,     75),
     SCHED_TASK(lost_vehicle_check,    10,     50),
@@ -215,7 +215,7 @@ void Copter::loop()
     uint32_t timer = micros();
 
     // check loop time
-    perf_info_check_loop_time(timer - fast_loopTimer);
+    perf_info_check_loop_time(timer - fast_loopTimer);	//# performance monitoring.
 
     // used by PI Loops
     G_Dt                    = (float)(timer - fast_loopTimer) / 1000000.0f;

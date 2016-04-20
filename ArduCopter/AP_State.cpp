@@ -107,7 +107,7 @@ void Copter::set_pre_arm_check(bool b)
     }
 }
 
-void Copter::set_pre_arm_rc_check(bool b)
+void Copter::set_pre_arm_rc_check(bool b)	//#
 {
     if(ap.pre_arm_rc_check != b) {
         ap.pre_arm_rc_check = b;
