@@ -19,7 +19,7 @@ const AP_HAL::HAL& hal = AP_HAL::get_HAL();
 
 void flush_console_to_statustext() {
     uint8_t data[50];
-    int n = hal.console->backend_read(data, 50);
+    int n = hal.console->backend_read(data, 50);	//# This func does not exist!
     if (n > 0) {
         try_send_statustext(MAVLINK_COMM_0, (char*) data, n);
     }
@@ -48,7 +48,7 @@ void setup(void) {
     char hello[] = "Hello statustext\r\n";
     try_send_statustext(MAVLINK_COMM_0, hello, strlen(hello));
 
-    hal.console->backend_open();
+    hal.console->backend_open();	//# This func does not exist!
     hal.console->printf("Hello hal.console\r\n");
 }
 
