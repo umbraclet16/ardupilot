@@ -1,0 +1,17 @@
+
+error1:
+comparison between signed and unsigned integer expressions.
+if (ret != strlen(float_tests[i].result)) {
+
+status: solved.
+
+modified to:
+if ((unsigned))ret != strlen(float_tests[i].result)) {
+
+----------------------------------------------------------------------------------------------------
+error2:
+/home/quad906/Github/ardupilot/libraries/AP_HAL_PX4/Scheduler.cpp:288:
+undefined reference to `AP_Scheduler::current_task'
+
+status: unsolved.
+

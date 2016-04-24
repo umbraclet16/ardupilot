@@ -53,12 +53,22 @@ void setup()
 
     // Initialise the leds
     board_led.init();
+    //>>>
+    AP_Notify::flags.initialising = 1;
+    hal.console->println("board_led init finished.");
+    //<<<
 
     // Initialize the UART for GPS system
-    serial_manager.init();
-    gps.init(NULL, serial_manager);
+    //serial_manager.init();
+    //gps.init(NULL, serial_manager);
 }
 
+void loop()
+{
+    board_led.update();
+    //hal.console->println("in loop.");	// loop is running, but led doesn't behave as I want it to.
+}
+/*
 void loop()
 {
     static uint32_t last_msg_ms;
@@ -95,6 +105,6 @@ void loop()
     // Delay for 10 mS will give us 100 Hz invocation rate
     hal.scheduler->delay(10);
 }
-
+*/
 // Register above functions in HAL board level
 AP_HAL_MAIN();

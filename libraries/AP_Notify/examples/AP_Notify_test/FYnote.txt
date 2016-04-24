@@ -1,0 +1,7 @@
+ 
+I added the last line in make.inc:
+	LIBRARIES += AP_Scheduler
+ to solve error: undefined reference to 'AP_Scheduler::current_task'.
+
+Comments in make.inc stop 'make' to process, so I record this change here in a
+new file.

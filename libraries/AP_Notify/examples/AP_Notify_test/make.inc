@@ -5,3 +5,4 @@ LIBRARIES += AP_Param
 LIBRARIES += AP_RangeFinder
 LIBRARIES += GCS_MAVLink
 LIBRARIES += StorageManager
+LIBRARIES += AP_Scheduler

@@ -139,10 +139,12 @@ static int main_loop(int argc, char **argv)
     hal.uartD->begin(57600);
     hal.uartE->begin(57600);
     hal.scheduler->init();
-    hal.rcin->init();
-    hal.rcout->init();
-    hal.analogin->init();
-    hal.gpio->init();
+    printf("It all goes well before rcin init. -FY\n");
+    // Error happens with these function calls, so I commented them out.
+    //hal.rcin->init();		// Error happens: AP_HAL_PX4/RCInput.cpp: "Unable to subscribe to input_rc".
+    //hal.rcout->init();	// Error happens: AP_HAL_PX4/RCOutput.cpp: "Unable to open /dev/pwm_output0".
+    //hal.analogin->init();	// Error happens: AP_HAL_PX4/AnalogIn.cpp: "Unable to open /dev/adc0".
+    //hal.gpio->init();		// Error happens: AP_HAL_PX4/GPIO.cpp: "Unable to open GPIO".
 
 
     /*
@@ -255,6 +257,9 @@ void HAL_PX4::run(int argc, char * const argv[], Callbacks* callbacks) const
                                              APM_MAIN_THREAD_STACK_SIZE,
                                              main_loop,
                                              NULL);
+	    //>>>
+	    printf("main_loop already ran.\n");
+	    //<<<
             exit(0);
         }
 

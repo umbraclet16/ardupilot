@@ -1,0 +1,5 @@
+error:
+
+The following two functions do not exist!
+console->backend_read()
+console->backend_open()

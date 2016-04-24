@@ -1,0 +1,5 @@
+error1:
+
+/home/quad906/Github/ardupilot/libraries/AP_HAL_PX4/Scheduler.cpp:288: undefined reference to `AP_Scheduler::current_task'
+
+status: unsolved.

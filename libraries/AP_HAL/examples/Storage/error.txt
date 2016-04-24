@@ -1,0 +1,7 @@
+error1:
+
+/home/quad906/Github/ardupilot/modules/PX4Firmware/src/platforms/nuttx/px4_messages/px4_actuator_armed.h:47:20:
+error: 'actuator_armed_s' was not declared in this scope
+public PX4Message<actuator_armed_s>
+
+status: unsolved.

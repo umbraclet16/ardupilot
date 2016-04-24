@@ -1,0 +1,17 @@
+uavcan_main() is called in:
+
+
+libraries/AP_BoardConfig/AP_BoardConfig.cpp:104:extern "C" int uavcan_main(int argc, const char *argv[]);
+libraries/AP_BoardConfig/AP_BoardConfig.cpp:190:        int ret = uavcan_main(3, args);
+libraries/AP_BoardConfig/AP_BoardConfig.cpp:201:        int ret = uavcan_main(4, args);
+modules/PX4Firmware/Build/px4fmu-v2_APM.build/builtin_commands.c:39:extern int uavcan_main(int argc, char *argv[]);
+modules/PX4Firmware/Build/px4fmu-v2_APM.build/builtin_commands.c:79:    {"uavcan", SCHED_PRIORITY_DEFAULT, CONFIG_PTHREAD_STACK_DEFAULT, uavcan_main},
+modules/PX4Firmware/src/modules/uavcan/uavcan_module.hpp:71:extern "C" __EXPORT int uavcan_main(int argc, char *argv[]);
+modules/PX4Firmware/src/modules/uavcan/uavcan_main.hpp:35: * @file uavcan_main.hpp
+modules/PX4Firmware/src/modules/uavcan/module.mk:44:SRCS += uavcan_main.cpp              \
+modules/PX4Firmware/src/modules/uavcan/uavcan_servers.cpp:53:#include "uavcan_main.hpp"
+modules/PX4Firmware/src/modules/uavcan/uavcan_main.cpp:35: * @file uavcan_main.cpp
+modules/PX4Firmware/src/modules/uavcan/uavcan_main.cpp:66:#include "uavcan_main.hpp"
+modules/PX4Firmware/src/modules/uavcan/uavcan_main.cpp:1266:extern "C" __EXPORT int uavcan_main(int argc, char *argv[]);
+modules/PX4Firmware/src/modules/uavcan/uavcan_main.cpp:1268:int uavcan_main(int argc, char *argv[])
+modules/PX4Firmware/src/modules/uavcan/CMakeLists.txt:67:		uavcan_main.cpp
