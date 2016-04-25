@@ -258,7 +258,7 @@ void HAL_PX4::run(int argc, char * const argv[], Callbacks* callbacks) const
                                              main_loop,
                                              NULL);
 	    //>>>
-	    printf("main_loop already ran.\n");
+	    printf("main_loop already ran.--FY\n");
 	    //<<<
             exit(0);
         }
