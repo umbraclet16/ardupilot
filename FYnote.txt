@@ -1,0 +1,21 @@
+Tests that already succeded:
+
+Simple
+UART_test
+AP_Motor_test
+Baro_generic
+AP_Compass_test
+AC_PID_test
+INS_generic
+GCS_Mavlink
+AP_Scheduler
+AP_InertialSensor
+AP_Common
+AP_Math
+--------------------------------------------------
+Test with problems:
+
+Printf
+AP_Notify: LED can be turned off by init(), but cannot be changed by update().
+AHRS_Test: with 'sleep 2' in rc.APM, it turns dead after compass.int(). NSH
+not controllable.
