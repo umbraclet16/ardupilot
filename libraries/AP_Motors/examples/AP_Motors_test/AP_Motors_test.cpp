@@ -129,7 +129,7 @@ void motor_order_test()
 }
 
 // stability_test
-void stability_test()
+void stability_test()	//# takes a really long time to finish...
 {
     int16_t roll_in, pitch_in, yaw_in, avg_out;
     float throttle_in;

@@ -4,4 +4,5 @@ all of the examples in AP_Math has the same error:
 
 undefined reference to 'AP_Scheduler::current_task'.
 
-something related to HAL_PX4_Class.cpp: _timer_thread() ???
+solution:
+add "LIBRARIES += AP_Scheduler" to make.inc.

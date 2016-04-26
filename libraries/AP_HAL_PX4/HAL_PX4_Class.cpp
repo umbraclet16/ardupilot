@@ -139,12 +139,13 @@ static int main_loop(int argc, char **argv)
     hal.uartD->begin(57600);
     hal.uartE->begin(57600);
     hal.scheduler->init();
-    printf("It all goes well before rcin init. -FY\n");
+    //printf("It all goes well before rcin init. -FY\n");
     // Error happens with these function calls, so I commented them out.
-    //hal.rcin->init();		// Error happens: AP_HAL_PX4/RCInput.cpp: "Unable to subscribe to input_rc".
-    //hal.rcout->init();	// Error happens: AP_HAL_PX4/RCOutput.cpp: "Unable to open /dev/pwm_output0".
-    //hal.analogin->init();	// Error happens: AP_HAL_PX4/AnalogIn.cpp: "Unable to open /dev/adc0".
-    //hal.gpio->init();		// Error happens: AP_HAL_PX4/GPIO.cpp: "Unable to open GPIO".
+    hal.rcin->init();		// Error happens: AP_HAL_PX4/RCInput.cpp: "Unable to subscribe to input_rc".
+    hal.rcout->init();	// Error happens: AP_HAL_PX4/RCOutput.cpp: "Unable to open /dev/pwm_output0".
+    hal.analogin->init();	// Error happens: AP_HAL_PX4/AnalogIn.cpp: "Unable to open /dev/adc0".
+    hal.gpio->init();		// Error happens: AP_HAL_PX4/GPIO.cpp: "Unable to open GPIO".
+    printf("Init all finished in main_loop. -FY\n");
 
 
     /*
@@ -155,7 +156,9 @@ static int main_loop(int argc, char **argv)
 
     schedulerInstance.hal_initialized();
 
+    printf("Setup() will run.--FY\n");
     g_callbacks->setup();
+    printf("Setup() done.--FY\n");
     hal.scheduler->system_initialized();
 
     perf_counter_t perf_loop = perf_alloc(PC_ELAPSED, "APM_loop");
@@ -180,7 +183,9 @@ static int main_loop(int argc, char **argv)
          */
         hrt_call_after(&loop_overtime_call, 100000, (hrt_callout)loop_overtime, NULL);
 
+	//hal.console->print("Loop() will run.--FY\n");	// 循环打印到nsh影响输入,改为打印到console
         g_callbacks->loop();
+	//hal.console->print("Loop() just ran.--FY\n");
 
         if (px4_ran_overtime) {
             /*

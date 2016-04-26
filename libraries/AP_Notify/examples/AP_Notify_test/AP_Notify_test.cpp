@@ -17,7 +17,7 @@ void setup()
     hal.console->println("AP_Notify library test");
 
     // initialise the board leds
-    board_led.init();
+    board_led.init();		//# not able to turn off the led.
 
     // turn on initialising notification
     AP_Notify::flags.initialising = true;
@@ -29,6 +29,7 @@ void setup()
 void loop()
 {
     hal.scheduler->delay(1000);
+    //hal.console->printf("in loop.\n");	// running, but cannot make led work.
 }
 
 AP_HAL_MAIN();

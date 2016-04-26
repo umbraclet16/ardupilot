@@ -3,3 +3,4 @@ LIBRARIES += AP_Math
 LIBRARIES += AP_Param
 LIBRARIES += StorageManager
 LIBRARIES += AP_ADC
+LIBRARIES += AP_Scheduler

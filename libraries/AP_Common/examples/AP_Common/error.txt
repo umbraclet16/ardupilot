@@ -3,4 +3,5 @@ error 1:
 /home/quad906/Github/ardupilot/libraries/AP_HAL_PX4/Scheduler.cpp:288:
 undefined reference to `AP_Scheduler::current_task'
 
-status: unsolved.
+solution:
+add "LIBRARIES += AP_Scheduler" to make.inc.

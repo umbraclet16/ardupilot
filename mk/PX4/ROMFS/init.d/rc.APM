@@ -495,7 +495,7 @@ if irlock start
 then
     echo "irlock started"
 fi
-
+sleep 2
 echo Starting ArduPilot $deviceA $deviceC $deviceD
 if ArduPilot -d $deviceA -d2 $deviceC -d3 $deviceD start
 then

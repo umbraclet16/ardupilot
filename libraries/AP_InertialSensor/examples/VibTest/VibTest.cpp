@@ -16,6 +16,9 @@
 #include <AP_Baro/AP_Baro.h>
 #include <Filter/Filter.h>
 #include <DataFlash/DataFlash.h>
+//>>>
+#include <DataFlash/DataFlash_File.h>
+//<<<
 #include <GCS_MAVLink/GCS_MAVLink.h>
 #include <AP_Mission/AP_Mission.h>
 #include <StorageManager/StorageManager.h>

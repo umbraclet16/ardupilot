@@ -1,0 +1,13 @@
+error1:
+
+/home/quad906/Github/ardupilot/libraries/AP_InertialSensor/examples/VibTest/VibTest.cpp:57:8: error: 'DataFlash_File' does not name a type
+
+solution:
+
+#include <DataFlash/DataFlash_File.h>
+====================================================================================================
+error2:
+
+/home/quad906/Github/ardupilot/libraries/AP_InertialSensor/examples/VibTest/VibTest.cpp:60:54: error: no matching function for call to 'DataFlash_File::DataFlash_File(const char [20])'
+
+status : unsolved.

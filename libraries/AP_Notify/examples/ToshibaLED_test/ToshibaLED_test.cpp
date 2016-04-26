@@ -19,7 +19,7 @@ void setup(void)
     hal.console->print("Toshiba LED test ver 0.1\n");
 
     // initialise LED
-    toshiba_led.init();
+    toshiba_led.init();		//# succeed to turn off the led.
 
     // check if healthy
     if (!toshiba_led.healthy()) {
@@ -39,14 +39,15 @@ void loop(void)
     // blink test
     //hal.console->print("Blink test\n");
     //blink();
-    /*
+    
     // full spectrum test
-    hal.console->print("Spectrum test\n");
-    full_spectrum();
-    */
+    //hal.console->print("Spectrum test\n");
+    //full_spectrum();
+    
 
     // update the toshiba led
     toshiba_led.update();
+    //hal.console->print("Toshiba LED updated.--FY\n");	// running, but cannot make led work...
 
     // wait 1/50th of a second
     hal.scheduler->delay(20);

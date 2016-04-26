@@ -1,0 +1,144 @@
+libraries/AP_HAL_PX4/NSHShellStream.cpp:84:    pthread_create(&shell_thread_ctx, &thread_attr, (pthread_startroutine_t)&PX4::NSHShellStream::shell_thread, this);
+libraries/AP_HAL_PX4/Scheduler.cpp:55:	pthread_create(&_timer_thread_ctx, &thread_attr, &PX4Scheduler::_timer_thread, this);
+libraries/AP_HAL_PX4/Scheduler.cpp:65:	pthread_create(&_uart_thread_ctx, &thread_attr, &PX4Scheduler::_uart_thread, this);
+libraries/AP_HAL_PX4/Scheduler.cpp:75:	pthread_create(&_io_thread_ctx, &thread_attr, &PX4Scheduler::_io_thread, this);
+libraries/AP_HAL_PX4/Scheduler.cpp:85:    pthread_create(&_storage_thread_ctx, &thread_attr, &PX4Scheduler::_storage_thread, this);
+modules/PX4NuttX/NxWidgets/nxwm/src/ctouchscreen.cxx:169:  int ret = pthread_create(&m_thread, &attr, listener, (FAR void *)this);
+modules/PX4NuttX/NxWidgets/nxwm/src/ctouchscreen.cxx:172:      dbg("CTouchscreen::start: pthread_create failed: %d\n", ret);
+modules/PX4NuttX/NxWidgets/nxwm/src/ccalibration.cxx:411:  int ret = pthread_create(&m_thread, &attr, calibration, (FAR void *)this);
+modules/PX4NuttX/NxWidgets/nxwm/src/ccalibration.cxx:414:      gdbg("pthread_create failed: %d\n", ret);
+modules/PX4NuttX/NxWidgets/nxwm/src/ckeyboard.cxx:130:  int ret = pthread_create(&m_thread, &attr, listener, (FAR void *)this);
+modules/PX4NuttX/NxWidgets/nxwm/src/ckeyboard.cxx:133:      gdbg("CKeyboard::start: pthread_create failed: %d\n", ret);
+modules/PX4NuttX/NxWidgets/libnxwidgets/src/cnxserver.cxx:249:      ret = pthread_create(&thread, &attr, listener, (FAR void *)this);
+modules/PX4NuttX/NxWidgets/libnxwidgets/src/cnxserver.cxx:252:          gdbg("NxServer::connect: pthread_create failed: %d\n", ret);
+modules/PX4NuttX/apps/nshlib/nsh_parse.c:1766:      ret = pthread_create(&thread, &attr, nsh_child, (pthread_addr_t)args);
+modules/PX4NuttX/apps/nshlib/nsh_parse.c:1769:          nsh_output(vtbl, g_fmtcmdfailed, cmd, "pthread_create", NSH_ERRNO_OF(ret));
+modules/PX4NuttX/apps/examples/elf/tests/mutex/mutex.c:121:  if ((pthread_create(&thread1, NULL, (void*)thread_func, (void*)1)) != 0)
+modules/PX4NuttX/apps/examples/elf/tests/mutex/mutex.c:127:  if ((pthread_create(&thread2, NULL, (void*)thread_func, (void*)2)) != 0)
+modules/PX4NuttX/apps/examples/elf/tests/pthread/pthread.c:119:  status = pthread_create(&thread, &attr, child_start_routine, CHILD_ARG);
+modules/PX4NuttX/apps/examples/elf/tests/pthread/pthread.c:122:      printf("PARENT: pthread_create() returned %d\n", status);
+modules/PX4NuttX/apps/examples/usbterm/usbterm_main.c:296:  ret = pthread_create(&g_usbterm.listener, &attr,
+modules/PX4NuttX/apps/examples/nxflat/tests/mutex/mutex.c:121:  if ((pthread_create(&thread1, NULL, (void*)thread_func, (void*)1)) != 0)
+modules/PX4NuttX/apps/examples/nxflat/tests/mutex/mutex.c:127:  if ((pthread_create(&thread2, NULL, (void*)thread_func, (void*)2)) != 0)
+modules/PX4NuttX/apps/examples/nxflat/tests/pthread/pthread.c:119:  status = pthread_create(&thread, &attr, child_start_routine, CHILD_ARG);
+modules/PX4NuttX/apps/examples/nxflat/tests/pthread/pthread.c:122:      printf("PARENT: pthread_create() returned %d\n", status);
+modules/PX4NuttX/apps/examples/modbus/modbus_main.c:319:      ret = pthread_create(&g_modbus.threadid, NULL, modbus_pollthread, NULL);
+modules/PX4NuttX/apps/examples/nxconsole/nxcon_main.c:153:       ret = pthread_create(&thread, &attr, nxcon_listener, NULL);
+modules/PX4NuttX/apps/examples/nxconsole/nxcon_main.c:156:            printf("nxcon_initialize: pthread_create failed: %d\n", ret);
+modules/PX4NuttX/apps/examples/poll/poll_main.c:139:  ret = pthread_create(&tid1, NULL, poll_listener, NULL);
+modules/PX4NuttX/apps/examples/poll/poll_main.c:149:  ret = pthread_create(&tid2, NULL, select_listener, NULL);
+modules/PX4NuttX/apps/examples/poll/poll_main.c:161:  ret = pthread_create(&tid3, NULL, net_listener, NULL);
+modules/PX4NuttX/apps/examples/poll/poll_main.c:165:  ret = pthread_create(&tid3, NULL, net_reader, NULL);
+modules/PX4NuttX/apps/examples/ostest/rmutex.c:143:      status = pthread_create(&thread[i], &attr, thread_outer, (pthread_addr_t)i+1);
+modules/PX4NuttX/apps/examples/ostest/rmutex.c:145:      status = pthread_create(&thread[i], NULL, thread_outer, (pthread_addr_t)i+1);
+modules/PX4NuttX/apps/examples/ostest/mqueue.c:330:  status = pthread_create(&receiver, &attr, receiver_thread, NULL);
+modules/PX4NuttX/apps/examples/ostest/mqueue.c:333:      printf("mqueue_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/mqueue.c:362:  status = pthread_create(&sender, &attr, sender_thread, NULL);
+modules/PX4NuttX/apps/examples/ostest/mqueue.c:365:      printf("mqueue_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/timedmqueue.c:340:  status = pthread_create(&sender, &attr, sender_thread, NULL);
+modules/PX4NuttX/apps/examples/ostest/timedmqueue.c:343:      printf("timedmqueue_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/timedmqueue.c:370:  status = pthread_create(&receiver, &attr, receiver_thread, NULL);
+modules/PX4NuttX/apps/examples/ostest/timedmqueue.c:373:      printf("timedmqueue_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/barrier.c:158:      status = pthread_create(&barrier_thread[i], &attr, barrier_func,
+modules/PX4NuttX/apps/examples/ostest/prioinherit.c:458:      status = pthread_create(&lowpri[i], &attr, lowpri_thread, (void*)threadno);
+modules/PX4NuttX/apps/examples/ostest/prioinherit.c:461:          printf("priority_inheritance: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/prioinherit.c:489:  status = pthread_create(&medpri, &attr, medpri_thread, NULL);
+modules/PX4NuttX/apps/examples/ostest/prioinherit.c:492:      printf("priority_inheritance: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/prioinherit.c:524:      status = pthread_create(&highpri[i], &attr, highpri_thread, (void*)threadno);
+modules/PX4NuttX/apps/examples/ostest/prioinherit.c:527:          printf("priority_inheritance: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/cond.c:248:  status = pthread_create(&waiter, &attr, thread_waiter, NULL);
+modules/PX4NuttX/apps/examples/ostest/cond.c:251:      printf("cond_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/cond.c:272:  status = pthread_create(&signaler, &attr, thread_signaler, NULL);
+modules/PX4NuttX/apps/examples/ostest/cond.c:275:      printf("cond_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/sem.c:183:  status = pthread_create(&waiter_thread1, &attr, waiter_func, (pthread_addr_t)1);
+modules/PX4NuttX/apps/examples/ostest/sem.c:207:  status = pthread_create(&waiter_thread2, &attr, waiter_func, (pthread_addr_t)2);
+modules/PX4NuttX/apps/examples/ostest/sem.c:231:  status = pthread_create(&poster_thread, &attr, poster_func, (pthread_addr_t)3);
+modules/PX4NuttX/apps/examples/ostest/mutex.c:111:  status = pthread_create(&thread1, &attr, thread_func, (pthread_addr_t)1);
+modules/PX4NuttX/apps/examples/ostest/mutex.c:113:  status = pthread_create(&thread1, NULL, thread_func, (pthread_addr_t)1);
+modules/PX4NuttX/apps/examples/ostest/mutex.c:122:  status = pthread_create(&thread2, &attr, thread_func, (pthread_addr_t)2);
+modules/PX4NuttX/apps/examples/ostest/mutex.c:124:  status = pthread_create(&thread2, NULL, thread_func, (pthread_addr_t)2);
+modules/PX4NuttX/apps/examples/ostest/timedwait.c:178:  status = pthread_create(&waiter, &attr, thread_waiter, NULL);
+modules/PX4NuttX/apps/examples/ostest/timedwait.c:181:      printf("timedwait_test: pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/cancel.c:143:  status = pthread_create(waiter, &attr, thread_waiter, (pthread_addr_t)cancelable);
+modules/PX4NuttX/apps/examples/ostest/cancel.c:146:      printf("start_thread: ERROR pthread_create failed, status=%d\n", status);
+modules/PX4NuttX/apps/examples/ostest/roundrobin.c:186:  status = pthread_create(&get_primes1_thread, &attr, get_primes_thread, (FAR void *)1);
+modules/PX4NuttX/apps/examples/ostest/roundrobin.c:195:  status = pthread_create(&get_primes2_thread, &attr, get_primes_thread, (FAR void *)2);
+modules/PX4NuttX/apps/examples/pipe/interlock_test.c:139:  ret = pthread_create(&writerid, NULL, null_writer, (pthread_addr_t)NULL);
+modules/PX4NuttX/apps/examples/pipe/transfer_test.c:184:  ret = pthread_create(&readerid, NULL, transfer_reader, (pthread_addr_t)fdin);
+modules/PX4NuttX/apps/examples/pipe/transfer_test.c:194:  ret = pthread_create(&writerid, NULL, transfer_writer, (pthread_addr_t)fdout);
+modules/PX4NuttX/apps/examples/nxtext/nxtext_main.c:299:       ret = pthread_create(&thread, &attr, nxtext_listener, NULL);
+modules/PX4NuttX/apps/examples/nxtext/nxtext_main.c:302:            printf("nxtext_initialize: pthread_create failed: %d\n", ret);
+modules/PX4NuttX/apps/examples/nx/nx_main.c:557:       ret = pthread_create(&thread, &attr, nx_listenerthread, NULL);
+modules/PX4NuttX/apps/examples/nx/nx_main.c:560:            printf("nxeg_initialize: pthread_create failed: %d\n", ret);
+modules/PX4NuttX/apps/netutils/ftpd/ftpd.c:3908:  ret = pthread_create(&threadid, &attr, handler, arg);
+modules/PX4NuttX/apps/netutils/ftpd/ftpd.c:3911:      ndbg("pthread_create() failed: %d\n", ret);
+modules/PX4NuttX/apps/netutils/uiplib/uip_server.c:142:      ret = pthread_create(&child, &attr, handler, (void*)acceptsd);
+modules/PX4NuttX/apps/netutils/uiplib/uip_server.c:148:          ndbg("pthread_create failed\n");
+modules/PX4NuttX/nuttx/include/pthread.h:280:int pthread_create(FAR pthread_t *thread, FAR pthread_attr_t *attr,
+modules/PX4NuttX/nuttx/include/sys/syscall.h:282:#  define SYS_pthread_create           (__SYS_pthread+9)
+modules/PX4NuttX/nuttx/include/nuttx/sched.h:266:/* All threads created by pthread_create belong in the same task group (along with
+modules/PX4NuttX/nuttx/include/nuttx/pthread.h:73:/* Default pthread attributes (see sched/pthread_create.c).  This global
+modules/PX4NuttX/nuttx/syscall/syscall.csv:60:"pthread_create","pthread.h","!defined(CONFIG_DISABLE_PTHREAD)","int","FAR pthread_t*","FAR pthread_attr_t*","pthread_startroutine_t","pthread_addr_t"
+modules/PX4NuttX/nuttx/syscall/syscall_lookup.h:210:  SYSCALL_LOOKUP(pthread_create,          4, STUB_pthread_create)
+modules/PX4NuttX/nuttx/syscall/syscall_stublookup.c:223:uintptr_t STUB_pthread_create(int nbr, uintptr_t parm1, uintptr_t parm2,
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:5374:    <li><a href="#pthreadcreate">2.9.11 pthread_create</a></li>
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:5825:<H3><a name="pthreadcreate">2.9.11 pthread_create</a></H3>
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:5831:    int pthread_create(pthread_t *thread, pthread_attr_t *attr,
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:5852:If successful, the <code>pthread_create()</code> function will return
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:6180:  <code>pthread_setschedprio()</code>, or <code>pthread_create()</code> call
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:7670:    When a pthread is created using <a href="#pthreadcreate">pthread_create</a>, the child
+modules/PX4NuttX/nuttx/Documentation/NuttxUserGuide.html:9641:  <li><a href="#pthreadcreate">pthread_create</a></li>
+modules/PX4NuttX/nuttx/drivers/usbdev/usbmsc.c:1616:  ret = pthread_create(&priv->thread, &attr, usbmsc_workerthread, (pthread_addr_t)priv);
+modules/PX4NuttX/nuttx/drivers/usbdev/usbmsc.c:1618:  ret = pthread_create(&priv->thread, NULL, usbmsc_workerthread, (pthread_addr_t)priv);
+modules/PX4NuttX/nuttx/sched/Makefile:146:PTHREAD_SRCS  = pthread_create.c pthread_exit.c pthread_join.c pthread_detach.c
+modules/PX4NuttX/nuttx/sched/pthread_create.c:2: * sched/pthread_create.c
+modules/PX4NuttX/nuttx/sched/pthread_create.c:96: *   a new task (with arguments cloned via strdup) or pthread_create() which
+modules/PX4NuttX/nuttx/sched/pthread_create.c:211: * Name:  pthread_create
+modules/PX4NuttX/nuttx/sched/pthread_create.c:229:int pthread_create(FAR pthread_t *thread, FAR pthread_attr_t *attr,
+modules/PX4NuttX/nuttx/sched/pthread_getschedparam.c:84: *   pthread_setschedprio(), or pthread_create() call affecting the target
+modules/PX4NuttX/nuttx/sched/pthread_getspecific.c:82: *   not obtained from pthread_create() or after a key has been deleted
+modules/PX4NuttX/nuttx/sched/pthread_exit.c:83: *   Terminate execution of a thread started with pthread_create.
+modules/PX4NuttX/nuttx/sched/task_setup.c:353:      /* exec(), pthread_create(), task_create(), and vfork() all
+modules/PX4NuttX/nuttx/sched/task_setup.c:669: *   pthread_schedsetup() is called from pthread_create(),
+modules/PX4NuttX/nuttx/sched/pthread_setspecific.c:87: *   with a key value not obtained from pthread_create() or
+modules/PX4NuttX/nuttx/ChangeLog:721:	* sched/: pthread_create() must return a (non-negated) errno value on failure.
+modules/PX4NuttX/nuttx/TODO:1690:               sched/pthread_create.c at 330
+modules/PX4Firmware/Build/px4io-v2_default.build/nuttx-export/include/pthread.h:280:int pthread_create(FAR pthread_t *thread, FAR pthread_attr_t *attr,
+modules/PX4Firmware/Build/px4io-v2_default.build/nuttx-export/include/sys/syscall.h:282:#  define SYS_pthread_create           (__SYS_pthread+9)
+modules/PX4Firmware/Build/px4io-v2_default.build/nuttx-export/include/nuttx/sched.h:266:/* All threads created by pthread_create belong in the same task group (along with
+modules/PX4Firmware/Build/px4io-v2_default.build/nuttx-export/include/nuttx/pthread.h:73:/* Default pthread attributes (see sched/pthread_create.c).  This global
+Binary file modules/PX4Firmware/Build/px4fmu-v2_APM.build/firmware.elf matches
+Binary file modules/PX4Firmware/Build/px4fmu-v2_APM.build/nuttx-export/libs/libapps.a matches
+Binary file modules/PX4Firmware/Build/px4fmu-v2_APM.build/nuttx-export/libs/libnuttx.a matches
+modules/PX4Firmware/Build/px4fmu-v2_APM.build/nuttx-export/include/pthread.h:280:int pthread_create(FAR pthread_t *thread, FAR pthread_attr_t *attr,
+modules/PX4Firmware/Build/px4fmu-v2_APM.build/nuttx-export/include/sys/syscall.h:282:#  define SYS_pthread_create           (__SYS_pthread+9)
+modules/PX4Firmware/Build/px4fmu-v2_APM.build/nuttx-export/include/nuttx/sched.h:266:/* All threads created by pthread_create belong in the same task group (along with
+modules/PX4Firmware/Build/px4fmu-v2_APM.build/nuttx-export/include/nuttx/pthread.h:73:/* Default pthread attributes (see sched/pthread_create.c).  This global
+modules/PX4Firmware/src/lib/DriverFramework/framework/src/DriverFramework.cpp:460:	if (pthread_create(&g_tid, &attr, process_trampoline, NULL)) {
+modules/PX4Firmware/src/lib/DriverFramework/framework/src/DriverFramework.cpp:464:	DF_LOG_DEBUG("pthread_create success");
+modules/PX4Firmware/src/platforms/posix/px4_layer/px4_posix_tasks.cpp:227:	rv = pthread_create(&taskmap[taskid].pid, &attr, &entry_adapter, (void *) taskdata);
+modules/PX4Firmware/src/platforms/posix/px4_layer/px4_posix_tasks.cpp:233:			rv = pthread_create(&taskmap[taskid].pid, NULL, &entry_adapter, (void *) taskdata);
+modules/PX4Firmware/src/platforms/qurt/stubs/stubs_posix.c:82:int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg)
+modules/PX4Firmware/src/platforms/qurt/px4_layer/px4_qurt_tasks.cpp:216:	rv = pthread_create(&task, &attr, &entry_adapter, (void *) taskdata);
+modules/PX4Firmware/src/platforms/qurt/px4_layer/px4_qurt_tasks.cpp:219:		PX4_ERR("px4_task_spawn_cmd: pthread_create failed, error: %d", rv);
+modules/PX4Firmware/src/modules/muorb/krait/uORBKraitFastRpcChannel.cpp:182:	if (pthread_create(&_RecvThread, &recv_thread_attr, thread_start, (void *)this) != 0) {
+modules/PX4Firmware/src/modules/commander/commander.cpp:1520:	pthread_create(&commander_low_prio_thread, &commander_low_prio_attr, commander_low_prio_loop, NULL);
+modules/PX4Firmware/src/modules/sdlog2/sdlog2.c:741:	if (0 != pthread_create(&logwriter_pthread, &logwriter_attr, logwriter_thread, &lb)) {
+modules/PX4Firmware/src/modules/uavcan/uavcan_servers.cpp:200:	rv = pthread_create(&_instance->_subnode_thread, &tattr, static_cast<pthread_startroutine_t>(run_trampoline), NULL);
+modules/PX4Firmware/src/modules/uavcan/uavcan_servers.cpp:204:		warnx("pthread_create() failed: %d", rv);
+modules/PX4Firmware/src/modules/simulator/simulator_mavlink.cpp:603:	pthread_create(&sender_thread, &sender_thread_attr, Simulator::sending_trampoline, NULL);
+modules/PX4Firmware/src/modules/mavlink/mavlink_receiver.cpp:2001:	pthread_create(thread, &receiveloop_attr, MavlinkReceiver::start_helper, (void *)parent);
+modules/PX4Firmware/src/systemcmds/tests/test_uart_console.c:121:	pthread_create(&receive_thread, NULL, receive_loop, NULL);
+modules/gtest/m4/acx_pthread.m4:174:        # while pthread_create is in libc.  We check for pthread_attr_init
+modules/gtest/m4/acx_pthread.m4:178:        # We try pthread_create on general principles.
+modules/gtest/m4/acx_pthread.m4:182:                     pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
+modules/gtest/m4/acx_pthread.m4:286:	      pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
+modules/gtest/m4/acx_pthread.m4:306:	      pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
+modules/gtest/m4/acx_pthread.m4:325:	        pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
+modules/gtest/include/gtest/internal/gtest-port.h:1250:// pthread_create() accepts a pointer to a function type with the C linkage.
+modules/gtest/include/gtest/internal/gtest-port.h:1255:// pass into pthread_create().
+modules/gtest/include/gtest/internal/gtest-port.h:1288:        pthread_create(&thread_, 0, &ThreadFuncWithCLinkage, base));
+modules/gtest/test/gtest-port_test.cc:328:  const int status = pthread_create(&thread_id, &attr, &ThreadFunc, &mutex);
+Tools/FlightGear/FGShim.c:273:        if (pthread_create(&gIMUThread, NULL, imuThread, NULL))
+Tools/FlightGear/FGShim.c:275:        if (pthread_create(&gCTRLThread, NULL, ctrlThread, NULL))
+Tools/FlightGear/FGShim.c:277:        if (pthread_create(&gQGCSThread, NULL, qgsThread, NULL))

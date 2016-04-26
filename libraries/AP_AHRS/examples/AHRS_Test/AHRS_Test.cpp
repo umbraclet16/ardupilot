@@ -30,8 +30,11 @@ AP_AHRS_DCM  ahrs(ins, baro, gps);
 void setup(void)
 {
     ins.init(100);
+    hal.console->printf("ins init done.--FY\n");
     ahrs.init();
+    hal.console->printf("ahrs init done.--FY\n");
     serial_manager.init();
+    hal.console->printf("serial_mng init done.--FY\n");
 
     if( compass.init() ) {
         hal.console->printf("Enabling compass\n");
@@ -39,7 +42,9 @@ void setup(void)
     } else {
         hal.console->printf("No compass detected\n");
     }
+    hal.console->printf("compass init done.--FY\n");
     gps.init(NULL, serial_manager);
+    hal.console->printf("gps init done.--FY\n");
 }
 
 void loop(void)

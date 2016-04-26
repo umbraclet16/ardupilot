@@ -23,3 +23,4 @@ LIBRARIES += AP_Rally
 LIBRARIES += AP_BattMonitor
 LIBRARIES += AP_RangeFinder
 LIBRARIES += AP_OpticalFlow
+LIBRARIES += AP_Scheduler

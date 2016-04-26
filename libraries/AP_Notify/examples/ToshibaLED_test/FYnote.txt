@@ -1,0 +1,7 @@
+0426
+The prgram is running, init() can turn off the led.
+However, update() does not work.
+led is controlled by thread lpwork(),
+because : work_que(lpwork,...)
+Using 'ps' in NSH, looks like that lpwork()) is always in status 'WAITSIG',
+never 'WAITSEM', meaning that the command is not passed to the OS.
