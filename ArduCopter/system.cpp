@@ -322,7 +322,7 @@ bool Copter::calibrate_gyros()
 }
 
 // position_ok - returns true if the horizontal absolute position is ok and home position is set
-bool Copter::position_ok()
+bool Copter::position_ok()	//#
 {
     // return false if ekf failsafe has triggered
     if (failsafe.ekf) {

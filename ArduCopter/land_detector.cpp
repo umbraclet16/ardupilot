@@ -8,7 +8,7 @@ static uint32_t land_detector_count = 0;
 
 // run land and crash detectors
 // called at MAIN_LOOP_RATE
-void Copter::update_land_and_crash_detectors()
+void Copter::update_land_and_crash_detectors()	//#
 {
     // update 1hz filtered acceleration
     Vector3f accel_ef = ahrs.get_accel_ef_blended();
@@ -27,7 +27,7 @@ void Copter::update_land_and_crash_detectors()
 
 // update_land_detector - checks if we have landed and updates the ap.land_complete flag
 // called at MAIN_LOOP_RATE
-void Copter::update_land_detector()
+void Copter::update_land_detector()	//#
 {
     // land detector can not use the following sensors because they are unreliable during landing
     // barometer altitude :                 ground effect can cause errors larger than 4m
@@ -79,7 +79,7 @@ void Copter::update_land_detector()
     set_land_complete_maybe(ap.land_complete || (land_detector_count >= LAND_DETECTOR_MAYBE_TRIGGER_SEC*MAIN_LOOP_RATE));
 }
 
-void Copter::set_land_complete(bool b)
+void Copter::set_land_complete(bool b)	//#
 {
     // if no change, exit immediately
     if( ap.land_complete == b )
@@ -96,7 +96,7 @@ void Copter::set_land_complete(bool b)
 }
 
 // set land complete maybe flag
-void Copter::set_land_complete_maybe(bool b)
+void Copter::set_land_complete_maybe(bool b)	//#
 {
     // if no change, exit immediately
     if (ap.land_complete_maybe == b)

@@ -10,7 +10,7 @@
 // crash_check - disarms motors if a crash has been detected
 // crashes are detected by the vehicle being more than 20 degrees beyond it's angle limits continuously for more than 1 second
 // called at MAIN_LOOP_RATE
-void Copter::crash_check()
+void Copter::crash_check()	//#
 {
     static uint16_t crash_counter;  // number of iterations vehicle may have been crashed
 

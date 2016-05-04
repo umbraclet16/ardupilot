@@ -18,12 +18,14 @@ bool Copter::loiter_init(bool ignore_checks)
 
     if (position_ok() || ignore_checks) {
 
+        //# 1.水平方向
         // set target to current position
-        wp_nav.init_loiter_target();
+        wp_nav.init_loiter_target();	//# initialize's loiter position and feed-forward velocity from current pos and velocity
 
+	//# 2.竖直方向
         // initialize vertical speed and acceleration
-        pos_control.set_speed_z(-g.pilot_velocity_z_max, g.pilot_velocity_z_max);
-        pos_control.set_accel_z(g.pilot_accel_z);
+        pos_control.set_speed_z(-g.pilot_velocity_z_max, g.pilot_velocity_z_max);	//# sets maximum climb and descent rates
+        pos_control.set_accel_z(g.pilot_accel_z);	//# set vertical acceleration in cm/s/s
 
         // initialise position and desired velocity
         pos_control.set_alt_target(inertial_nav.get_altitude());

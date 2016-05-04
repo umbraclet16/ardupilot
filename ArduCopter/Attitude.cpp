@@ -141,8 +141,8 @@ int16_t Copter::get_pilot_desired_throttle(int16_t throttle_control)
     int16_t mid_stick = channel_throttle->get_control_mid();
 
     // ensure reasonable throttle values
-    throttle_control = constrain_int16(throttle_control,0,1000);
-    g.throttle_mid = constrain_int16(g.throttle_mid,g.throttle_min+50,700);
+    throttle_control = constrain_int16(throttle_control,0,1000);		//# 遥控输入值
+    g.throttle_mid = constrain_int16(g.throttle_mid,g.throttle_min+50,700);	//# 飞控输出值
 
     // check throttle is above, below or in the deadband
     if (throttle_control < mid_stick) {
@@ -199,7 +199,7 @@ float Copter::get_pilot_desired_climb_rate(float throttle_control)
 }
 
 // get_non_takeoff_throttle - a throttle somewhere between min and mid throttle which should not lead to a takeoff
-float Copter::get_non_takeoff_throttle()
+float Copter::get_non_takeoff_throttle()	//#
 {
     return (g.throttle_mid / 2.0f);
 }
@@ -285,7 +285,7 @@ float Copter::get_surface_tracking_climb_rate(int16_t target_rate, float current
 }
 
 // set_accel_throttle_I_from_pilot_throttle - smoothes transition from pilot controlled throttle to autopilot throttle
-void Copter::set_accel_throttle_I_from_pilot_throttle(int16_t pilot_throttle)
+void Copter::set_accel_throttle_I_from_pilot_throttle(int16_t pilot_throttle)	//#
 {
     // shift difference between pilot's throttle and hover throttle into accelerometer I
     g.pid_accel_z.set_integrator(pilot_throttle-throttle_average);

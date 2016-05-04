@@ -210,7 +210,7 @@ bool Copter::init_arm_motors(bool arming_from_gcs)
 }
 
 // init_disarm_motors - disarm motors
-void Copter::init_disarm_motors()
+void Copter::init_disarm_motors()	//#
 {
     // return immediately if we are already disarmed
     if (!motors.armed()) {

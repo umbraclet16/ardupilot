@@ -72,7 +72,7 @@ void Copter::takeoff_timer_start(float alt_cm)
 }
 
 // stop takeoff
-void Copter::takeoff_stop()
+void Copter::takeoff_stop()	//#
 {
     takeoff_state.running = false;
     takeoff_state.start_ms = 0;

@@ -132,6 +132,7 @@ void AP_Compass_PX4::accumulate(void)
     struct mag_report mag_report;
     for (uint8_t i=0; i<_num_sensors; i++) {
         uint8_t frontend_instance = _instance[i];
+				//# ::read() defined in <unistd.h>. read from _mag_fd[i] to mag_report.
         while (::read(_mag_fd[i], &mag_report, sizeof(mag_report)) == sizeof(mag_report) &&
                mag_report.timestamp != _last_timestamp[i]) {
 

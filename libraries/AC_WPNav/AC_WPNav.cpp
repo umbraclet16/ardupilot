@@ -177,29 +177,29 @@ void AC_WPNav::shift_loiter_target(const Vector3f &pos_adjustment)
 }
 
 /// init_loiter_target - initialize's loiter position and feed-forward velocity from current pos and velocity
-void AC_WPNav::init_loiter_target()
+void AC_WPNav::init_loiter_target()	//#
 {
-    const Vector3f& curr_pos = _inav.get_position();
-    const Vector3f& curr_vel = _inav.get_velocity();
+    const Vector3f& curr_pos = _inav.get_position();	//#1.returns the current position relative to the home location in cm(Vector3f)
+    const Vector3f& curr_vel = _inav.get_velocity();	//# returns the current velocity in cm/s(Vector3f)
 
     // initialise ekf position reset check
     init_ekf_position_reset();
 
     // initialise position controller
-    _pos_control.init_xy_controller();
+    _pos_control.init_xy_controller();	//#2. sets target roll angle, pitch angle and I terms based on vehicle current lean angles.
 
     // initialise pos controller speed and acceleration
-    _pos_control.set_speed_xy(_loiter_speed_cms);
-    _pos_control.set_accel_xy(_loiter_accel_cmss);
-    _pos_control.set_jerk_xy(_loiter_jerk_max_cmsss);
+    _pos_control.set_speed_xy(_loiter_speed_cms);	//#3. set horizontal speed maximum in cm/s
+    _pos_control.set_accel_xy(_loiter_accel_cmss);	//#   set horizontal acceleration in cm/s/s
+    _pos_control.set_jerk_xy(_loiter_jerk_max_cmsss);	//#   set max horizontal jerk in cm/s/s/s
 
-    // set target position
+    // set target position	//# 4.
     _pos_control.set_xy_target(curr_pos.x, curr_pos.y);
 
-    // move current vehicle velocity into feed forward velocity
+    // move current vehicle velocity into feed forward velocity		//#5.
     _pos_control.set_desired_velocity_xy(curr_vel.x, curr_vel.y);
 
-    // initialise desired accel and add fake wind
+    // initialise desired accel and add fake wind	//#6.
     _loiter_desired_accel.x = (_loiter_accel_cmss)*curr_vel.x/_loiter_speed_cms;
     _loiter_desired_accel.y = (_loiter_accel_cmss)*curr_vel.y/_loiter_speed_cms;
 
@@ -407,7 +407,7 @@ void AC_WPNav::wp_and_spline_init()
 }
 
 /// set_speed_xy - allows main code to pass target horizontal velocity for wp navigation
-void AC_WPNav::set_speed_xy(float speed_cms)
+void AC_WPNav::set_speed_xy(float speed_cms)	//#
 {
     // range check new target speed and update position controller
     if (speed_cms >= WPNAV_WP_SPEED_MIN) {
