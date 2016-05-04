@@ -2,6 +2,7 @@
 
 #include "Copter.h"
 
+//# calibrate() does more jobs than update_calibration(). calibration() is full calibration.
 void Copter::init_barometer(bool full_calibration)
 {
     gcs_send_text(MAV_SEVERITY_INFO, "Calibrating barometer");
@@ -13,6 +14,7 @@ void Copter::init_barometer(bool full_calibration)
     gcs_send_text(MAV_SEVERITY_INFO, "Barometer calibration complete");
 }
 
+//# get baro_alt and baro_climbrate.
 // return barometric altitude in centimeters
 void Copter::read_barometer(void)
 {
@@ -26,7 +28,7 @@ void Copter::read_barometer(void)
     motors.set_air_density_ratio(barometer.get_air_density_ratio());
 }
 
-void Copter::init_rangefinder(void)
+void Copter::init_rangefinder(void) //#
 {
 #if RANGEFINDER_ENABLED == ENABLED
    rangefinder.init();
@@ -35,6 +37,7 @@ void Copter::init_rangefinder(void)
 #endif
 }
 
+//# notice: RANGEFINDER_TILT_CORRECTION is disabled for use of range finder data by EKF.
 // return rangefinder altitude in centimeters
 void Copter::read_rangefinder(void)
 {
@@ -84,7 +87,7 @@ bool Copter::rangefinder_alt_ok()
 /*
   update RPM sensors
  */
-void Copter::rpm_update(void)
+void Copter::rpm_update(void)	//#
 {
     rpm_sensor.update();
     if (rpm_sensor.enabled(0) || rpm_sensor.enabled(1)) {
@@ -95,7 +98,7 @@ void Copter::rpm_update(void)
 }
 
 // initialise compass
-void Copter::init_compass()
+void Copter::init_compass()	//#
 {
     if (!compass.init() || !compass.read()) {
         // make sure we don't pass a broken compass to DCM
@@ -107,7 +110,7 @@ void Copter::init_compass()
 }
 
 // initialise optical flow sensor
-void Copter::init_optflow()
+void Copter::init_optflow()	//#
 {
 #if OPTFLOW == ENABLED
     // exit immediately if not enabled

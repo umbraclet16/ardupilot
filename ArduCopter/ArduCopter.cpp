@@ -99,8 +99,8 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK(run_nav_updates,       50,    100),
     SCHED_TASK(update_thr_average,   100,     90),
     SCHED_TASK(three_hz_loop,          3,     75),
-    SCHED_TASK(compass_accumulate,   100,    100),
-    SCHED_TASK(barometer_accumulate,  50,     90),
+    SCHED_TASK(compass_accumulate,   100,    100),	//# needed by compass of PX4
+    SCHED_TASK(barometer_accumulate,  50,     90),	//# not needed by baro of PX4
 #if PRECISION_LANDING == ENABLED
     SCHED_TASK(update_precland,       50,     50),
 #endif
@@ -301,7 +301,7 @@ void Copter::rc_loop()
 void Copter::throttle_loop()
 {
     // update throttle_low_comp value (controls priority of throttle vs attitude control)
-    update_throttle_thr_mix();
+    update_throttle_thr_mix();		//# only used by Heli.
 
     // check auto_armed status
     update_auto_armed();

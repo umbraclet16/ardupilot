@@ -492,7 +492,7 @@ void AC_PosControl::accel_to_throttle(float accel_target_z)
 
 /// set_accel_xy - set horizontal acceleration in cm/s/s
 ///     calc_leash_length_xy should be called afterwards
-void AC_PosControl::set_accel_xy(float accel_cmss)
+void AC_PosControl::set_accel_xy(float accel_cmss)	//#
 {
     if (fabsf(_accel_cms-accel_cmss) > 1.0f) {
         _accel_cms = accel_cmss;
@@ -503,7 +503,7 @@ void AC_PosControl::set_accel_xy(float accel_cmss)
 
 /// set_speed_xy - set horizontal speed maximum in cm/s
 ///     calc_leash_length_xy should be called afterwards
-void AC_PosControl::set_speed_xy(float speed_cms)
+void AC_PosControl::set_speed_xy(float speed_cms)	//#
 {
     if (fabsf(_speed_cms-speed_cms) > 1.0f) {
         _speed_cms = speed_cms;
@@ -526,7 +526,7 @@ void AC_PosControl::set_pos_target(const Vector3f& position)
 }
 
 /// set_xy_target in cm from home
-void AC_PosControl::set_xy_target(float x, float y)
+void AC_PosControl::set_xy_target(float x, float y)	//#
 {
     _pos_target.x = x;
     _pos_target.y = y;
@@ -619,7 +619,7 @@ bool AC_PosControl::is_active_xy() const
 ///     sets target roll angle, pitch angle and I terms based on vehicle current lean angles
 ///     should be called once whenever significant changes to the position target are made
 ///     this does not update the xy target
-void AC_PosControl::init_xy_controller(bool reset_I)
+void AC_PosControl::init_xy_controller(bool reset_I)	//#
 {
     // set roll, pitch lean angle targets to current attitude
     _roll_target = _ahrs.roll_sensor;
@@ -748,7 +748,7 @@ void AC_PosControl::update_vel_controller_xyz(float ekfNavVelGainScaler)
 
 /// calc_leash_length - calculates the horizontal leash length given a maximum speed, acceleration
 ///     should be called whenever the speed, acceleration or position kP is modified
-void AC_PosControl::calc_leash_length_xy()
+void AC_PosControl::calc_leash_length_xy()	//#
 {
     if (_flags.recalc_leash_xy) {
         _leash = calc_leash_length(_speed_cms, _accel_cms, _p_pos_xy.kP());
@@ -964,14 +964,14 @@ void AC_PosControl::accel_to_lean_angles(float dt, float ekfNavVelGainScaler, bo
 }
 
 // get_lean_angles_to_accel - convert roll, pitch lean angles to lat/lon frame accelerations in cm/s/s
-void AC_PosControl::lean_angles_to_accel(float& accel_x_cmss, float& accel_y_cmss) const
+void AC_PosControl::lean_angles_to_accel(float& accel_x_cmss, float& accel_y_cmss) const	//#
 {
     // rotate our roll, pitch angles into lat/lon frame
     accel_x_cmss = (GRAVITY_MSS * 100) * (-(_ahrs.cos_yaw() * _ahrs.sin_pitch() / MAX(_ahrs.cos_pitch(),0.5f)) - _ahrs.sin_yaw() * _ahrs.sin_roll() / MAX(_ahrs.cos_roll(),0.5f));
     accel_y_cmss = (GRAVITY_MSS * 100) * (-(_ahrs.sin_yaw() * _ahrs.sin_pitch() / MAX(_ahrs.cos_pitch(),0.5f)) + _ahrs.cos_yaw() * _ahrs.sin_roll() / MAX(_ahrs.cos_roll(),0.5f));
 }
 
-			//# speed为横轴,leash_length为纵轴,横坐标在accel/kP以内为线性,斜率k1=1/kP;以外为非线性(斜率变大(k2=speed/accel>1/kP)).
+	//# speed为横轴,leash_length为纵轴,横坐标在accel/kP以内为线性,斜率k1=1/kP;以外为非线性(斜率变大(k2=speed/accel>1/kP)).
 /// calc_leash_length - calculates the horizontal leash length given a maximum speed, acceleration and position kP gain
 float AC_PosControl::calc_leash_length(float speed_cms, float accel_cms, float kP) const
 {

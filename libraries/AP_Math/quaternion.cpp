@@ -126,12 +126,8 @@ void Quaternion::from_vector312(float roll ,float pitch, float yaw)
     from_rotation_matrix(m);
 }
 
-<<<<<<< HEAD
-void Quaternion::from_axis_angle(Vector3f v)
-{
-=======
 void Quaternion::from_axis_angle(Vector3f v) {	//#
->>>>>>> Comments20160414
+{
     float theta = v.length();
     if (theta < 1.0e-12f) {
         q1 = 1.0f;
@@ -142,14 +138,9 @@ void Quaternion::from_axis_angle(Vector3f v) {	//#
     from_axis_angle(v,theta);
 }
 
-<<<<<<< HEAD
-void Quaternion::from_axis_angle(const Vector3f &axis, float theta)
+void Quaternion::from_axis_angle(const Vector3f &axis, float theta)	//#
 {
     if (theta < 1.0e-12f) {
-=======
-void Quaternion::from_axis_angle(const Vector3f &axis, float theta) {	//#
-    if(theta < 1.0e-12f) {
->>>>>>> Comments20160414
         q1 = 1.0f;
         q2=q3=q4=0.0f;
     }
@@ -161,23 +152,15 @@ void Quaternion::from_axis_angle(const Vector3f &axis, float theta) {	//#
     q4 = axis.z * st2;
 }
 
-<<<<<<< HEAD
-void Quaternion::rotate(const Vector3f &v)
+void Quaternion::rotate(const Vector3f &v)  //#
 {
-=======
-void Quaternion::rotate(const Vector3f &v) {	//#
->>>>>>> Comments20160414
     Quaternion r;
     r.from_axis_angle(v);
     (*this) *= r;
 }
 
-<<<<<<< HEAD
-void Quaternion::to_axis_angle(Vector3f &v)
+void Quaternion::to_axis_angle(Vector3f &v)	//# 四元数->轴角表示[v=旋转向量(i,j,k)*旋转角度](轴角表示无法合并两个旋转,必须转换为旋转矩阵或quat)
 {
-=======
-void Quaternion::to_axis_angle(Vector3f &v) {	//# 四元数->轴角表示[v=旋转向量(i,j,k)*旋转角度](轴角表示无法合并两个旋转,必须转换为旋转矩阵或quat)
->>>>>>> Comments20160401
     float l = sqrt(sq(q2)+sq(q3)+sq(q4));
     v = Vector3f(q2,q3,q4);
     if (l >= 1.0e-12f) {
