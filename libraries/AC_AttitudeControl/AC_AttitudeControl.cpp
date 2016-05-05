@@ -664,7 +664,7 @@ void AC_AttitudeControl::set_throttle_out(float throttle_in, bool apply_angle_bo
     }
 }
 
-void AC_AttitudeControl::set_throttle_out_unstabilized(float throttle_in, bool reset_attitude_control, float filter_cutoff)
+void AC_AttitudeControl::set_throttle_out_unstabilized(float throttle_in, bool reset_attitude_control, float filter_cutoff)	//#
 {
     _throttle_in = throttle_in;
     _throttle_in_filt.apply(throttle_in, _dt);

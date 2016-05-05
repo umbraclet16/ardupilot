@@ -230,7 +230,7 @@ void AC_PosControl::add_takeoff_climb_rate(float climb_rate_cms, float dt)	//# æ
 }
 
 /// relax_alt_hold_controllers - set all desired and targets to measured
-void AC_PosControl::relax_alt_hold_controllers(float throttle_setting)
+void AC_PosControl::relax_alt_hold_controllers(float throttle_setting)	//#
 {
     _pos_target.z = _inav.get_altitude();
     _vel_desired.z = 0.0f;
@@ -294,7 +294,7 @@ void AC_PosControl::get_stopping_point_z(Vector3f& stopping_point) const
 }
 
 /// init_takeoff - initialises target altitude if we are taking off
-void AC_PosControl::init_takeoff()
+void AC_PosControl::init_takeoff()	//#
 {
     const Vector3f& curr_pos = _inav.get_position();
 

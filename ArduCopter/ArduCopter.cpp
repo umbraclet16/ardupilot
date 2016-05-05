@@ -553,7 +553,7 @@ void Copter::init_simple_bearing()
 }
 
 // update_simple_mode - rotates pilot input if we are in simple mode
-void Copter::update_simple_mode(void)
+void Copter::update_simple_mode(void)	//#
 {
     float rollx, pitchx;
 
