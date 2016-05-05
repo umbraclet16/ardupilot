@@ -209,7 +209,7 @@ void AC_WPNav::init_loiter_target()	//#
 }
 
 /// loiter_soften_for_landing - reduce response for landing
-void AC_WPNav::loiter_soften_for_landing()
+void AC_WPNav::loiter_soften_for_landing()	//#
 {
     const Vector3f& curr_pos = _inav.get_position();
 
@@ -219,7 +219,7 @@ void AC_WPNav::loiter_soften_for_landing()
 }
 
 /// set_pilot_desired_acceleration - sets pilot desired acceleration from roll and pitch stick input
-void AC_WPNav::set_pilot_desired_acceleration(float control_roll, float control_pitch)
+void AC_WPNav::set_pilot_desired_acceleration(float control_roll, float control_pitch)	//#
 {
     // convert pilot input to desired acceleration in cm/s/s
     _pilot_accel_fwd_cms = -control_pitch * _loiter_accel_cmss / 4500.0f;

@@ -43,7 +43,7 @@ void Copter::get_pilot_desired_lean_angles(float roll_in, float pitch_in, float 
 // get_pilot_desired_heading - transform pilot's yaw input into a
 // desired yaw rate
 // returns desired yaw rate in centi-degrees per second
-float Copter::get_pilot_desired_yaw_rate(int16_t stick_angle)
+float Copter::get_pilot_desired_yaw_rate(int16_t stick_angle)	//#
 {
     // convert pilot input to the desired yaw rate
     return stick_angle * g.acro_yaw_p;
@@ -122,7 +122,7 @@ void Copter::update_thr_average()
 }
 
 // set_throttle_takeoff - allows parents to tell throttle controller we are taking off so I terms can be cleared
-void Copter::set_throttle_takeoff()
+void Copter::set_throttle_takeoff()	//#
 {
     // tell position controller to reset alt target and reset I terms
     pos_control.init_takeoff();
@@ -204,7 +204,7 @@ float Copter::get_non_takeoff_throttle()	//#
     return (g.throttle_mid / 2.0f);
 }
 
-float Copter::get_takeoff_trigger_throttle()
+float Copter::get_takeoff_trigger_throttle()	//#
 {
     return channel_throttle->get_control_mid() + g.takeoff_trigger_dz;
 }
@@ -212,7 +212,7 @@ float Copter::get_takeoff_trigger_throttle()
 // get_throttle_pre_takeoff - convert pilot's input throttle to a throttle output before take-off
 // used only for althold, loiter, hybrid flight modes
 // returns throttle output 0 to 1000
-float Copter::get_throttle_pre_takeoff(float input_thr)
+float Copter::get_throttle_pre_takeoff(float input_thr)	//#
 {
     // exit immediately if input_thr is zero
     if (input_thr <= 0.0f) {
@@ -230,9 +230,9 @@ float Copter::get_throttle_pre_takeoff(float input_thr)
     float out_min = 0;
 #else
     // multicopters will output between spin-when-armed and 1/2 of mid throttle
-    float out_min = motors.get_throttle_warn();
+    float out_min = motors.get_throttle_warn();	//# spin-when-armed  
 #endif
-    float out_max = get_non_takeoff_throttle();
+    float out_max = get_non_takeoff_throttle();	//# 1/2 of mid throttle
 
     if ((g.throttle_behavior & THR_BEHAVE_FEEDBACK_FROM_MID_STICK) != 0) {
         in_min = channel_throttle->get_control_mid();
