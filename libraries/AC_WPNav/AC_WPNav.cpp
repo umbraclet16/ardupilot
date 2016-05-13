@@ -309,7 +309,7 @@ void AC_WPNav::calc_loiter_desired_velocity(float nav_dt, float ekfGndSpdLimit)
 }
 
 /// get_bearing_to_target - get bearing to loiter target in centi-degrees
-int32_t AC_WPNav::get_loiter_bearing_to_target() const
+int32_t AC_WPNav::get_loiter_bearing_to_target() const	//#
 {
     return get_bearing_cd(_inav.get_position(), _pos_control.get_pos_target());
 }
@@ -386,7 +386,7 @@ void AC_WPNav::update_brake(float ekfGndSpdLimit, float ekfNavVelGainScaler)
 /// wp_and_spline_init - initialise straight line and spline waypoint controllers
 ///     updates target roll, pitch targets and I terms based on vehicle lean angles
 ///     should be called once before the waypoint controller is used but does not need to be called before subsequent updates to destination
-void AC_WPNav::wp_and_spline_init()
+void AC_WPNav::wp_and_spline_init()	//#
 {
     // check _wp_accel_cms is reasonable
     if (_wp_accel_cms <= 0) {
@@ -646,7 +646,7 @@ void AC_WPNav::advance_wp_target_along_track(float dt)
 }
 
 /// get_wp_distance_to_destination - get horizontal distance to destination in cm
-float AC_WPNav::get_wp_distance_to_destination() const
+float AC_WPNav::get_wp_distance_to_destination() const	//#
 {
     // get current location
     Vector3f curr = _inav.get_position();
@@ -654,7 +654,7 @@ float AC_WPNav::get_wp_distance_to_destination() const
 }
 
 /// get_wp_bearing_to_destination - get bearing to next waypoint in centi-degrees
-int32_t AC_WPNav::get_wp_bearing_to_destination() const
+int32_t AC_WPNav::get_wp_bearing_to_destination() const	//#
 {
     return get_bearing_cd(_inav.get_position(), _destination);
 }
@@ -1022,7 +1022,7 @@ void AC_WPNav::calc_spline_pos_vel(float spline_time, Vector3f& position, Vector
 
 // get_bearing_cd - return bearing in centi-degrees between two positions
 // To-Do: move this to math library
-float AC_WPNav::get_bearing_cd(const Vector3f &origin, const Vector3f &destination) const
+float AC_WPNav::get_bearing_cd(const Vector3f &origin, const Vector3f &destination) const	//#
 {
     float bearing = 9000 + atan2f(-(destination.x-origin.x), destination.y-origin.y) * 5729.57795f;
     if (bearing < 0) {

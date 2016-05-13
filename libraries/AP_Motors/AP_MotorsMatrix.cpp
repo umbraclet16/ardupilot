@@ -35,7 +35,7 @@ void AP_MotorsMatrix::Init()
 }
 
 // set update rate to motors - a value in hertz
-void AP_MotorsMatrix::set_update_rate( uint16_t speed_hz )
+void AP_MotorsMatrix::set_update_rate( uint16_t speed_hz )	//#
 {
     uint8_t i;
 
@@ -53,7 +53,7 @@ void AP_MotorsMatrix::set_update_rate( uint16_t speed_hz )
 }
 
 // set frame orientation (normally + or X)
-void AP_MotorsMatrix::set_frame_orientation( uint8_t new_orientation )
+void AP_MotorsMatrix::set_frame_orientation( uint8_t new_orientation )	//#
 {
     // return if nothing has changed
     if( new_orientation == _flags.frame_orientation ) {
@@ -71,7 +71,7 @@ void AP_MotorsMatrix::set_frame_orientation( uint8_t new_orientation )
 }
 
 // enable - starts allowing signals to be sent to motors
-void AP_MotorsMatrix::enable()
+void AP_MotorsMatrix::enable()	//#
 {
     int8_t i;
 
@@ -84,7 +84,7 @@ void AP_MotorsMatrix::enable()
 }
 
 // output_min - sends minimum values out to the motors
-void AP_MotorsMatrix::output_min()
+void AP_MotorsMatrix::output_min()	//#
 {
     int8_t i;
 
@@ -106,7 +106,7 @@ void AP_MotorsMatrix::output_min()
 
 // get_motor_mask - returns a bitmask of which outputs are being used for motors (1 means being used)
 //  this can be used to ensure other pwm outputs (i.e. for servos) do not conflict
-uint16_t AP_MotorsMatrix::get_motor_mask()
+uint16_t AP_MotorsMatrix::get_motor_mask()	//#
 {
     uint16_t mask = 0;
     for (uint8_t i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++) {
@@ -243,7 +243,7 @@ void AP_MotorsMatrix::output_armed_stabilizing()
     //      Situation #2b allows us to raise the throttle above what the pilot commanded but not so far that it would actually cause the copter to rise.
     //      We will choose #1 (the best throttle for yaw control) if that means reducing throttle to the motors (i.e. we favour reducing throttle *because* it provides better yaw control)
     //      We will choose #2 (a mix of pilot and hover throttle) only when the throttle is quite low.  We favour reducing throttle instead of better yaw control because the pilot has commanded it
-    int16_t motor_mid = (rpy_low+rpy_high)/2;
+    int16_t motor_mid = (rpy_low+rpy_high)/2;	//# 应该是0???
     out_best_thr_pwm = MIN(out_mid_pwm - motor_mid, MAX(throttle_radio_output, throttle_radio_output*MAX(0,1.0f-_throttle_thr_mix)+get_hover_throttle_as_pwm()*_throttle_thr_mix));
 
     // calculate amount of yaw we can fit into the throttle range
@@ -369,7 +369,7 @@ void AP_MotorsMatrix::output_armed_stabilizing()
 }
 
 // output_disarmed - sends commands to the motors
-void AP_MotorsMatrix::output_disarmed()
+void AP_MotorsMatrix::output_disarmed()	//#
 {
     // Send minimum values to all motors
     output_min();
@@ -378,7 +378,7 @@ void AP_MotorsMatrix::output_disarmed()
 // output_test - spin a motor at the pwm value specified
 //  motor_seq is the motor's sequence number from 1 to the number of motors on the frame
 //  pwm value is an actual pwm value that will be output, normally in the range of 1000 ~ 2000
-void AP_MotorsMatrix::output_test(uint8_t motor_seq, int16_t pwm)
+void AP_MotorsMatrix::output_test(uint8_t motor_seq, int16_t pwm)	//#
 {
     // exit immediately if not armed
     if (!armed()) {
@@ -397,7 +397,7 @@ void AP_MotorsMatrix::output_test(uint8_t motor_seq, int16_t pwm)
 }
 
 // add_motor
-void AP_MotorsMatrix::add_motor_raw(int8_t motor_num, float roll_fac, float pitch_fac, float yaw_fac, uint8_t testing_order)
+void AP_MotorsMatrix::add_motor_raw(int8_t motor_num, float roll_fac, float pitch_fac, float yaw_fac, uint8_t testing_order)	//#
 {
     // ensure valid motor number is provided
     if( motor_num >= 0 && motor_num < AP_MOTORS_MAX_NUM_MOTORS ) {
@@ -428,13 +428,13 @@ void AP_MotorsMatrix::add_motor_raw(int8_t motor_num, float roll_fac, float pitc
 }
 
 // add_motor using just position and prop direction - assumes that for each motor, roll and pitch factors are equal
-void AP_MotorsMatrix::add_motor(int8_t motor_num, float angle_degrees, float yaw_factor, uint8_t testing_order)
+void AP_MotorsMatrix::add_motor(int8_t motor_num, float angle_degrees, float yaw_factor, uint8_t testing_order)	//#
 {
     add_motor(motor_num, angle_degrees, angle_degrees, yaw_factor, testing_order);
 }
 
 // add_motor using position and prop direction. Roll and Pitch factors can differ (for asymmetrical frames)
-void AP_MotorsMatrix::add_motor(int8_t motor_num, float roll_factor_in_degrees, float pitch_factor_in_degrees, float yaw_factor, uint8_t testing_order)
+void AP_MotorsMatrix::add_motor(int8_t motor_num, float roll_factor_in_degrees, float pitch_factor_in_degrees, float yaw_factor, uint8_t testing_order)	//#
 {
     add_motor_raw(
         motor_num,
@@ -445,7 +445,7 @@ void AP_MotorsMatrix::add_motor(int8_t motor_num, float roll_factor_in_degrees, 
 }
 
 // remove_motor - disabled motor and clears all roll, pitch, throttle factors for this motor
-void AP_MotorsMatrix::remove_motor(int8_t motor_num)
+void AP_MotorsMatrix::remove_motor(int8_t motor_num)	//#
 {
     // ensure valid motor number is provided
     if( motor_num >= 0 && motor_num < AP_MOTORS_MAX_NUM_MOTORS ) {
@@ -458,7 +458,7 @@ void AP_MotorsMatrix::remove_motor(int8_t motor_num)
 }
 
 // remove_all_motors - removes all motor definitions
-void AP_MotorsMatrix::remove_all_motors()
+void AP_MotorsMatrix::remove_all_motors()	//#
 {
     for( int8_t i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++ ) {
         remove_motor(i);

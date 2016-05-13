@@ -246,7 +246,7 @@ void Copter::land_do_not_use_GPS()
 
 // set_mode_land_with_pause - sets mode to LAND and triggers 4 second delay before descent starts
 //  this is always called from a failsafe so we trigger notification to pilot
-void Copter::set_mode_land_with_pause()
+void Copter::set_mode_land_with_pause()	//#
 {
     set_mode(LAND);
     land_pause = true;

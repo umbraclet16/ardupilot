@@ -54,7 +54,7 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
 }
 
 // start takeoff to specified altitude above home in centimeters
-void Copter::takeoff_timer_start(float alt_cm)
+void Copter::takeoff_timer_start(float alt_cm)	//#
 {
     // calculate climb rate
     float speed = MIN(wp_nav.get_speed_up(), MAX(g.pilot_velocity_z_max*2.0f/3.0f, g.pilot_velocity_z_max-50.0f));
@@ -82,7 +82,7 @@ void Copter::takeoff_stop()	//#
 //  pilot_climb_rate is both an input and an output
 //  takeoff_climb_rate is only an output
 //  has side-effect of turning takeoff off when timeout as expired
-void Copter::takeoff_get_climb_rates(float& pilot_climb_rate, float& takeoff_climb_rate)
+void Copter::takeoff_get_climb_rates(float& pilot_climb_rate, float& takeoff_climb_rate)	//#???没大看懂
 {
     // return pilot_climb_rate if take-off inactive
     if (!takeoff_state.running) {

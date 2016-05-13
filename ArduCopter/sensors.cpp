@@ -37,7 +37,7 @@ void Copter::init_sonar(void)	//#
 
 //# notice: SONAR_TILT_CORRECTION is disabled for use of range finder data by EKF.
 // return sonar altitude in centimeters
-int16_t Copter::read_sonar(void)
+int16_t Copter::read_sonar(void)	//# tilt correction disabled, 声呐给出的高度不能直接用,EKF后inav给出的高度有效
 {
 #if CONFIG_SONAR == ENABLED
     sonar.update();
@@ -48,7 +48,7 @@ int16_t Copter::read_sonar(void)
         return 0;
     }
 
-    int16_t temp_alt = sonar.distance_cm();
+    int16_t temp_alt = sonar.distance_cm();	//# 多个声呐时,使用primary_instance(第一个获得有效数据的声呐)的数据
 
     if (temp_alt >= sonar.min_distance_cm() && 
         temp_alt <= sonar.max_distance_cm() * SONAR_RELIABLE_DISTANCE_PCT) {

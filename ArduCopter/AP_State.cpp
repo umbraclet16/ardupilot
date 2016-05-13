@@ -58,7 +58,7 @@ void Copter::set_simple_mode(uint8_t b)
 }
 
 // ---------------------------------------------
-void Copter::set_failsafe_radio(bool b)
+void Copter::set_failsafe_radio(bool b)	//#
 {
     // only act on changes
     // -------------------

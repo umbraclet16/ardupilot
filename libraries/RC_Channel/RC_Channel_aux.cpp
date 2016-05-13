@@ -60,7 +60,7 @@ RC_Channel_aux::output_ch_all(void)
   This is used by the copter code to ensure channels used for motors
   can't be used for auxillary functions
 */
-void RC_Channel_aux::disable_aux_channel(uint8_t channel)
+void RC_Channel_aux::disable_aux_channel(uint8_t channel)	//#
 {
     for (uint8_t i = 0; i < RC_AUX_MAX_CHANNELS; i++) {
         if (_aux_channels[i] && _aux_channels[i]->_ch_out == channel) {

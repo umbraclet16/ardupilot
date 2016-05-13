@@ -164,7 +164,7 @@ void AP_MotorsMulticopter::output()
 };
 
 // update the throttle input filter
-void AP_MotorsMulticopter::update_throttle_filter()
+void AP_MotorsMulticopter::update_throttle_filter()	//# LPF
 {
     if (armed()) {
         _throttle_filter.apply(_throttle_in, 1.0f/_loop_rate);
@@ -177,7 +177,7 @@ void AP_MotorsMulticopter::update_throttle_filter()
 }
 
 // update_max_throttle - updates the limits on _max_throttle if necessary taking into account slow_start_throttle flag
-void AP_MotorsMulticopter::update_max_throttle()
+void AP_MotorsMulticopter::update_max_throttle()	//#
 {
     // ramp up minimum spin speed if necessary
     if (_multicopter_flags.slow_start_low_end) {
@@ -206,7 +206,7 @@ void AP_MotorsMulticopter::update_max_throttle()
 }
 
 // current_limit_max_throttle - limits maximum throttle based on current
-void AP_MotorsMulticopter::current_limit_max_throttle()
+void AP_MotorsMulticopter::current_limit_max_throttle()	//#
 {
     // return maximum if current limiting is disabled
     if (_batt_current_max <= 0) {
@@ -305,7 +305,7 @@ void AP_MotorsMulticopter::update_battery_resistance()
 }
 
 // update_throttle_thr_mix - slew set_throttle_thr_mix to requested value
-void AP_MotorsMulticopter::update_throttle_thr_mix()
+void AP_MotorsMulticopter::update_throttle_thr_mix()	//#
 {
     // slew _throttle_thr_mix to _throttle_thr_mix_desired
     if (_throttle_thr_mix < _throttle_thr_mix_desired) {
@@ -342,30 +342,30 @@ float AP_MotorsMulticopter::get_compensation_gain() const
     return ret;
 }
 
-float AP_MotorsMulticopter::rel_pwm_to_thr_range(float pwm) const
+float AP_MotorsMulticopter::rel_pwm_to_thr_range(float pwm) const	//#
 {
     return pwm/_throttle_pwm_scalar;
 }
 
-float AP_MotorsMulticopter::thr_range_to_rel_pwm(float thr) const
+float AP_MotorsMulticopter::thr_range_to_rel_pwm(float thr) const	//# never used.
 {
     return _throttle_pwm_scalar*thr;
 }
 
 // set_throttle_range - sets the minimum throttle that will be sent to the engines when they're not off (i.e. to prevents issues with some motors spinning and some not at very low throttle)
 // also sets throttle channel minimum and maximum pwm
-void AP_MotorsMulticopter::set_throttle_range(uint16_t min_throttle, int16_t radio_min, int16_t radio_max)
+void AP_MotorsMulticopter::set_throttle_range(uint16_t min_throttle, int16_t radio_min, int16_t radio_max)	//#!!!
 {
     _throttle_radio_min = radio_min;
     _throttle_radio_max = radio_max;
-    _throttle_pwm_scalar = (_throttle_radio_max - _throttle_radio_min) / 1000.0f;
-    _rpy_pwm_scalar = (_throttle_radio_max - (_throttle_radio_min + _min_throttle)) / 9000.0f;
-    _min_throttle = (float)min_throttle * _throttle_pwm_scalar;   
+    _throttle_pwm_scalar = (_throttle_radio_max - _throttle_radio_min) / 1000.0f;		//# pwm = scalar * range(0~1000)!
+    _rpy_pwm_scalar = (_throttle_radio_max - (_throttle_radio_min + _min_throttle)) / 9000.0f;//# pwm = scalar * range(-4500~4500)!
+    _min_throttle = (float)min_throttle * _throttle_pwm_scalar; 	//# _min_throttle is pwm value 
 }
 
 // slow_start - set to true to slew motors from current speed to maximum
 // Note: this must be set immediately before a step up in throttle
-void AP_MotorsMulticopter::slow_start(bool true_false)
+void AP_MotorsMulticopter::slow_start(bool true_false)	//#
 {
     // set slow_start flag
     _multicopter_flags.slow_start = true;
@@ -376,7 +376,7 @@ void AP_MotorsMulticopter::slow_start(bool true_false)
 
 // throttle_pass_through - passes provided pwm directly to all motors - dangerous but used for initialising ESCs
 //  pwm value is an actual pwm value that will be output, normally in the range of 1000 ~ 2000
-void AP_MotorsMulticopter::throttle_pass_through(int16_t pwm)
+void AP_MotorsMulticopter::throttle_pass_through(int16_t pwm)	//#
 {
     if (armed()) {
         // send the pilot's input directly to each enabled motor

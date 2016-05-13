@@ -144,7 +144,7 @@ protected:
         uint8_t interlock          : 1;    // 1 if the motor interlock is enabled (i.e. motors run), 0 if disabled (motors don't run)
     } _flags;
 
-    // internal variables
+    // internal variables		//# 2个比例系数都是range-to-pwm:  pwm = range * _XXX_pwm_scalar!
     float               _roll_control_input;        // desired roll control from attitude controllers, +/- 4500
     float               _pitch_control_input;       // desired pitch control from attitude controller, +/- 4500
     float               _throttle_control_input;    // desired throttle (thrust) control from attitude controller, 0-1000

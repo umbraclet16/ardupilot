@@ -101,7 +101,7 @@ void Copter::loiter_run()
         attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
 #endif  // HELI_FRAME
         pos_control.relax_alt_hold_controllers(get_throttle_pre_takeoff(channel_throttle->control_in)-throttle_average);
-        break;
+        break;		//#??? disarmed为什么throttle > 0(get_throttle_pre_takeoff)?作为积分项的作用?
 
     case Loiter_MotorStop:
 
