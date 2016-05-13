@@ -131,14 +131,14 @@ void Copter::set_throttle_takeoff()	//#
 // get_pilot_desired_throttle - transform pilot's throttle input to make cruise throttle mid stick
 // used only for manual throttle modes
 // returns throttle output 0 to 1
-float Copter::get_pilot_desired_throttle(int16_t throttle_control)
+float Copter::get_pilot_desired_throttle(int16_t throttle_control)	//#???
 {
     float throttle_out;
 
-    int16_t mid_stick = channel_throttle->get_control_mid();
+    int16_t mid_stick = channel_throttle->get_control_mid();	//# a control_in value
 
     // ensure reasonable throttle values
-    throttle_control = constrain_int16(throttle_control,0,1000);		//# 遥控输入值
+    throttle_control = constrain_int16(throttle_control,0,1000);		//# 遥控输入值经计算得到的值
     // ensure mid throttle is set within a reasonable range
     g.throttle_mid = constrain_int16(g.throttle_mid,g.throttle_min+50,700);	//# 飞控输出值
     float thr_mid = MAX(0,g.throttle_mid-g.throttle_min) / (float)(1000-g.throttle_min);
@@ -160,7 +160,7 @@ float Copter::get_pilot_desired_throttle(int16_t throttle_control)
 
 // get_pilot_desired_climb_rate - transform pilot's throttle input to climb rate in cm/s
 // without any deadzone at the bottom
-float Copter::get_pilot_desired_climb_rate(float throttle_control)
+float Copter::get_pilot_desired_climb_rate(float throttle_control)	//#
 {
     // throttle failsafe check
     if( failsafe.radio ) {

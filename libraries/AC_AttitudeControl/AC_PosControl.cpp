@@ -604,7 +604,7 @@ void AC_PosControl::get_stopping_point_xy(Vector3f &stopping_point) const
 }
 
 /// get_distance_to_target - get horizontal distance to loiter target in cm
-float AC_PosControl::get_distance_to_target() const
+float AC_PosControl::get_distance_to_target() const	//#
 {
     return _distance_to_target;
 }

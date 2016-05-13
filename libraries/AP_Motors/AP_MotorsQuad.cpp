@@ -26,9 +26,9 @@
 void AP_MotorsQuad::setup_motors()
 {
     // call parent
-    AP_MotorsMatrix::setup_motors();
+    AP_MotorsMatrix::setup_motors();	//# remove all motors.
 
-    // hard coded config for supported frames
+    // hard coded config for supported frames	//# X frame 在最后
     if( _flags.frame_orientation == AP_MOTORS_PLUS_FRAME ) {
         // plus frame set-up
         add_motor(AP_MOTORS_MOT_1,  90, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 2);

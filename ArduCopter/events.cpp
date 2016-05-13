@@ -6,7 +6,7 @@
  *       This event will be called when the failsafe changes
  *       boolean failsafe reflects the current state
  */
-void Copter::failsafe_radio_on_event()
+void Copter::failsafe_radio_on_event()	//#
 {
     // if motors are not armed there is nothing to do
     if( !motors.armed() ) {
@@ -37,14 +37,14 @@ void Copter::failsafe_radio_on_event()
 // failsafe_off_event - respond to radio contact being regained
 // we must be in AUTO, LAND or RTL modes
 // or Stabilize or ACRO mode but with motors disarmed
-void Copter::failsafe_radio_off_event()
+void Copter::failsafe_radio_off_event()	//#
 {
     // no need to do anything except log the error as resolved
     // user can now override roll, pitch, yaw and throttle and even use flight mode switch to restore previous flight mode
     Log_Write_Error(ERROR_SUBSYSTEM_FAILSAFE_RADIO, ERROR_CODE_FAILSAFE_RESOLVED);
 }
 
-void Copter::failsafe_battery_event(void)
+void Copter::failsafe_battery_event(void)	//#
 {
     // return immediately if low battery event has already been triggered
     if (failsafe.battery) {
@@ -188,7 +188,7 @@ void Copter::failsafe_terrain_on_event()
 
 // set_mode_RTL_or_land_with_pause - sets mode to RTL if possible or LAND with 4 second delay before descent starts
 //  this is always called from a failsafe so we trigger notification to pilot
-void Copter::set_mode_RTL_or_land_with_pause(mode_reason_t reason)
+void Copter::set_mode_RTL_or_land_with_pause(mode_reason_t reason)  //#
 {
     // attempt to switch to RTL, if this fails then switch to Land
     if (!set_mode(RTL, reason)) {
@@ -200,7 +200,7 @@ void Copter::set_mode_RTL_or_land_with_pause(mode_reason_t reason)
     }
 }
 
-bool Copter::should_disarm_on_failsafe() {
+bool Copter::should_disarm_on_failsafe() {	//#
     switch(control_mode) {
         case STABILIZE:
         case ACRO:

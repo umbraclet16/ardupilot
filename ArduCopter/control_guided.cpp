@@ -588,7 +588,7 @@ void Copter::guided_angle_control_run()
 // Guided Limit code
 
 // guided_limit_clear - clear/turn off guided limits
-void Copter::guided_limit_clear()
+void Copter::guided_limit_clear()	//#
 {
     guided_limit.timeout_ms = 0;
     guided_limit.alt_min_cm = 0.0f;

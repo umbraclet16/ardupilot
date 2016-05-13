@@ -183,7 +183,7 @@ void AP_MotorsMulticopter::output_min()
 }
 
 // update the throttle input filter
-void AP_MotorsMulticopter::update_throttle_filter()
+void AP_MotorsMulticopter::update_throttle_filter()	//# LPF
 {
     if (armed()) {
         _throttle_filter.apply(_throttle_in, 1.0f/_loop_rate);
@@ -355,7 +355,7 @@ int16_t AP_MotorsMulticopter::get_pwm_output_max() const
 
 // set_throttle_range - sets the minimum throttle that will be sent to the engines when they're not off (i.e. to prevents issues with some motors spinning and some not at very low throttle)
 // also sets throttle channel minimum and maximum pwm
-void AP_MotorsMulticopter::set_throttle_range(uint16_t min_throttle, int16_t radio_min, int16_t radio_max)
+void AP_MotorsMulticopter::set_throttle_range(uint16_t min_throttle, int16_t radio_min, int16_t radio_max)	//#!!!
 {
     // sanity check
     if ((radio_max > radio_min) && (min_throttle < (radio_max - radio_min))) {

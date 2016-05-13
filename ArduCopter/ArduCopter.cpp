@@ -582,7 +582,7 @@ void Copter::update_simple_mode(void)	//#
 
 // update_super_simple_bearing - adjusts simple bearing based on location
 // should be called after home_bearing has been updated
-void Copter::update_super_simple_bearing(bool force_update)
+void Copter::update_super_simple_bearing(bool force_update)	//#
 {
     // check if we are in super simple mode and at least 10m from home
     if(force_update || (ap.simple_mode == 2 && home_distance > SUPER_SIMPLE_RADIUS)) {

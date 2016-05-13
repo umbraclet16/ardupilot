@@ -20,7 +20,7 @@
  */
 
 // auto_init - initialise auto controller
-bool Copter::auto_init(bool ignore_checks)
+bool Copter::auto_init(bool ignore_checks)	//#
 {
     if ((position_ok() && mission.num_commands() > 1) || ignore_checks) {
         auto_mode = Auto_Loiter;

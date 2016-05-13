@@ -39,14 +39,14 @@ void Copter::init_rangefinder(void) //#
 
 //# notice: RANGEFINDER_TILT_CORRECTION is disabled for use of range finder data by EKF.
 // return rangefinder altitude in centimeters
-void Copter::read_rangefinder(void)
+void Copter::read_rangefinder(void)	//# tilt correction disabled, 声呐给出的高度不能直接用,EKF后inav给出的高度有效
 {
 #if RANGEFINDER_ENABLED == ENABLED
     rangefinder.update();
 
     rangefinder_state.alt_healthy = ((rangefinder.status() == RangeFinder::RangeFinder_Good) && (rangefinder.range_valid_count() >= RANGEFINDER_HEALTH_MAX));
 
-    int16_t temp_alt = rangefinder.distance_cm();
+    int16_t temp_alt = rangefinder.distance_cm();	//# 多个声呐时,使用primary_instance(第一个获得有效数据的声呐)的数据
 
  #if RANGEFINDER_TILT_CORRECTION == ENABLED
     // correct alt for angle of the rangefinder

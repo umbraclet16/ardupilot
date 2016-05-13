@@ -402,7 +402,7 @@ RC_Channel::range_to_pwm()
 // ------------------------------------------
 
 float
-RC_Channel::norm_input()
+RC_Channel::norm_input()	//# not used by ArduCopter!!!
 {
     float ret;
     int16_t reverse_mul = (_reverse==-1?-1:1);
@@ -421,7 +421,7 @@ RC_Channel::norm_input()
 }
 
 float
-RC_Channel::norm_input_dz()
+RC_Channel::norm_input_dz()	//# not used by ArduCopter!!!
 {
     int16_t dz_min = _radio_trim - _dead_zone;
     int16_t dz_max = _radio_trim + _dead_zone;
@@ -441,7 +441,7 @@ RC_Channel::norm_input_dz()
   get percentage input from 0 to 100. This ignores the trim value.
  */
 uint8_t
-RC_Channel::percent_input()
+RC_Channel::percent_input()	//# not used by ArduCopter!!!
 {
     if (_radio_in <= _radio_min) {
         return _reverse==-1?100:0;
@@ -457,7 +457,7 @@ RC_Channel::percent_input()
 }
 
 float
-RC_Channel::norm_output()
+RC_Channel::norm_output()	//# only used in AC/GCS_Mavlink.cpp: send_servo_out()
 {
     int16_t mid = (_radio_max + _radio_min) / 2;
     float ret;

@@ -10,7 +10,7 @@
 //    .z = altitude above home in cm
 
 // pv_location_to_vector - convert lat/lon coordinates to a position vector
-Vector3f Copter::pv_location_to_vector(const Location& loc)
+Vector3f Copter::pv_location_to_vector(const Location& loc)	//#
 {
     const struct Location &origin = inertial_nav.get_origin();
     float alt_above_origin = pv_alt_above_origin(loc.alt);  // convert alt-relative-to-home to alt-relative-to-origin
@@ -18,21 +18,21 @@ Vector3f Copter::pv_location_to_vector(const Location& loc)
 }
 
 // pv_alt_above_origin - convert altitude above home to altitude above EKF origin
-float Copter::pv_alt_above_origin(float alt_above_home_cm)
+float Copter::pv_alt_above_origin(float alt_above_home_cm)	//# home & origin区别???
 {
     const struct Location &origin = inertial_nav.get_origin();
     return alt_above_home_cm + (ahrs.get_home().alt - origin.alt);
 }
 
 // pv_alt_above_home - convert altitude above EKF origin to altitude above home
-float Copter::pv_alt_above_home(float alt_above_origin_cm)
+float Copter::pv_alt_above_home(float alt_above_origin_cm)	//#
 {
     const struct Location &origin = inertial_nav.get_origin();
     return alt_above_origin_cm + (origin.alt - ahrs.get_home().alt);
 }
 
 // pv_get_bearing_cd - return bearing in centi-degrees between two positions
-float Copter::pv_get_bearing_cd(const Vector3f &origin, const Vector3f &destination)
+float Copter::pv_get_bearing_cd(const Vector3f &origin, const Vector3f &destination)	//#
 {
     float bearing = atan2f(destination.y-origin.y, destination.x-origin.x) * DEGX100;
     if (bearing < 0) {
@@ -42,7 +42,7 @@ float Copter::pv_get_bearing_cd(const Vector3f &origin, const Vector3f &destinat
 }
 
 // pv_get_horizontal_distance_cm - return distance between two positions in cm
-float Copter::pv_get_horizontal_distance_cm(const Vector3f &origin, const Vector3f &destination)
+float Copter::pv_get_horizontal_distance_cm(const Vector3f &origin, const Vector3f &destination)	//#
 {
     return norm(destination.x-origin.x,destination.y-origin.y);
 }

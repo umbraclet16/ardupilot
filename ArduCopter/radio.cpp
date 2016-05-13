@@ -6,7 +6,7 @@
 // Function that will read the radio data, limit servos and trigger a failsafe
 // ----------------------------------------------------------------------------
 
-void Copter::default_dead_zones()
+void Copter::default_dead_zones()	//#
 {
     channel_roll->set_default_dead_zone(30);
     channel_pitch->set_default_dead_zone(30);
@@ -21,7 +21,7 @@ void Copter::default_dead_zones()
     g.rc_6.set_default_dead_zone(0);
 }
 
-void Copter::init_rc_in()
+void Copter::init_rc_in()	//#
 {
     channel_roll     = RC_Channel::rc_channel(rcmap.roll()-1);
     channel_pitch    = RC_Channel::rc_channel(rcmap.pitch()-1);
@@ -52,7 +52,7 @@ void Copter::init_rc_in()
 }
 
  // init_rc_out -- initialise motors and check if pilot wants to perform ESC calibration
-void Copter::init_rc_out()
+void Copter::init_rc_out()	//#
 {
     motors.set_update_rate(g.rc_speed);
     motors.set_frame_orientation(g.frame_orientation);
@@ -88,21 +88,21 @@ void Copter::init_rc_out()
 }
 
 // enable_motor_output() - enable and output lowest possible value to motors
-void Copter::enable_motor_output()
+void Copter::enable_motor_output()	//#
 {
     // enable motors
     motors.enable();
     motors.output_min();
 }
 
-void Copter::read_radio()
+void Copter::read_radio()	//#
 {
     static uint32_t last_update_ms = 0;
     uint32_t tnow_ms = millis();
 
     if (hal.rcin->new_input()) {
         ap.new_radio_frame = true;
-        RC_Channel::set_pwm_all();
+        RC_Channel::set_pwm_all();	//#!!! static member function, can be called without an object.
 
         set_throttle_and_failsafe(channel_throttle->get_radio_in());
         set_throttle_zero_flag(channel_throttle->get_control_in());
@@ -133,11 +133,11 @@ void Copter::read_radio()
 }
 
 #define FS_COUNTER 3        // radio failsafe kicks in after 3 consecutive throttle values below failsafe_throttle_value
-void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
+void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)	//#
 {
     // if failsafe not enabled pass through throttle and exit
     if(g.failsafe_throttle == FS_THR_DISABLED) {
-        channel_throttle->set_pwm(throttle_pwm);
+        channel_throttle->set_pwm(throttle_pwm);	//#??? 多余?上面read_radio()已调用set_pwm_all()
         return;
     }
 
@@ -179,7 +179,7 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 // throttle_zero is used to determine if the pilot intends to shut down the motors
 // Basically, this signals when we are not flying.  We are either on the ground
 // or the pilot has shut down the copter in the air and it is free-falling
-void Copter::set_throttle_zero_flag(int16_t throttle_control)
+void Copter::set_throttle_zero_flag(int16_t throttle_control)	//#
 {
     static uint32_t last_nonzero_throttle_ms = 0;
     uint32_t tnow_ms = millis();

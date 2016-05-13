@@ -35,7 +35,7 @@ StorageAccess AP_Mission::_storage(StorageManager::StorageMission);
 ///
 
 /// init - initialises this library including checks the version in eeprom matches this library
-void AP_Mission::init()
+void AP_Mission::init()	//#
 {
     // check_eeprom_version - checks version of missions stored in eeprom matches this library
     // command list will be cleared if they do not match
@@ -51,7 +51,7 @@ void AP_Mission::init()
 
 /// start - resets current commands to point to the beginning of the mission
 ///     To-Do: should we validate the mission first and return true/false?
-void AP_Mission::start()
+void AP_Mission::start()	//#
 {
     _flags.state = MISSION_RUNNING;
 
@@ -65,14 +65,14 @@ void AP_Mission::start()
 }
 
 /// stop - stops mission execution.  subsequent calls to update() will have no effect until the mission is started or resumed
-void AP_Mission::stop()
+void AP_Mission::stop()	//#
 {
     _flags.state = MISSION_STOPPED;
 }
 
 /// resume - continues the mission execution from where we last left off
 ///     previous running commands will be re-initialized
-void AP_Mission::resume()
+void AP_Mission::resume()	//#
 {
     // if mission had completed then start it from the first command
     if (_flags.state == MISSION_COMPLETE) {
@@ -138,7 +138,7 @@ bool AP_Mission::starts_with_takeoff_cmd()
 }
 
 /// start_or_resume - if MIS_AUTORESTART=0 this will call resume(), otherwise it will call start()
-void AP_Mission::start_or_resume()
+void AP_Mission::start_or_resume()	//#
 {
     if (_restart) {
         start();
@@ -148,7 +148,7 @@ void AP_Mission::start_or_resume()
 }
 
 /// reset - reset mission to the first command
-void AP_Mission::reset()
+void AP_Mission::reset()	//#
 {
     _flags.nav_cmd_loaded  = false;
     _flags.do_cmd_loaded   = false;
@@ -163,7 +163,7 @@ void AP_Mission::reset()
 
 /// clear - clears out mission
 ///     returns true if mission was running so it could not be cleared
-bool AP_Mission::clear()
+bool AP_Mission::clear()	//#
 {
     // do not allow clearing the mission while it is running
     if (_flags.state == MISSION_RUNNING) {
@@ -185,7 +185,7 @@ bool AP_Mission::clear()
 
 
 /// trucate - truncate any mission items beyond index
-void AP_Mission::truncate(uint16_t index)
+void AP_Mission::truncate(uint16_t index)	//#
 {
     if ((unsigned)_cmd_total > index) {        
         _cmd_total.set_and_save(index);
@@ -1236,7 +1236,7 @@ bool AP_Mission::mission_cmd_to_mavlink_int(const AP_Mission::Mission_Command& c
 ///
 
 /// complete - mission is marked complete and clean-up performed including calling the mission_complete_fn
-void AP_Mission::complete()
+void AP_Mission::complete()	//#
 {
     // flag mission as complete
     _flags.state = MISSION_COMPLETE;
@@ -1474,7 +1474,7 @@ bool AP_Mission::get_next_do_cmd(uint16_t start_index, Mission_Command& cmd)
 ///
 
 // init_jump_tracking - initialise jump_tracking variables
-void AP_Mission::init_jump_tracking()
+void AP_Mission::init_jump_tracking()	//#
 {
     for(uint8_t i=0; i<AP_MISSION_MAX_NUM_DO_JUMP_COMMANDS; i++) {
         _jump_tracking[i].index = AP_MISSION_CMD_INDEX_NONE;
@@ -1537,7 +1537,7 @@ void AP_Mission::increment_jump_times_run(Mission_Command& cmd)
 
 // check_eeprom_version - checks version of missions stored in eeprom matches this library
 // command list will be cleared if they do not match
-void AP_Mission::check_eeprom_version()
+void AP_Mission::check_eeprom_version()	//#
 {
     uint32_t eeprom_version = _storage.read_uint32(0);
 
