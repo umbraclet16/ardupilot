@@ -17,7 +17,7 @@ static bool in_failsafe;
 //
 // failsafe_enable - enable failsafe
 //
-void Copter::failsafe_enable()
+void Copter::failsafe_enable()	//#
 {
     failsafe_enabled = true;
     failsafe_last_timestamp = micros();
@@ -26,7 +26,7 @@ void Copter::failsafe_enable()
 //
 // failsafe_disable - used when we know we are going to delay the mainloop significantly
 //
-void Copter::failsafe_disable()
+void Copter::failsafe_disable()	//#
 {
     failsafe_enabled = false;
 }

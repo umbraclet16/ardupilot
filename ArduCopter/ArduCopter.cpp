@@ -108,7 +108,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK(update_altitude,       10,    140),
     SCHED_TASK(run_nav_updates,       50,    100),
     SCHED_TASK(update_thr_average,   100,     90),
-    SCHED_TASK(three_hz_loop,          3,     75),
+    SCHED_TASK(three_hz_loop,          3,     75),	//# failsafe_gcs_check, sprayer.update
     SCHED_TASK(compass_accumulate,   100,    100),	//# needed by compass of PX4
     SCHED_TASK(barometer_accumulate,  50,     90),	//# not needed by baro of PX4
 #if PRECISION_LANDING == ENABLED
@@ -298,7 +298,7 @@ void Copter::fast_loop()
 
 // rc_loops - reads user input from transmitter/receiver
 // called at 100hz
-void Copter::rc_loop()
+void Copter::rc_loop()	//#
 {
     // Read radio and 3-position switch on radio
     // -----------------------------------------
@@ -308,13 +308,13 @@ void Copter::rc_loop()
 
 // throttle_loop - should be run at 50 hz
 // ---------------------------
-void Copter::throttle_loop()
+void Copter::throttle_loop()	//#	???
 {
     // get altitude and climb rate from inertial lib
     read_inertial_altitude();
 
     // update throttle_low_comp value (controls priority of throttle vs attitude control)
-    update_throttle_thr_mix();		//# only used by Heli.
+    update_throttle_thr_mix();		// ???
 
     // check auto_armed status
     update_auto_armed();
@@ -479,7 +479,7 @@ void Copter::three_hz_loop()
 }
 
 // one_hz_loop - runs at 1Hz
-void Copter::one_hz_loop()
+void Copter::one_hz_loop()	//# 主要update_arming_checks
 {
     if (should_log(MASK_LOG_ANY)) {
         Log_Write_Data(DATA_AP_STATE, ap.value);
@@ -530,7 +530,7 @@ void Copter::one_hz_loop()
 }
 
 // called at 50hz
-void Copter::update_GPS(void)
+void Copter::update_GPS(void)	//#
 {
     static uint32_t last_gps_reading[GPS_MAX_INSTANCES];   // time of last gps message
     bool gps_updated = false;
@@ -628,7 +628,7 @@ void Copter::update_super_simple_bearing(bool force_update)	//#
     }
 }
 
-void Copter::read_AHRS(void)
+void Copter::read_AHRS(void)	//#
 {
     // Perform IMU calculations and get attitude info
     //-----------------------------------------------
@@ -641,7 +641,7 @@ void Copter::read_AHRS(void)
 }
 
 // read baro and sonar altitude at 10hz
-void Copter::update_altitude()
+void Copter::update_altitude()	//#
 {
     // read in baro altitude
     read_barometer();

@@ -3,7 +3,7 @@
 #include "Copter.h"
 
 // performs pre-arm checks. expects to be called at 1hz.
-void Copter::update_arming_checks(void)
+void Copter::update_arming_checks(void)	//#
 {
     // perform pre-arm checks & display failures every 30 seconds
     static uint8_t pre_arm_display_counter = PREARM_DISPLAY_PERIOD/2;
@@ -20,7 +20,7 @@ void Copter::update_arming_checks(void)
 }
 
 // performs pre-arm checks and arming checks
-bool Copter::all_arming_checks_passing(bool arming_from_gcs)
+bool Copter::all_arming_checks_passing(bool arming_from_gcs)	//#
 {
     if (pre_arm_checks(true)) {
         set_pre_arm_check(true);
@@ -31,7 +31,7 @@ bool Copter::all_arming_checks_passing(bool arming_from_gcs)
 
 // perform pre-arm checks and set ap.pre_arm_check flag
 //  return true if the checks pass successfully
-bool Copter::pre_arm_checks(bool display_failure)
+bool Copter::pre_arm_checks(bool display_failure)	// important func!!!!!!
 {
     // exit immediately if already armed
     if (motors.armed()) {
@@ -489,7 +489,7 @@ bool Copter::pre_arm_ekf_attitude_check()
 // arm_checks - perform final checks before arming
 //  always called just before arming.  Return true if ok to arm
 //  has side-effect that logging is started
-bool Copter::arm_checks(bool display_failure, bool arming_from_gcs)
+bool Copter::arm_checks(bool display_failure, bool arming_from_gcs)	// !!!
 {
     #if LOGGING_ENABLED == ENABLED
     // start dataflash

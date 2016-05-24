@@ -85,7 +85,7 @@ void Copter::set_failsafe_radio(bool b)	//#
 
 
 // ---------------------------------------------
-void Copter::set_failsafe_battery(bool b)
+void Copter::set_failsafe_battery(bool b)	//#
 {
     failsafe.battery = b;
     AP_Notify::flags.failsafe_battery = b;
@@ -99,7 +99,7 @@ void Copter::set_failsafe_gcs(bool b)
 
 // ---------------------------------------------
 
-void Copter::set_pre_arm_check(bool b)
+void Copter::set_pre_arm_check(bool b)	//#
 {
     if(ap.pre_arm_check != b) {
         ap.pre_arm_check = b;
@@ -114,7 +114,7 @@ void Copter::set_pre_arm_rc_check(bool b)	//#
     }
 }
 
-void Copter::update_using_interlock()
+void Copter::update_using_interlock()	//#
 {
 #if FRAME_CONFIG == HELI_FRAME
     // helicopters are always using motor interlock

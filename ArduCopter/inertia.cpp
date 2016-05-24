@@ -3,14 +3,15 @@
 #include "Copter.h"
 
 // read_inertia - read inertia in from accelerometers
-void Copter::read_inertia()
+void Copter::read_inertia()	//# update _relpos_cm, _abspos, _velocity_cm, _pos_z_rate.
 {
     // inertial altitude estimates
     inertial_nav.update(G_Dt);
 }
 
+		//# current_loc.alt = _relpos_cm.z+origin和home之差(alt above home), climb_rate = _velocity_cm.z.
 // read_inertial_altitude - pull altitude and climb rate from inertial nav library
-void Copter::read_inertial_altitude()
+void Copter::read_inertial_altitude()	//# ??? EKF origin和home的差别??
 {
     // exit immediately if we do not have an altitude estimate
     if (!inertial_nav.get_filter_status().flags.vert_pos) {
@@ -28,5 +29,5 @@ void Copter::read_inertial_altitude()
 
     // set flags and get velocity
     current_loc.flags.relative_alt = true;
-    climb_rate = inertial_nav.get_velocity_z();
+    climb_rate = inertial_nav.get_velocity_z();		//# 用于Log和GCS_Mavlink
 }

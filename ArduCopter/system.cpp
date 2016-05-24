@@ -377,7 +377,7 @@ bool Copter::optflow_position_ok()
 }
 
 // update_auto_armed - update status of auto_armed flag
-void Copter::update_auto_armed()
+void Copter::update_auto_armed()	//#
 {
     // disarm checks
     if(ap.auto_armed){

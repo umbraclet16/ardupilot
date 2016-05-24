@@ -173,7 +173,7 @@ void AP_Baro::calibrate()
    this updates the baro ground calibration to the current values. It
    can be used before arming to keep the baro well calibrated
 */
-void AP_Baro::update_calibration()
+void AP_Baro::update_calibration()	//# !!!
 {
     for (uint8_t i=0; i<_num_sensors; i++) {
         if (healthy(i)) {

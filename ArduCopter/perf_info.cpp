@@ -27,7 +27,7 @@ void Copter::perf_info_reset()
 }
 
 // perf_ignore_loop - ignore this loop from performance measurements (used to reduce false positive when arming)
-void Copter::perf_ignore_this_loop()
+void Copter::perf_ignore_this_loop()	//#
 {
     perf_ignore_loop = true;
 }

@@ -14,7 +14,7 @@ void Copter::init_barometer(bool full_calibration)
     gcs_send_text(MAV_SEVERITY_INFO, "Barometer calibration complete");
 }
 
-//# get baro_alt and baro_climbrate.
+//# get baro_alt(仅用于arming_checks,crash_checks和log) and baro_climbrate(没用到).
 // return barometric altitude in centimeters
 void Copter::read_barometer(void)
 {

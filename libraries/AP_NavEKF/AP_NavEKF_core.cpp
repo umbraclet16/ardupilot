@@ -3438,7 +3438,7 @@ bool NavEKF_core::resetHeightDatum(void)
     for (uint8_t i=0; i<=49; i++){
         storedStates[i].position.z = state.position.z;
     }
-    // adjust the height of the EKF origin so that the origin plus baro height before and afer the reset is the same
+    // adjust the height of the EKF origin so that the origin plus baro height before and after the reset is the same
     if (validOrigin) {
         EKF_origin.alt += oldHgt*100;
     }
