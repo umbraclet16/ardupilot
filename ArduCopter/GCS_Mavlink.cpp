@@ -8,7 +8,7 @@
 // default sensors are present and healthy: gyro, accelerometer, barometer, rate_control, attitude_stabilization, yaw_position, altitude control, x/y position control, motor_control
 #define MAVLINK_SENSOR_PRESENT_DEFAULT (MAV_SYS_STATUS_SENSOR_3D_GYRO | MAV_SYS_STATUS_SENSOR_3D_ACCEL | MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE | MAV_SYS_STATUS_SENSOR_ANGULAR_RATE_CONTROL | MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION | MAV_SYS_STATUS_SENSOR_YAW_POSITION | MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL | MAV_SYS_STATUS_SENSOR_XY_POSITION_CONTROL | MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS | MAV_SYS_STATUS_AHRS)
 
-void Copter::gcs_send_heartbeat(void)
+void Copter::gcs_send_heartbeat(void)	//#
 {
     gcs_send_message(MSG_HEARTBEAT);
 }
@@ -2126,7 +2126,7 @@ void Copter::gcs_data_stream_send(void)
 /*
  *  look for incoming commands on the GCS links
  */
-void Copter::gcs_check_input(void)
+void Copter::gcs_check_input(void)	//#
 {
     for (uint8_t i=0; i<num_gcs; i++) {
         if (gcs[i].initialised) {
@@ -2139,7 +2139,7 @@ void Copter::gcs_check_input(void)
     }
 }
 
-void Copter::gcs_send_text(MAV_SEVERITY severity, const char *str)
+void Copter::gcs_send_text(MAV_SEVERITY severity, const char *str)	//#
 {
     GCS_MAVLINK::send_statustext(severity, 0xFF, str);
 }

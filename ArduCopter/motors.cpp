@@ -11,7 +11,7 @@ static uint32_t auto_disarm_begin;
 
 // arm_motors_check - checks for pilot input to arm or disarm the copter
 // called at 10hz
-void Copter::arm_motors_check()
+void Copter::arm_motors_check()	//# 遥控解锁/锁定
 {
     static int16_t arming_counter;
 
@@ -122,7 +122,7 @@ void Copter::auto_disarm_check()
 
 // init_arm_motors - performs arming process including initialisation of barometer and gyros
 //  returns false if arming failed because of pre-arm checks, arming checks or a gyro calibration failure
-bool Copter::init_arm_motors(bool arming_from_gcs)
+bool Copter::init_arm_motors(bool arming_from_gcs)	//#
 {
     static bool in_arm_motors = false;
 
@@ -164,7 +164,7 @@ bool Copter::init_arm_motors(bool arming_from_gcs)
 
     if (ap.home_state == HOME_UNSET) {
         // Reset EKF altitude if home hasn't been set yet (we use EKF altitude as substitute for alt above home)
-        ahrs.resetHeightDatum();
+        ahrs.resetHeightDatum();			//# !!!
         Log_Write_Event(DATA_EKF_ALT_RESET);
     } else if (ap.home_state == HOME_SET_NOT_LOCKED) {
         // Reset home position if it has already been set before (but not locked)
@@ -257,7 +257,7 @@ void Copter::init_disarm_motors()	//#
 }
 
 // motors_output - send output to motors library which will adjust and send to ESCs and servos
-void Copter::motors_output()
+void Copter::motors_output()	//#
 {
     // check if we are performing the motor test
     if (ap.motor_test) {
@@ -275,7 +275,7 @@ void Copter::motors_output()
 }
 
 // check for pilot stick input to trigger lost vehicle alarm
-void Copter::lost_vehicle_check()
+void Copter::lost_vehicle_check()	//# never used.
 {
     static uint8_t soundalarm_counter;
 

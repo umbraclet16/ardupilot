@@ -96,7 +96,7 @@ float Copter::get_look_ahead_yaw()
 
 // update_thr_average - update estimated throttle required to hover (if necessary)
 //  should be called at 100hz
-void Copter::update_thr_average()
+void Copter::update_thr_average()	//# set _throttle_hover
 {
     // ensure throttle_average has been initialised
     if( is_zero(throttle_average) ) {
@@ -289,7 +289,7 @@ void Copter::set_accel_throttle_I_from_pilot_throttle(int16_t pilot_throttle)	//
 }
 
 // updates position controller's maximum altitude using fence and EKF limits
-void Copter::update_poscon_alt_max()
+void Copter::update_poscon_alt_max()	//#
 {
     float alt_limit_cm = 0.0f;  // interpreted as no limit if left as zero
 

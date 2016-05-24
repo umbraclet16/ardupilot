@@ -219,7 +219,7 @@ bool Copter::should_disarm_on_failsafe() {	//#
     }
 }
 
-void Copter::update_events()
+void Copter::update_events()	//# 伺服继电器
 {
     ServoRelayEvents.update_events();
 }
