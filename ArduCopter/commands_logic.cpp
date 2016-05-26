@@ -3,7 +3,7 @@
 #include "Copter.h"
 
 // start_command - this function will be called when the ap_mission lib wishes to start a new command
-bool Copter::start_command(const AP_Mission::Mission_Command& cmd)
+bool Copter::start_command(const AP_Mission::Mission_Command& cmd)	//# ??? when called? only for AP_Mission instance initialization?
 {
     // To-Do: logging when new commands start/end
     if (should_log(MASK_LOG_CMD)) {

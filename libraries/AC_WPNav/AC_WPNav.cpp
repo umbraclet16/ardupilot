@@ -235,7 +235,7 @@ void AC_WPNav::get_loiter_stopping_point_xy(Vector3f& stopping_point) const
 /// calc_loiter_desired_velocity - updates desired velocity (i.e. feed forward) with pilot requested acceleration and fake wind resistance
 ///		updated velocity sent directly to position controller
 void AC_WPNav::calc_loiter_desired_velocity(float nav_dt, float ekfGndSpdLimit)
-{
+{							//# _pilot_accel_fwd/rgt_cms => _loiter_desired_accel => _vel_desired.x&y
     // calculate a loiter speed limit which is the minimum of the value set by the WPNAV_LOITER_SPEED
     // parameter and the value set by the EKF to observe optical flow limits
     float gnd_speed_limit_cms = MIN(_loiter_speed_cms,ekfGndSpdLimit*100.0f);
@@ -255,12 +255,12 @@ void AC_WPNav::calc_loiter_desired_velocity(float nav_dt, float ekfGndSpdLimit)
     _pos_control.set_accel_xy(_loiter_accel_cmss);
     _pos_control.set_jerk_xy(_loiter_jerk_max_cmsss);
 
-    // rotate pilot input to lat/lon frame
+    // rotate pilot input to lat/lon frame			//# 1.坐标变换bf->ef	=>desired_accel.x&y
     Vector2f desired_accel;
     desired_accel.x = (_pilot_accel_fwd_cms*_ahrs.cos_yaw() - _pilot_accel_rgt_cms*_ahrs.sin_yaw());
     desired_accel.y = (_pilot_accel_fwd_cms*_ahrs.sin_yaw() + _pilot_accel_rgt_cms*_ahrs.cos_yaw());
 
-    // calculate the difference
+    // calculate the difference					//# 2.->
     Vector2f des_accel_diff = (desired_accel - _loiter_desired_accel);
 
     // constrain and scale the desired acceleration
@@ -272,18 +272,18 @@ void AC_WPNav::calc_loiter_desired_velocity(float nav_dt, float ekfGndSpdLimit)
         des_accel_diff.y = accel_change_max * des_accel_diff.y/des_accel_change_total;
     }
     
-    // adjust the desired acceleration
+    // adjust the desired acceleration				//# 2.<-.更新_loiter_desired_accel(带限幅)
     _loiter_desired_accel += des_accel_diff;
 
-    // get pos_control's feed forward velocity
+    // get pos_control's feed forward velocity			//# 3.->
     const Vector3f &desired_vel_3d = _pos_control.get_desired_velocity();
     Vector2f desired_vel(desired_vel_3d.x,desired_vel_3d.y);
 
-    // add pilot commanded acceleration
+    // add pilot commanded acceleration				//# 3.<-.计算desired_vel.x&y
     desired_vel.x += _loiter_desired_accel.x * nav_dt;
     desired_vel.y += _loiter_desired_accel.y * nav_dt;
 
-    float desired_speed = desired_vel.length();
+    float desired_speed = desired_vel.length();			//# 4.->
 
     if (!is_zero(desired_speed)) {
         Vector2f desired_vel_norm = desired_vel/desired_speed;
@@ -302,9 +302,9 @@ void AC_WPNav::calc_loiter_desired_velocity(float nav_dt, float ekfGndSpdLimit)
     if (horizSpdDem > gnd_speed_limit_cms) {
         desired_vel.x = desired_vel.x * gnd_speed_limit_cms / horizSpdDem;
         desired_vel.y = desired_vel.y * gnd_speed_limit_cms / horizSpdDem;
-    }
+    }								//# 4.<-.对desired_vel的一系列限幅处理
 
-    // send adjusted feed forward velocity back to position controller
+    // send adjusted feed forward velocity back to position controller	//# 5.desired_vel赋给_vel_desired.x&y(lat/lng)
     _pos_control.set_desired_velocity_xy(desired_vel.x,desired_vel.y);
 }
 
@@ -316,7 +316,7 @@ int32_t AC_WPNav::get_loiter_bearing_to_target() const	//#
 
 // update_loiter - run the loiter controller - gets called at 100hz (APM) or 400hz (PX4)
 void AC_WPNav::update_loiter(float ekfGndSpdLimit, float ekfNavVelGainScaler)
-{
+{			//# _pilot_accel_fwd/rgt_cms(bf) => _loiter_desired_accel(ef) => _vel_desired.x&y(ef) => _pitch/roll_target(bf)
     // calculate dt
     float dt = _pos_control.time_since_last_xy_update();
 
@@ -334,8 +334,9 @@ void AC_WPNav::update_loiter(float ekfGndSpdLimit, float ekfNavVelGainScaler)
         _pos_control.set_speed_xy(_loiter_speed_cms);
         _pos_control.set_accel_xy(_loiter_accel_cmss);
         _pos_control.set_jerk_xy(_loiter_jerk_max_cmsss);
-
+					//# 1._pilot_accel_fwd/rgt_cms(bf) => _loiter_desired_accel(ef) => _vel_desired.x&y(ef)
         calc_loiter_desired_velocity(dt,ekfGndSpdLimit);
+					//# 2._vel_desired.x&y => _pos_target => _vel_target => _accel_target => _pitch/roll_target
         _pos_control.update_xy_controller(AC_PosControl::XY_MODE_POS_LIMITED_AND_VEL_FF, ekfNavVelGainScaler, true);
     }
 }
@@ -625,7 +626,7 @@ void AC_WPNav::advance_wp_target_along_track(float dt)
         _track_desired = constrain_float(_track_desired, 0, _track_length + WPNAV_WP_FAST_OVERSHOOT_MAX);
     }
 
-    // recalculate the desired position
+    // recalculate the desired position		//# 关键:更新目标位置!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     _pos_control.set_pos_target(_origin + _pos_delta_unit * _track_desired);
 
     // check if we've reached the waypoint
@@ -678,10 +679,10 @@ void AC_WPNav::update_wpnav()
             dt = 0.0f;
         }
 
-        // advance the target if necessary
+        // advance the target if necessary			//# 1.更新目标位置_pos_target.
         advance_wp_target_along_track(dt);
 
-        // freeze feedforwards during known discontinuities
+        // freeze feedforwards during known discontinuities	//# used in rate_to_accel(),即用于加速度的前馈_accel_feedforward
         // TODO: why always consider Z axis discontinuous?
         if (_flags.new_wp_destination) {
             _flags.new_wp_destination = false;
@@ -689,8 +690,8 @@ void AC_WPNav::update_wpnav()
         }
         _pos_control.freeze_ff_z();
 
-        _pos_control.update_xy_controller(AC_PosControl::XY_MODE_POS_ONLY, 1.0f, false);
-        check_wp_leash_length();
+        _pos_control.update_xy_controller(AC_PosControl::XY_MODE_POS_ONLY, 1.0f, false);//# 2. _vel_desired.x&y => _pitch/roll_target
+        check_wp_leash_length();							//# (注意第一个参数mode,计算_vel_target时无前馈)
 
         _wp_last_update = AP_HAL::millis();
     }
@@ -1045,7 +1046,7 @@ void AC_WPNav::calc_slow_down_distance(float speed_cms, float accel_cmss)
 }
 
 /// get_slow_down_speed - returns target speed of target point based on distance from the destination (in cm)
-float AC_WPNav::get_slow_down_speed(float dist_from_dest_cm, float accel_cmss)
+float AC_WPNav::get_slow_down_speed(float dist_from_dest_cm, float accel_cmss)	//# 
 {
     // return immediately if distance is zero (or less)
     if (dist_from_dest_cm <= 0) {

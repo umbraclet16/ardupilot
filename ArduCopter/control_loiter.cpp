@@ -51,17 +51,17 @@ void Copter::loiter_run()
     pos_control.set_accel_z(g.pilot_accel_z);
 
     // process pilot inputs unless we are in radio failsafe
-    if (!failsafe.radio) {
+    if (!failsafe.radio) {				//# 0. 获取遥控输入量
         // apply SIMPLE mode transform to pilot inputs
         update_simple_mode();
 
-        // process pilot's roll and pitch input
+        // process pilot's roll and pitch input		//# 0.1. => _pilot_accel_fwd/rgt_cms 
         wp_nav.set_pilot_desired_acceleration(channel_roll->control_in, channel_pitch->control_in);
 
-        // get pilot's desired yaw rate
+        // get pilot's desired yaw rate			//# 0.2. => target_yaw_rate
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
 
-        // get pilot desired climb rate
+        // get pilot desired climb rate			//# 0.3. => target_climb_rate 
         target_climb_rate = get_pilot_desired_climb_rate(channel_throttle->control_in);
         target_climb_rate = constrain_float(target_climb_rate, -g.pilot_velocity_z_max, g.pilot_velocity_z_max);
     } else {
@@ -164,22 +164,22 @@ void Copter::loiter_run()
         break;
 
     case Loiter_Flying:
-
-        // run loiter controller
+					//# 1.水平方向
+        // run loiter controller	//# 1.1. _pilot_accel_fwd/rgt_cms => _vel_desired.x&y(ef) => _pitch/roll_target
         wp_nav.update_loiter(ekfGndSpdLimit, ekfNavVelGainScaler);
 
-        // call attitude controller
+        // call attitude controller	//# 1.2. _pitch/roll_target,target_yaw_rate => 控制器目标角速度_ang_vel_target_rads(bf)
         attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
 
-        // run altitude controller
+        // run altitude controller	//# 2.竖直方向
         if (sonar_enabled && (sonar_alt_health >= SONAR_ALT_HEALTH_MAX)) {
             // if sonar is ok, use surface tracking
             target_climb_rate = get_surface_tracking_climb_rate(target_climb_rate, pos_control.get_alt_target(), G_Dt);
         }
-
         // update altitude target and call position controller
+						//# 2.1. 更新_pos_target.z += _vel_desired.z * dt;(_vel_desired.z=target_climb_rate)
         pos_control.set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
-        pos_control.update_z_controller();
+        pos_control.update_z_controller();	//# 2.2._pos_target.z => _vel_target.z => _accel_target.z => _throttle_in
         break;
     }
 }
