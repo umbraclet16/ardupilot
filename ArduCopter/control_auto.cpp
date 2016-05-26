@@ -239,7 +239,7 @@ void Copter::auto_wp_run()
 
     // process pilot's yaw input
     float target_yaw_rate = 0;
-    if (!failsafe.radio) {
+    if (!failsafe.radio) {					//# 0.获取遥控输入target_yaw_rate 
         // get pilot's desired yaw rate
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->get_control_in());
         if (!is_zero(target_yaw_rate)) {
