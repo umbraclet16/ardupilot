@@ -163,7 +163,7 @@ bool Copter::start_command(const AP_Mission::Mission_Command& cmd)
 //      we double check that the flight mode is AUTO to avoid the possibility of ap-mission triggering actions while we're not in AUTO mode
 bool Copter::verify_command_callback(const AP_Mission::Mission_Command& cmd)
 {
-    if (control_mode == AUTO) {
+    if (control_mode == AUTO || control_mode == AUTOF) {
         bool cmd_complete = verify_command(cmd);
 
         // send message to GCS

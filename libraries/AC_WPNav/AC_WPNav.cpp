@@ -515,6 +515,9 @@ bool AC_WPNav::set_wp_origin_and_destination(const Vector3f& origin, const Vecto
     // initialise intermediate point to the origin
     _pos_control.set_pos_target(origin + Vector3f(0,0,origin_terr_offset));
     _track_desired = 0;             // target is at beginning of track
+    //#>>>>>>>>>>>>>>>>>>>>
+    _track_desired_last = 0;
+    //#<<<<<<<<<<<<<<<<<<<<
     _flags.reached_destination = false;
     _flags.fast_waypoint = false;   // default waypoint back to slow
     _flags.slowing_down = false;    // target is not slowing down yet
@@ -625,15 +628,34 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
 
     // calculate point at which velocity switches from linear to sqrt
     float linear_velocity = _wp_speed_cms;
-    float kP = _pos_control.get_pos_xy_kP();
+    float kP = _pos_control.get_pos_xy_kP();    //# default = 1.0f
     if (kP >= 0.0f) {   // avoid divide by zero
-        linear_velocity = _track_accel/kP;
+        linear_velocity = _track_accel/kP;  //# default = 1 m/s^2 / 1 = 1m/s ?
     }
 
     // let the limited_speed_xy_cms be some range above or below current velocity along track
+    /*
     if (speed_along_track < -linear_velocity) {
         // we are traveling fast in the opposite direction of travel to the waypoint so do not move the intermediate point
         _limited_speed_xy_cms = 0;
+    */
+    //#>>>>>>>>>>>>>>>>>>>>
+    if (_track_desired_change_limit < 0) {  //# moving backward
+        if(dt > 0 && !reached_leash_limit) {
+                _limited_speed_xy_cms -= 2.0f * _track_accel * dt;
+        }
+        _limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, -_track_speed, 0.0f);
+        // check if we should begin slowing down before reaching the origin
+        if (!_flags.fast_waypoint) {
+            if (!_flags.slowing_down && _track_desired <= _slow_down_dist) {
+                _flags.slowing_down = true;
+            }
+            // if target is slowing down, limit the speed
+            if (_flags.slowing_down) {
+                _limited_speed_xy_cms = MAX(_limited_speed_xy_cms, -get_slow_down_speed(_track_desired, _track_accel));
+            }
+        }
+    //#<<<<<<<<<<<<<<<<<<<<
     }else{
         // increase intermediate target point's velocity if not yet at the leash limit
         if(dt > 0 && !reached_leash_limit) {
@@ -641,6 +663,7 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
         }
         // do not allow speed to be below zero or over top speed
         _limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, 0.0f, _track_speed);
+        //_limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, -_track_speed, _track_speed);
 
         // check if we should begin slowing down
         if (!_flags.fast_waypoint) {
@@ -659,6 +682,14 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
             _limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms,speed_along_track-linear_velocity,speed_along_track+linear_velocity);
         }
     }
+
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# for AUTOF mode
+    //# scheme 2: modify _limited_speed_xy_cms(multiply by the input) rather than _track_desired
+    _limited_speed_xy_cms *= fabs(_track_desired_change_limit);
+    //# TODO: the leash only works for going forward. Maybe we should add sth to deal with going backward
+    //#<<<<<<<<<<<<<<<<<<<<
+
     // advance the current target
     if (!reached_leash_limit) {
     	_track_desired += _limited_speed_xy_cms * dt;
@@ -679,6 +710,13 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
     } else {
         _track_desired = constrain_float(_track_desired, 0, _track_length + WPNAV_WP_FAST_OVERSHOOT_MAX);
     }
+
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# for AUTOF mode
+    //# TODO: another scheme: modify _limited_speed_xy_cms(multiply by the input) rather than _track_desired?
+    //_track_desired = _track_desired_last + (_track_desired - _track_desired_last) * _track_desired_change_limit;
+    //_track_desired_last = _track_desired;
+    //#<<<<<<<<<<<<<<<<<<<<
 
     // recalculate the desired position
     Vector3f final_target = _origin + _pos_delta_unit * _track_desired;

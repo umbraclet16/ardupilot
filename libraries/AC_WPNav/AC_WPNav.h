@@ -187,6 +187,12 @@ public:
     /// calculate_wp_leash_length - calculates track speed, acceleration and leash lengths for waypoint controller
     void calculate_wp_leash_length();
 
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# for AUTOF mode.
+    //# set variable _track_desired_change_limit. 
+    void set_track_desired_change_limit(float proportion);
+    //#<<<<<<<<<<<<<<<<<<<<
+
     ///
     /// spline methods
     ///
@@ -364,4 +370,13 @@ protected:
     bool        _rangefinder_use = false;
     bool        _rangefinder_healthy = false;
     float       _rangefinder_alt_cm = 0.0f;
+
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# AUTOF mode variable
+    //# used to limit track_desired change so as to control the update of _pos_target, thereafter the speed of the vehicle.
+    //# initialized to 1. Only will be modified in AUTOF mode.
+    //# valid range [-1, 1](pitch input, -1:lower limit; 0:neutral; 1:upper limit)
+    float       _track_desired_change_limit = 1.0f;
+    float       _track_desired_last = 0.0f;           //# 在此赋值,免去修改构造函数的初始化列表.
+    //#<<<<<<<<<<<<<<<<<<<<
 };

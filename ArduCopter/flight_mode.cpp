@@ -48,6 +48,9 @@ bool Copter::set_mode(control_mode_t mode, mode_reason_t reason)
             break;
 
         case AUTO:
+        //#>>>>>>>>>>>>>>>>>>>>
+        case AUTOF:       //# share auto_init() with AUTO, but change auto_run() to autoF_run() in update_flight_mode()
+        //#<<<<<<<<<<<<<<<<<<<<
             success = auto_init(ignore_checks);
             break;
 
@@ -172,6 +175,11 @@ void Copter::update_flight_mode()
             auto_run();
             break;
 
+        //#>>>>>>>>>>>>>>>>>>>>
+        case AUTOF:
+            autoF_run();
+        //#<<<<<<<<<<<<<<<<<<<<
+
         case CIRCLE:
             circle_run();
             break;
@@ -239,7 +247,7 @@ void Copter::exit_mode(control_mode_t old_control_mode, control_mode_t new_contr
 #endif
 
     // stop mission when we leave auto mode
-    if (old_control_mode == AUTO) {
+    if (old_control_mode == AUTO || old_control_mode == AUTOF) {
         if (mission.state() == AP_Mission::MISSION_RUNNING) {
             mission.stop();
         }
@@ -285,6 +293,9 @@ void Copter::exit_mode(control_mode_t old_control_mode, control_mode_t new_contr
 bool Copter::mode_requires_GPS(control_mode_t mode) {
     switch(mode) {
         case AUTO:
+        //#>>>>>>>>>>>>>>>>>>>>
+        case AUTOF:
+        //#<<<<<<<<<<<<<<<<<<<<
         case GUIDED:
         case LOITER:
         case RTL:
@@ -327,6 +338,9 @@ bool Copter::mode_allows_arming(control_mode_t mode, bool arming_from_gcs) {
 void Copter::notify_flight_mode(control_mode_t mode) {
     switch(mode) {
         case AUTO:
+        //#>>>>>>>>>>>>>>>>>>>>
+        case AUTOF:
+        //#<<<<<<<<<<<<<<<<<<<<
         case GUIDED:
         case RTL:
         case CIRCLE:
@@ -359,6 +373,10 @@ void Copter::print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
     case AUTO:
         port->print("AUTO");
         break;
+    //#>>>>>>>>>>>>>>>>>>>>
+    case AUTOF:
+        port->print("AUTOF");
+    //#<<<<<<<<<<<<<<<<<<<<
     case GUIDED:
         port->print("GUIDED");
         break;

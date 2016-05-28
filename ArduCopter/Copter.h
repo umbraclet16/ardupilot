@@ -721,11 +721,17 @@ private:
     void althold_run();
     bool auto_init(bool ignore_checks);
     void auto_run();
+    //#>>>>>>>>>>>>>>>>>>>>
+    void autoF_run();
+    //#<<<<<<<<<<<<<<<<<<<<
     void auto_takeoff_start(const Location& dest_loc);
     void auto_takeoff_run();
     void auto_wp_start(const Vector3f& destination);
     void auto_wp_start(const Location_Class& dest_loc);
     void auto_wp_run();
+    //#>>>>>>>>>>>>>>>>>>>>
+    void autoF_wp_run();
+    //#<<<<<<<<<<<<<<<<<<<<
     void auto_spline_run();
     void auto_land_start();
     void auto_land_start(const Vector3f& destination);
