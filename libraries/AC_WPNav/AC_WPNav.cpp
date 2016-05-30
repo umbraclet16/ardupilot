@@ -302,7 +302,7 @@ void AC_WPNav::calc_loiter_desired_velocity(float nav_dt, float ekfGndSpdLimit)
     if (horizSpdDem > gnd_speed_limit_cms) {
         desired_vel.x = desired_vel.x * gnd_speed_limit_cms / horizSpdDem;
         desired_vel.y = desired_vel.y * gnd_speed_limit_cms / horizSpdDem;
-    }								//# 4.<-.对desired_vel的一系列限幅处理
+    }								                    //# 4.<-.对desired_vel的一系列限幅处理
 
     // send adjusted feed forward velocity back to position controller	//# 5.desired_vel赋给_vel_desired.x&y(lat/lng)
     _pos_control.set_desired_velocity_xy(desired_vel.x,desired_vel.y);

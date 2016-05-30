@@ -126,7 +126,7 @@ void Quaternion::from_vector312(float roll ,float pitch, float yaw)
     from_rotation_matrix(m);
 }
 
-void Quaternion::from_axis_angle(Vector3f v) {	//#
+void Quaternion::from_axis_angle(Vector3f v) 	//#
 {
     float theta = v.length();
     if (theta < 1.0e-12f) {

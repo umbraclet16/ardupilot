@@ -90,14 +90,6 @@ const AP_Param::GroupInfo AC_AttitudeControl::var_info[] = {
     AP_GROUPEND
 };
 
-void AC_AttitudeControl::set_dt(float delta_sec)
-{
-    _dt = delta_sec;
-    _pid_rate_roll.set_dt(_dt);
-    _pid_rate_pitch.set_dt(_dt);
-    _pid_rate_yaw.set_dt(_dt);
-}
-
 void AC_AttitudeControl::relax_bf_rate_controller()	//# 设参考角速率为当前角速率,清空PID控制器的I, p,q,r=>dphi,dtheta,dpsi(i.e. bf->ef).
 {
     // Set reference angular velocity used in angular velocity controller equal
