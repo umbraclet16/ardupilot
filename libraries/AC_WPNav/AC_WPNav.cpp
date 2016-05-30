@@ -644,6 +644,8 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
         if(dt > 0 && !reached_leash_limit) {
                 _limited_speed_xy_cms -= 2.0f * _track_accel * dt;
         }
+        //# we do not need to change upper bound from 0 to sth like 2m/s to avoid violent deceleration,
+        //# because the deceleration is already too mild. _pos_target is set very far away from current loc.
         _limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, -_track_speed, 0.0f);
         // check if we should begin slowing down before reaching the origin
         if (!_flags.fast_waypoint) {
@@ -656,14 +658,13 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
             }
         }
     //#<<<<<<<<<<<<<<<<<<<<
-    }else{
+    }else{                                  //# moving forward
         // increase intermediate target point's velocity if not yet at the leash limit
         if(dt > 0 && !reached_leash_limit) {
             _limited_speed_xy_cms += 2.0f * _track_accel * dt;
         }
         // do not allow speed to be below zero or over top speed
         _limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, 0.0f, _track_speed);
-        //_limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, -_track_speed, _track_speed);
 
         // check if we should begin slowing down
         if (!_flags.fast_waypoint) {
@@ -685,8 +686,13 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
 
     //#>>>>>>>>>>>>>>>>>>>>
     //# for AUTOF mode
-    //# scheme 2: modify _limited_speed_xy_cms(multiply by the input) rather than _track_desired
-    _limited_speed_xy_cms *= fabs(_track_desired_change_limit);
+    //# scheme 2: modify _limited_speed_xy_cms(constrained by (input*_track_speed)) rather than _track_desired
+    //# TODO: which one of these 2 is better?
+    //float lower_bound = -fabs(_limited_speed_xy_cms * _track_desired_change_limit);
+    //float upper_bound =  fabs(_limited_speed_xy_cms * _track_desired_change_limit);
+    float lower_bound = -fabs(_track_speed * _track_desired_change_limit);
+    float upper_bound =  fabs(_track_speed * _track_desired_change_limit);
+    _limited_speed_xy_cms = constrain_float(_limited_speed_xy_cms, lower_bound, upper_bound);
     //# TODO: the leash only works for going forward. Maybe we should add sth to deal with going backward
     //#<<<<<<<<<<<<<<<<<<<<
 
@@ -713,7 +719,7 @@ bool AC_WPNav::advance_wp_target_along_track(float dt)
 
     //#>>>>>>>>>>>>>>>>>>>>
     //# for AUTOF mode
-    //# TODO: another scheme: modify _limited_speed_xy_cms(multiply by the input) rather than _track_desired?
+    //# scheme 1: modify track_desired
     //_track_desired = _track_desired_last + (_track_desired - _track_desired_last) * _track_desired_change_limit;
     //_track_desired_last = _track_desired;
     //#<<<<<<<<<<<<<<<<<<<<

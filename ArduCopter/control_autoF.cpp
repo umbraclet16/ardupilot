@@ -113,12 +113,11 @@ void Copter::autoF_wp_run()
         //# get pilot's pitch input.
         //# !!!!! NOTICE that pitch input is REVERSE so we need to multiply it by -1 !!!!!
         //# Will be used to limit the update of _pos_target so as to indirectly control the movement along the track
-        int16_t pitch_input = channel_pitch->get_control_in() * (-1);
-        //# send input to WP controller. Input lower than neutral position is invalid, thus ignored.
-        //# TODO: if allow negative input, shall we expect it to work properly moving backward?
-        //if(pitch_input >= 0) {
-                wp_nav.set_track_desired_change_limit(pitch_input/4500.0f);
-        //}
+        float pitch_input = channel_pitch->get_control_in() / 4500.0f * (-1);
+        //# constrain the input. -1: lower limit; 0: neutral position; 1: upper limit
+        pitch_input = constrain_float(pitch_input, -1.0, 1.0);
+        //# send input to WP controller
+        wp_nav.set_track_desired_change_limit(pitch_input);
         //#<<<<<<<<<<<<<<<<<<<<
     }
 
