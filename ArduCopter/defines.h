@@ -105,7 +105,9 @@ enum control_mode_t {
     BRAKE =        17,  // full-brake using inertial/GPS system, no pilot input
     THROW =        18,  // throw to launch mode using inertial/GPS system, no pilot input
 
-    AUTOF =        31   // customized from auto, with pitch input to control the max speed along the track
+    AUTOF =        31,  // customized from auto, with pitch input to control the max speed along the track
+    AUTOH =        32,  // customized from auto, with throttle input to control the altitude
+    AUTOFH =       33   // combination of AUTOF and AUTOH
 };
 
 enum mode_reason_t {

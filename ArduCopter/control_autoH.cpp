@@ -3,16 +3,12 @@
 #include "Copter.h"
 
 /*
- * control_autoF.cpp
+ * control_autoH.cpp
  *                          by Fang You
- *                            May, 2016
+ *                            June, 2016
  *
- *     customized flight mode based on control_auto.cpp. 'F' means 'Forward'.
- *     use channel2(pitch) to control the movement of the vehicle along the planned path.
- *     joystick position is proportional to the maximum horizontal speed:
- *         neutral position : stay still;
- *         upper bound      : max speed;
- *         lower bound      : max speed in opposite direction.
+ *     customized flight mode based on control_auto.cpp. 'H' means 'Height'.
+ *     use channel3(throttle) to control the vertical speed of the vehicle.
  */
 
 /*
@@ -33,10 +29,10 @@
  */
 
 
-// autoF_run - runs the autoF controller
+// autoH_run - runs the autoF controller
 //      should be called at 100hz or more
 //      relies on run_autopilot being called at 10hz which handles decision making and non-navigation related commands
-void Copter::autoF_run()
+void Copter::autoH_run()
 {
     // call the correct auto controller
     switch (auto_mode) {
@@ -47,7 +43,7 @@ void Copter::autoF_run()
 
     case Auto_WP:
     case Auto_CircleMoveToEdge:
-        autoF_wp_run();                 //# This func is modified from auto_wp_run().
+        autoH_wp_run();                 //# This func is modified from auto_wp_run().
         break;
 
     case Auto_Land:
@@ -81,16 +77,15 @@ void Copter::autoF_run()
 
 // autoF_wp_run - runs the auto waypoint controller
 //      called by auto_run at 100hz or more
-void Copter::autoF_wp_run()
+void Copter::autoH_wp_run()
 {
     //#>>>>>>>>>>>>>>>>>>>>
     //# This is not a proper position for this.
-    //# TODO: Consider move it to somewhere like autoF_init() or set_mode()[flight_mode.cpp].
-    if (wp_nav.flag_AUTOFH() != 1) {
-            wp_nav.set_flag_AUTOF();
+    //# TODO: Consider move it to somewhere like autoH_init() or set_mode()[flight_mode.cpp].
+    if (wp_nav.flag_AUTOFH() != 2) {
+            wp_nav.set_flag_AUTOH();
     }
     //#<<<<<<<<<<<<<<<<<<<<
-
     // if not auto armed or motor interlock not enabled set throttle to zero and exit immediately
     if (!motors.armed() || !ap.auto_armed || !motors.get_interlock()) {
         // To-Do: reset waypoint origin to current location because copter is probably on the ground so we don't want it lurching left or right on take-off
@@ -108,8 +103,11 @@ void Copter::autoF_wp_run()
         return;
     }
 
-    // process pilot's yaw input
+    // process pilot's yaw and throttle input
     float target_yaw_rate = 0;
+    //#>>>>>>>>>>>>>>>>>>>>
+    float target_climb_rate = 0.0f;
+    //#<<<<<<<<<<<<<<<<<<<<
     if (!failsafe.radio) {
         // get pilot's desired yaw rate
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->get_control_in());
@@ -118,14 +116,9 @@ void Copter::autoF_wp_run()
         }
 
         //#>>>>>>>>>>>>>>>>>>>>
-        //# get pilot's pitch input.
-        //# !!!!! NOTICE that pitch input is REVERSE so we need to multiply it by -1 !!!!!
-        //# Will be used to limit the update of _pos_target so as to indirectly control the movement along the track
-        float pitch_input = channel_pitch->get_control_in() / 4500.0f * (-1);
-        //# constrain the input. -1: lower limit; 0: neutral position; 1: upper limit
-        pitch_input = constrain_float(pitch_input, -1.0, 1.0);
-        //# send input to WP controller
-        wp_nav.set_track_desired_change_limit(pitch_input);
+        // get pilot desired climb rate
+        target_climb_rate = get_pilot_desired_climb_rate(channel_throttle->get_control_in());
+        target_climb_rate = constrain_float(target_climb_rate, -g.pilot_velocity_z_max, g.pilot_velocity_z_max);
         //#<<<<<<<<<<<<<<<<<<<<
     }
 
@@ -135,7 +128,16 @@ void Copter::autoF_wp_run()
     // run waypoint controller
     failsafe_terrain_set_status(wp_nav.update_wpnav());
 
-    // call z-axis position controller (wpnav should have already updated it's alt target)
+    //#>>>>>>>>>>>>>>>>>>>>
+    // adjust climb rate using rangefinder
+    if (rangefinder_alt_ok()) {
+            // if rangefinder is ok, use surface tracking
+            target_climb_rate = get_surface_tracking_climb_rate(target_climb_rate, pos_control.get_alt_target(), G_Dt);
+    }
+
+    // update altitude target and call z-axis position controller
+    pos_control.set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
+    //#<<<<<<<<<<<<<<<<<<<<
     pos_control.update_z_controller();
 
     // call attitude controller

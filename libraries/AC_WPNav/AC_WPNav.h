@@ -187,12 +187,6 @@ public:
     /// calculate_wp_leash_length - calculates track speed, acceleration and leash lengths for waypoint controller
     void calculate_wp_leash_length();
 
-    //#>>>>>>>>>>>>>>>>>>>>
-    //# for AUTOF mode.
-    //# set variable _track_desired_change_limit. 
-    void set_track_desired_change_limit(float proportion);
-    //#<<<<<<<<<<<<<<<<<<<<
-
     ///
     /// spline methods
     ///
@@ -257,6 +251,24 @@ public:
 
     /// advance_wp_target_along_track - move target location along track from origin to destination
     bool advance_wp_target_along_track(float dt);
+    
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# for AUTOF/H/FH mode.
+
+    //# set variable _track_desired_change_limit. 
+    void set_track_desired_change_limit(float proportion);
+
+    bool advance_wp_target_along_track_F(float dt);
+    bool advance_wp_target_along_track_H(float dt);
+    bool advance_wp_target_along_track_FH(float dt);
+
+    void set_flag_AUTO() { _flag_AUTOFH = 0; }
+    void set_flag_AUTOF() { _flag_AUTOFH = 1; }
+    void set_flag_AUTOH() { _flag_AUTOFH = 2; }
+    void set_flag_AUTOFH() { _flag_AUTOFH = 3; }
+    int8_t flag_AUTOFH() { return _flag_AUTOFH; }
+    //#<<<<<<<<<<<<<<<<<<<<
+
 
     static const struct AP_Param::GroupInfo var_info[];
 
@@ -377,6 +389,9 @@ protected:
     //# initialized to 1. Only will be modified in AUTOF mode.
     //# valid range [-1, 1](pitch input, -1:lower limit; 0:neutral; 1:upper limit)
     float       _track_desired_change_limit = 1.0f;
-    float       _track_desired_last = 0.0f;           //# 在此赋值,免去修改构造函数的初始化列表.
+
+    //# Flag for AUTOF/H/FH.
+    //# AUTO:0; AUTOF:1; AUTOH:2; AUTOFH:3.
+    int8_t     _flag_AUTOFH = 0;
     //#<<<<<<<<<<<<<<<<<<<<
 };

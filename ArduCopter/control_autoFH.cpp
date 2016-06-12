@@ -3,16 +3,13 @@
 #include "Copter.h"
 
 /*
- * control_autoF.cpp
+ * control_autoFH.cpp
  *                          by Fang You
- *                            May, 2016
+ *                            June, 2016
  *
- *     customized flight mode based on control_auto.cpp. 'F' means 'Forward'.
+ *     a combination of AUTOF and AUTOH.
  *     use channel2(pitch) to control the movement of the vehicle along the planned path.
- *     joystick position is proportional to the maximum horizontal speed:
- *         neutral position : stay still;
- *         upper bound      : max speed;
- *         lower bound      : max speed in opposite direction.
+ *     use channel3(throttle) to control the vertical speed of the vehicle.
  */
 
 /*
@@ -36,7 +33,7 @@
 // autoF_run - runs the autoF controller
 //      should be called at 100hz or more
 //      relies on run_autopilot being called at 10hz which handles decision making and non-navigation related commands
-void Copter::autoF_run()
+void Copter::autoFH_run()
 {
     // call the correct auto controller
     switch (auto_mode) {
@@ -47,7 +44,7 @@ void Copter::autoF_run()
 
     case Auto_WP:
     case Auto_CircleMoveToEdge:
-        autoF_wp_run();                 //# This func is modified from auto_wp_run().
+        autoFH_wp_run();                 //# This func is modified from auto_wp_run().
         break;
 
     case Auto_Land:
@@ -81,16 +78,15 @@ void Copter::autoF_run()
 
 // autoF_wp_run - runs the auto waypoint controller
 //      called by auto_run at 100hz or more
-void Copter::autoF_wp_run()
+void Copter::autoFH_wp_run()
 {
     //#>>>>>>>>>>>>>>>>>>>>
     //# This is not a proper position for this.
-    //# TODO: Consider move it to somewhere like autoF_init() or set_mode()[flight_mode.cpp].
-    if (wp_nav.flag_AUTOFH() != 1) {
-            wp_nav.set_flag_AUTOF();
+    //# TODO: Consider move it to somewhere like autoFH_init() or set_mode()[flight_mode.cpp].
+    if (wp_nav.flag_AUTOFH() != 3) {
+            wp_nav.set_flag_AUTOFH();
     }
     //#<<<<<<<<<<<<<<<<<<<<
-
     // if not auto armed or motor interlock not enabled set throttle to zero and exit immediately
     if (!motors.armed() || !ap.auto_armed || !motors.get_interlock()) {
         // To-Do: reset waypoint origin to current location because copter is probably on the ground so we don't want it lurching left or right on take-off

@@ -723,6 +723,8 @@ private:
     void auto_run();
     //#>>>>>>>>>>>>>>>>>>>>
     void autoF_run();
+    void autoH_run();
+    void autoFH_run();
     //#<<<<<<<<<<<<<<<<<<<<
     void auto_takeoff_start(const Location& dest_loc);
     void auto_takeoff_run();
@@ -731,6 +733,8 @@ private:
     void auto_wp_run();
     //#>>>>>>>>>>>>>>>>>>>>
     void autoF_wp_run();
+    void autoH_wp_run();
+    void autoFH_wp_run();
     //#<<<<<<<<<<<<<<<<<<<<
     void auto_spline_run();
     void auto_land_start();

@@ -50,6 +50,8 @@ bool Copter::set_mode(control_mode_t mode, mode_reason_t reason)
         case AUTO:
         //#>>>>>>>>>>>>>>>>>>>>
         case AUTOF:       //# share auto_init() with AUTO, but change auto_run() to autoF_run() in update_flight_mode()
+        case AUTOH:
+        case AUTOFH:
         //#<<<<<<<<<<<<<<<<<<<<
             success = auto_init(ignore_checks);
             break;
@@ -178,6 +180,15 @@ void Copter::update_flight_mode()
         //#>>>>>>>>>>>>>>>>>>>>
         case AUTOF:
             autoF_run();
+            break;
+
+        case AUTOH:
+            autoH_run();
+            break;
+
+        case AUTOFH:
+            autoFH_run();
+            break;
         //#<<<<<<<<<<<<<<<<<<<<
 
         case CIRCLE:
@@ -247,7 +258,9 @@ void Copter::exit_mode(control_mode_t old_control_mode, control_mode_t new_contr
 #endif
 
     // stop mission when we leave auto mode
-    if (old_control_mode == AUTO || old_control_mode == AUTOF) {
+    //#>>>>>>>>>>>>>>>>>>>>
+    if (old_control_mode == AUTO || old_control_mode == AUTOF || old_control_mode == AUTOH || old_control_mode ==AUTOFH) {
+    //#<<<<<<<<<<<<<<<<<<<<
         if (mission.state() == AP_Mission::MISSION_RUNNING) {
             mission.stop();
         }
@@ -295,6 +308,8 @@ bool Copter::mode_requires_GPS(control_mode_t mode) {
         case AUTO:
         //#>>>>>>>>>>>>>>>>>>>>
         case AUTOF:
+        case AUTOH:
+        case AUTOFH:
         //#<<<<<<<<<<<<<<<<<<<<
         case GUIDED:
         case LOITER:
@@ -340,6 +355,8 @@ void Copter::notify_flight_mode(control_mode_t mode) {
         case AUTO:
         //#>>>>>>>>>>>>>>>>>>>>
         case AUTOF:
+        case AUTOH:
+        case AUTOFH:
         //#<<<<<<<<<<<<<<<<<<<<
         case GUIDED:
         case RTL:
@@ -376,6 +393,13 @@ void Copter::print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
     //#>>>>>>>>>>>>>>>>>>>>
     case AUTOF:
         port->print("AUTOF");
+        break;
+    case AUTOH:
+        port->print("AUTOH");
+        break;
+    case AUTOFH:
+        port->print("AUTOFH");
+        break;
     //#<<<<<<<<<<<<<<<<<<<<
     case GUIDED:
         port->print("GUIDED");

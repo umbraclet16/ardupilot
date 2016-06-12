@@ -220,6 +220,13 @@ void Copter::auto_wp_start(const Location_Class& dest_loc)
 //      called by auto_run at 100hz or more
 void Copter::auto_wp_run()
 {
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# This is not a proper position for this.
+    //# TODO: Consider move it to somewhere like auto_init() or set_mode()[flight_mode.cpp].
+    if (wp_nav.flag_AUTOFH() != 0) {
+            wp_nav.set_flag_AUTO();
+    }
+    //#<<<<<<<<<<<<<<<<<<<<
     // if not auto armed or motor interlock not enabled set throttle to zero and exit immediately
     if (!motors.armed() || !ap.auto_armed || !motors.get_interlock()) {
         // To-Do: reset waypoint origin to current location because copter is probably on the ground so we don't want it lurching left or right on take-off
