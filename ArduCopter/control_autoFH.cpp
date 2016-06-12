@@ -106,6 +106,9 @@ void Copter::autoFH_wp_run()
 
     // process pilot's yaw input
     float target_yaw_rate = 0;
+    //#>>>>>>>>>>>>>>>>>>>>
+    float target_climb_rate = 0.0f;
+    //#<<<<<<<<<<<<<<<<<<<<
     if (!failsafe.radio) {
         // get pilot's desired yaw rate
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->get_control_in());
@@ -122,6 +125,10 @@ void Copter::autoFH_wp_run()
         pitch_input = constrain_float(pitch_input, -1.0, 1.0);
         //# send input to WP controller
         wp_nav.set_track_desired_change_limit(pitch_input);
+
+        // get pilot desired climb rate
+        target_climb_rate = get_pilot_desired_climb_rate(channel_throttle->get_control_in());
+        target_climb_rate = constrain_float(target_climb_rate, -g.pilot_velocity_z_max, g.pilot_velocity_z_max);
         //#<<<<<<<<<<<<<<<<<<<<
     }
 
@@ -131,7 +138,16 @@ void Copter::autoFH_wp_run()
     // run waypoint controller
     failsafe_terrain_set_status(wp_nav.update_wpnav());
 
-    // call z-axis position controller (wpnav should have already updated it's alt target)
+    //#>>>>>>>>>>>>>>>>>>>>
+    // adjust climb rate using rangefinder
+    if (rangefinder_alt_ok()) {
+            // if rangefinder is ok, use surface tracking
+            target_climb_rate = get_surface_tracking_climb_rate(target_climb_rate, pos_control.get_alt_target(), G_Dt);
+    }
+
+    // update altitude target and call z-axis position controller
+    pos_control.set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
+    //#<<<<<<<<<<<<<<<<<<<<
     pos_control.update_z_controller();
 
     // call attitude controller
