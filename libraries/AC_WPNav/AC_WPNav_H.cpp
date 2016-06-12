@@ -35,7 +35,10 @@ bool AC_WPNav::advance_wp_target_along_track_H(float dt)
     float track_error_xy = norm(track_error.x, track_error.y);
 
     // calculate the vertical error
-    float track_error_z = fabsf(track_error.z);
+    //#>>>>>>>>>>>>>>>>>>>>
+    //float track_error_z = fabsf(track_error.z);
+    float track_error_z = 0.0f;
+    //#<<<<<<<<<<<<<<<<<<<<
 
     // get position control leash lengths
     float leash_xy = _pos_control.get_leash_xy();
@@ -125,6 +128,10 @@ bool AC_WPNav::advance_wp_target_along_track_H(float dt)
     Vector3f final_target = _origin + _pos_delta_unit * _track_desired;
     // convert final_target.z to altitude above the ekf origin
     final_target.z += terr_offset;
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# set z-axis target to current position
+    final_target.z = curr_pos.z;
+    //#<<<<<<<<<<<<<<<<<<<<
     _pos_control.set_pos_target(final_target);
 
     // check if we've reached the waypoint
@@ -136,6 +143,9 @@ bool AC_WPNav::advance_wp_target_along_track_H(float dt)
             }else{
                 // regular waypoints also require the copter to be within the waypoint radius
                 Vector3f dist_to_dest = (curr_pos - Vector3f(0,0,terr_offset)) - _destination;
+                //#>>>>>>>>>>>>>>>>>>>>
+                dist_to_dest.z = 0.0f;
+                //#<<<<<<<<<<<<<<<<<<<<
                 if( dist_to_dest.length() <= _wp_radius_cm ) {
                     _flags.reached_destination = true;
                 }

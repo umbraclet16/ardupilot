@@ -480,6 +480,12 @@ bool AC_WPNav::set_wp_origin_and_destination(const Vector3f& origin, const Vecto
     _destination = destination;
     _terrain_alt = terrain_alt;
     Vector3f pos_delta = _destination - _origin;
+    //#>>>>>>>>>>>>>>>>>>>>
+    //# in AUTOH or AUTOFH, clear z-axis pos_delta.
+    if (flag_AUTOFH() == 1 || flag_AUTOFH() == 3) {
+            pos_delta.z = 0.0f;
+    }
+    //#<<<<<<<<<<<<<<<<<<<<
 
     _track_length = pos_delta.length(); // get track length
 
