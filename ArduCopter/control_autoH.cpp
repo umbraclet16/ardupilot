@@ -4,7 +4,7 @@
 
 /*
  * control_autoH.cpp
- *                          by Fang You
+ *                          by Yang Liben & Fang You
  *                            June, 2016
  *
  *     customized flight mode based on control_auto.cpp. 'H' means 'Height'.

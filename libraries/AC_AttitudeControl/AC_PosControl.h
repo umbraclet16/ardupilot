@@ -209,6 +209,11 @@ public:
     /// set_pos_target in cm from home
     void set_pos_target(const Vector3f& position);
 
+    //#>>>>>>>>>>>>>>>>>>>>
+    /// set_pos_target in cm from home. Allow desired velocity feedforward for AUTOH!
+    void set_pos_target_autoH(const Vector3f& position);
+    //#<<<<<<<<<<<<<<<<<<<<
+
     /// set_xy_target in cm from home
     void set_xy_target(float x, float y);
 

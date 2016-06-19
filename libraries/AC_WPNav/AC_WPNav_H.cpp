@@ -125,14 +125,15 @@ bool AC_WPNav::advance_wp_target_along_track_H(float dt)
     }
 
     // recalculate the desired position
+    //# Notice that z-axis pos_delta has been cleared in set_wp_origin_and_destination()
     Vector3f final_target = _origin + _pos_delta_unit * _track_desired;
     // convert final_target.z to altitude above the ekf origin
     final_target.z += terr_offset;
     //#>>>>>>>>>>>>>>>>>>>>
-    //# set z-axis target to current position
-    final_target.z = curr_pos.z;
+    //# set z-axis target to current position, and allow desired velocity feedforward
+    _pos_control.set_pos_target_autoH(final_target);
+    //_pos_control.set_pos_target(final_target);
     //#<<<<<<<<<<<<<<<<<<<<
-    _pos_control.set_pos_target(final_target);
 
     // check if we've reached the waypoint
     if( !_flags.reached_destination ) {

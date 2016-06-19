@@ -525,6 +525,18 @@ void AC_PosControl::set_pos_target(const Vector3f& position)
     //_pitch_target = constrain_int32(_ahrs.pitch_sensor,-_attitude_control.lean_angle_max(),_attitude_control.lean_angle_max());
 }
 
+//#>>>>>>>>>>>>>>>>>>>>
+/// set_pos_target in cm from home. Allow desired velocity feedforward for AUTOH!
+void AC_PosControl::set_pos_target_autoH(const Vector3f& position)
+{
+    _pos_target = position;
+
+    _flags.use_desvel_ff_z = true;
+    const Vector3f curr_pos = _inav.get_position();
+    _pos_target.z = curr_pos.z;
+}
+//#<<<<<<<<<<<<<<<<<<<<
+
 /// set_xy_target in cm from home
 void AC_PosControl::set_xy_target(float x, float y)
 {
