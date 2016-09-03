@@ -6,6 +6,10 @@
 // variables
 #ifdef USERHOOK_VARIABLES
 
+bool target_in_image;
+int16_t target_coord_x;
+int16_t target_coord_y;
+
 #if WII_CAMERA == 1
 WiiCamera           ircam;
 int                 WiiRange=0;
