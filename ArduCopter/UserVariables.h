@@ -6,6 +6,8 @@
 // variables
 #ifdef USERHOOK_VARIABLES
 
+bool visualnav_enabled = false;
+
 bool target_in_image;
 int16_t target_coord_x;
 int16_t target_coord_y;
