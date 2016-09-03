@@ -56,6 +56,17 @@ bool Copter::auto_init(bool ignore_checks)
 //      relies on run_autopilot being called at 10hz which handles decision making and non-navigation related commands
 void Copter::auto_run()
 {
+    //>>>>>>>>>>>>>>>>>>>>
+    // The copter is in the target area(landing/water collection), and target shows up in the image,
+    // so change to DRIFT(i.e. VisualNav) mode.
+    if (visualnav_enabled) {
+        if (target_in_image) {
+            set_mode(DRIFT, MODE_REASON_UNKNOWN);
+            return;
+        }
+    }
+    //<<<<<<<<<<<<<<<<<<<<
+
     // call the correct auto controller
     switch (auto_mode) {
 
