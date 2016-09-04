@@ -37,7 +37,7 @@
  * I think it's good to read UART input regularly in a userhook(100/50/10Hz?),
  * what's the frequency of UART input???    Around 5Hz.
  *
- * what's the delay of target recognition???
+ * what's the delay of target recognition???    0.0X s.
  *
  * TODO: how does the controller recognize LANDING?
  * We must lower RC throttle to lower limit, then hope update_land_detector() works fine.
@@ -124,7 +124,9 @@ void Copter::drift_run()
     // update _pos_target.z:
     // 1. if target is near the center of the image, descend at a speed of 50 cm/s;
     // 2. if target is far from the center but still in the image, keep current altitude;
-    // 3. if lose target, ascend until target appears in the image again or reach an altitude of 15 m.
+    // 3. if lose target, ascend until target appears in the image again;
+    // 4. if reach an altitude of 15 m and still cannot find target, mission FAILED,
+    //    return to AUTO mode. TODO: maybe reload last waypoint?
     // >>>>>>>>>>>>>>>>>>>>
     // TODO: parameters need to be optimized based on practical experiments.
     int16_t coord_near_center = 50;     // range: [-120, 120]
@@ -143,7 +145,7 @@ void Copter::drift_run()
         if(curr_alt < altitude_limit) {
             target_climb_rate = ascend_velocity;
         }
-        else{
+        else{   // case 4
             bool ret = set_mode(AUTO, MODE_REASON_UNKNOWN);
             if(!ret) {
                 set_mode(LOITER, MODE_REASON_UNKNOWN);
@@ -154,10 +156,11 @@ void Copter::drift_run()
     // constrain target_climb_rate
     target_climb_rate = constrain_float(target_climb_rate, -g.pilot_velocity_z_max, g.pilot_velocity_z_max);
 
-    // TODO: decision making: land or water collection?
+    // TODO: decision making: land or lifebuoy delivery?
     float decision_making_alt = 200.0f;
-    // if(curr_alt < decision_making_alt)
-    //
+    // if(target_in_image == LIFEBUOY_DELIVERY && curr_alt < decision_making_alt)
+    // 
+    // DELIVER THE LIFEBUOY!
     //
 
     // relax loiter target if we might be landed
