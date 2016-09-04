@@ -69,7 +69,7 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     // @Description: Control what protocol to use on the Telem2 port. Note that the Frsky options require external converter hardware. See the wiki for details.
     // @Values: -1:None, 1:MAVLink1, 2:MAVLink2, 3:Frsky D, 4:Frsky SPort, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Lidar, 10:FrSky SPort Passthrough (OpenTX)
     // @User: Standard
-    AP_GROUPINFO("2_PROTOCOL",  3, AP_SerialManager, state[2].protocol, SerialProtocol_MAVLink),
+    AP_GROUPINFO("2_PROTOCOL",  3, AP_SerialManager, state[2].protocol, SerialProtocol_visualnav),
 
     // @Param: 2_BAUD
     // @DisplayName: Telemetry 2 Baud Rate
@@ -165,6 +165,7 @@ void AP_SerialManager::init()
                 case SerialProtocol_Console:
                 case SerialProtocol_MAVLink:
                 case SerialProtocol_MAVLink2:
+                case SerialProtocol_visualnav:
                     state[i].uart->begin(map_baudrate(state[i].baud), 
                                          AP_SERIALMANAGER_MAVLINK_BUFSIZE_RX,
                                          AP_SERIALMANAGER_MAVLINK_BUFSIZE_TX);
