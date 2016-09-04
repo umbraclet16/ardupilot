@@ -8,7 +8,14 @@
 
 bool visualnav_enabled = false;
 
-bool target_in_image;
+// flag = 0: no target in the image;
+// flag = 1: find lifebuoy delivery target in the image;
+// flag = 2: find landing platform in the image.
+#define NO_TARGET_IN_IMAGE  0
+#define LIFEBUOY_DELIVERY   1
+#define LANDING_PLATFORM    2
+uint8_t target_in_image = NO_TARGET_IN_IMAGE;
+
 int16_t target_coord_x;
 int16_t target_coord_y;
 
