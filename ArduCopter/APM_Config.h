@@ -30,6 +30,13 @@
 //#define AC_TERRAIN            DISABLED            // disable terrain library
 //#define PARACHUTE             DISABLED            // disable parachute release to save 1k of flash
 //#define EPM_ENABLED           DISABLED            // disable epm cargo gripper to save 500bytes of flash
+//>>>>>>>>>>>>>>>>>>>>
+// use DO_PARACHUTE to set flag visualnav_enabled. We don't reset the flag because it's reset in auto_init().
+#define PARACHUTE               ENABLED
+// use DO_GRIPPER... to do what? Undetermined
+#define EPM_ENABLED             ENABLED
+//!!!!! we can also use DO_SET/REPEAT_RELAY/SERVO, DO_SET_ROI .etc for triggering our missions!
+//<<<<<<<<<<<<<<<<<<<<
 //#define CLI_ENABLED           DISABLED            // disable the CLI (command-line-interface) to save 21K of flash space
 //#define NAV_GUIDED            DISABLED            // disable external navigation computer ability to control vehicle through MAV_CMD_NAV_GUIDED mission commands
 //#define OPTFLOW               DISABLED            // disable optical flow sensor to save 5K of flash space
