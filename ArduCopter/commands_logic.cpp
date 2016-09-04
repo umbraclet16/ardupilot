@@ -554,22 +554,26 @@ void Copter::do_nav_delay(const AP_Mission::Mission_Command& cmd)
 // do_parachute - configure or release parachute
 void Copter::do_parachute(const AP_Mission::Mission_Command& cmd)
 {
-    switch (cmd.p1) {
-        case PARACHUTE_DISABLE:
-            parachute.enabled(false);
-            Log_Write_Event(DATA_PARACHUTE_DISABLED);
-            break;
-        case PARACHUTE_ENABLE:
-            parachute.enabled(true);
-            Log_Write_Event(DATA_PARACHUTE_ENABLED);
-            break;
-        case PARACHUTE_RELEASE:
-            parachute_release();
-            break;
-        default:
-            // do nothing
-            break;
-    }
+    // set flag to enable visualnav
+    visualnav_enabled = true;
+    /*
+     *switch (cmd.p1) {
+     *    case PARACHUTE_DISABLE:
+     *        parachute.enabled(false);
+     *        Log_Write_Event(DATA_PARACHUTE_DISABLED);
+     *        break;
+     *    case PARACHUTE_ENABLE:
+     *        parachute.enabled(true);
+     *        Log_Write_Event(DATA_PARACHUTE_ENABLED);
+     *        break;
+     *    case PARACHUTE_RELEASE:
+     *        parachute_release();
+     *        break;
+     *    default:
+     *        // do nothing
+     *        break;
+     *}
+     */
 }
 #endif
 

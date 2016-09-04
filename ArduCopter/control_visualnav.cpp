@@ -46,9 +46,10 @@
  * If so, we may need to call Copter::init_disarm_motors() in motors.cpp manually.
  * Or, the easiest way is just lower the throttle and change to STABILIZE mode!
  *
- * TODO: choose a function that deal with Mavlink do_command and modify it to set/reset
- * visualnav_enabled FLAG.
+ * I modified DO_PARACHUTE() in commands_logic.cpp to set flag visualnav_enabled.
+ * If more do_command is needed, DO_GRIPPER() can be modified.
  */
+
 
 // image pixels: 320 * 240. coordination range: x:[-160, 160], y:[-120,120]
 #define COORD_RANGE_LIMIT_X 160
