@@ -22,6 +22,8 @@
  * this mode when we want to(target could be found during both taking off and landing stage, but we
  * definitely don't want it to land when it has just taken off.)
  * This can be done by modifying the function that deals with a GCS do_command which we never need.
+ * I modified DO_PARACHUTE() in commands_logic.cpp to set flag visualnav_enabled.
+ * If more do_command is needed, DO_GRIPPER() can be modified.
  *
  * AUTO mode desired flight status: altitude: 8~10m. velocity: 3m/s? gimbal is needed!
  * 
@@ -31,13 +33,14 @@
  *
  * I expect to receive a flag 'target_in_image' indicating target is in the image.
  *
- * XXX: what's the baudrate and format of UART input?
+ * the baudrate and format of UART input:
+ * baudrate: 57600
  * Format: target_in_image(1 bit), target_coord_x(int), target_coord_y(int)
  *
  * I think it's good to read UART input regularly in a userhook(100/50/10Hz?),
  * what's the frequency of UART input???    Around 5Hz.
  *
- * what's the delay of target recognition???    0.0X s.
+ * what's the delay of target recognition???    0.X s.
  *
  * TODO: how does the controller recognize LANDING?
  * We must lower RC throttle to lower limit, then hope update_land_detector() works fine.
@@ -45,9 +48,6 @@
  * (<=1m/s/s, see land_detector.cpp line64).
  * If so, we may need to call Copter::init_disarm_motors() in motors.cpp manually.
  * Or, the easiest way is just lower the throttle and change to STABILIZE mode!
- *
- * I modified DO_PARACHUTE() in commands_logic.cpp to set flag visualnav_enabled.
- * If more do_command is needed, DO_GRIPPER() can be modified.
  */
 
 
