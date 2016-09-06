@@ -91,13 +91,17 @@ void Copter::drift_run()
     pos_control.set_speed_z(-g.pilot_velocity_z_max, g.pilot_velocity_z_max);
     pos_control.set_accel_z(g.pilot_accel_z);
 
-    // change back to AUTO mode if we are in radio failsafe, or target coords are invalid.
-    if (failsafe.radio || abs(target_coord_x) > COORD_RANGE_LIMIT_X || abs(target_coord_y) > COORD_RANGE_LIMIT_Y) {
+    // change back to AUTO mode if we are in radio failsafe.
+    if (failsafe.radio) {
         bool ret = set_mode(AUTO, MODE_REASON_UNKNOWN);
         if(!ret) {
             set_mode(LOITER, MODE_REASON_UNKNOWN);
         }
     }
+
+    // check the validity of input target coord. If invalid or target not found, then set to 0.
+    if (abs(target_coord_x) > COORD_RANGE_LIMIT_X || !target_in_image) target_coord_x = 0;
+    if (abs(target_coord_y) > COORD_RANGE_LIMIT_Y || !target_in_image) target_coord_y = 0;
 
     const float curr_alt = inertial_nav.get_altitude();
     // update _pos_target.x/y by simulating pilot roll and pitch input(set _pilot_accel_fwd/rgt_cmss)
