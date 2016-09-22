@@ -32,10 +32,28 @@ static uint8_t _term_number = 0;    ///< term index within the current sentence
 static uint8_t _term_offset = 0;    ///< character offset with the term being received
 static int16_t _array[3];
 //<<<<<<<<<<<<<<<<<<<<
+/*
+ * Merge two bytes to one integer
+ *
+ * Parameters:
+ * uint8_t a: high-byte
+ * uint8_t b: low-byte
+ *
+ * Returnvalue:
+ * int Merged bytes
+ */
+int mergeBytes(uint8_t a, uint8_t b)    //# we must use uint8_t as parameters. int8_t will cause error!!!
+{
+	int c = a;                          //# expand high-byte to 16 bits before shifting!!!
+	return (c << 8) | b;
+}
+
 bool _term_complete()
 {
     //hal.uartD->printf("_term_number=%d,_term_offset=%d\n",_term_number,_term_offset);
     int16_t temp;
+    uint8_t low_byte;
+    uint8_t high_byte;
 
     if (_term_number == 1) {            // first parameter: target_in_image, 1 bit[0/1/2]
         temp = atoi(_term);
@@ -44,13 +62,19 @@ bool _term_complete()
         return false;
     }
     if (_term_number == 2) {            // second parameter: target_coord_x, 1~4 bit[-160,160]
-        temp = atoi(_term);             // atoi can handle negative sign!!!
+        //temp = atoi(_term);             // atoi can handle negative sign!!!
+        low_byte = _term[0];
+        high_byte = _term[1];
+        temp = mergeBytes(high_byte,low_byte);
         if (temp >= -160 && temp <= 160)
             _array[1] = temp;
         return false;
     }
     if (_term_number == 3) {            // third parameter: target_coord_y, 1~4 bit[-120,120]
-        temp = atoi(_term);
+        //temp = atoi(_term);
+        low_byte = _term[0];
+        high_byte = _term[1];
+        temp = mergeBytes(high_byte,low_byte);
         if (temp >= -120 && temp <= 120)
             _array[2] = temp;
         return true;
@@ -70,7 +94,7 @@ bool _decode(char c)
     case '*':
         ++_term_number;
         if (_term_offset < sizeof(_term)) {
-            _term[_term_offset] = 0;    // add '\0'
+            //_term[_term_offset] = 0;    // add '\0'
             valid_sentence = _term_complete();
         }
         _term_offset = 0;
