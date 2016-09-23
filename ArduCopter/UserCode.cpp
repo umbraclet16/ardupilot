@@ -133,17 +133,14 @@ void Copter::userhook_MediumLoop()
 {
     // put your 10Hz code here
     // read from telem 2
-    if (visualnav_enabled) {
-        if (_read()) {
-            target_in_image = _array[0];
-            target_coord_x  = _array[1];
-            target_coord_y  = _array[2];
-        }
+    if (_read()) {
+        target_in_image = _array[0];
+        target_coord_x  = _array[1];
+        target_coord_y  = _array[2];
     }
-//#define DEBUG_VISUALNAV
+#define DEBUG_VISUALNAV
 #ifdef DEBUG_VISUALNAV
     // debug
-    visualnav_enabled = 1;
     hal.uartD->printf("target_in_image:%d, target_coord_x:%d, target_coord_y:%d\n",target_in_image, target_coord_x, target_coord_y);
 #endif
 }
