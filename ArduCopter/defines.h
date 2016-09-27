@@ -247,6 +247,15 @@ enum SportModeState {
     Sport_Landed
 };
 
+// VisualNav states
+enum VisualNavModeState {
+    VisualNav_MotorStopped,
+    VisualNav_NotAutoArmed,
+    VisualNav_Takeoff,
+    VisualNav_Flying,
+    VisualNav_Landed
+};
+
 // Flip states
 enum FlipState {
     Flip_Start,

@@ -82,7 +82,7 @@ bool Copter::drift_init(bool ignore_checks)
 //void Copter::visualnav_run()
 void Copter::drift_run()
 {
-    LoiterModeState loiter_state;
+    VisualNavModeState visualnav_state;
     float target_yaw_rate = 0.0f;
     float target_climb_rate = 0.0f;
     float takeoff_climb_rate = 0.0f;
@@ -175,21 +175,21 @@ void Copter::drift_run()
 
     // Loiter State Machine Determination
     if (!motors.armed() || !motors.get_interlock()) {
-        loiter_state = Loiter_MotorStopped;
+        visualnav_state = VisualNav_MotorStopped;
     } else if (!ap.auto_armed) {
-        loiter_state = Loiter_NotAutoArmed;
+        visualnav_state = VisualNav_NotAutoArmed;
     //} else if (takeoff_state.running || (ap.land_complete && (channel_throttle->get_control_in() > get_takeoff_trigger_throttle()))){
         //loiter_state = Loiter_Takeoff;
     } else if (ap.land_complete){
-        loiter_state = Loiter_Landed;
+        visualnav_state = VisualNav_Landed;
     } else {
-        loiter_state = Loiter_Flying;
+        visualnav_state = VisualNav_Flying;
     }
 
     // Loiter State Machine
-    switch (loiter_state) {
+    switch (visualnav_state) {
 
-    case Loiter_MotorStopped:
+    case VisualNav_MotorStopped:
 
         motors.set_desired_spool_state(AP_Motors::DESIRED_SHUT_DOWN);
         wp_nav.init_loiter_target();
@@ -198,7 +198,7 @@ void Copter::drift_run()
         pos_control.relax_alt_hold_controllers(get_throttle_pre_takeoff(channel_throttle->get_control_in())-throttle_average);
         break;
 
-    case Loiter_NotAutoArmed:
+    case VisualNav_NotAutoArmed:
 
         motors.set_desired_spool_state(AP_Motors::DESIRED_SPIN_WHEN_ARMED);
         wp_nav.init_loiter_target();
@@ -208,11 +208,11 @@ void Copter::drift_run()
         break;
 
         // We will never take off in this flight mode.
-    case Loiter_Takeoff:
+    case VisualNav_Takeoff:
 
         break;
 
-    case Loiter_Landed:
+    case VisualNav_Landed:
 
         wp_nav.init_loiter_target();
         // call attitude controller
@@ -228,7 +228,7 @@ void Copter::drift_run()
         pos_control.relax_alt_hold_controllers(get_throttle_pre_takeoff(channel_throttle->get_control_in())-throttle_average);
         break;
 
-    case Loiter_Flying:
+    case VisualNav_Flying:
 
         // set motors to full range
         motors.set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
