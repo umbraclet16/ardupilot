@@ -173,14 +173,14 @@ void Copter::drift_run()
         wp_nav.loiter_soften_for_landing();
     }
 
+    bool takeoff_triggered = ap.land_complete && (target_climb_rate > 0.0f);
+
     // Loiter State Machine Determination
     if (!motors.armed() || !motors.get_interlock()) {
         visualnav_state = VisualNav_MotorStopped;
-    } else if (!ap.auto_armed) {
-        visualnav_state = VisualNav_NotAutoArmed;
-    //} else if (takeoff_state.running || (ap.land_complete && (channel_throttle->get_control_in() > get_takeoff_trigger_throttle()))){
-        //loiter_state = Loiter_Takeoff;
-    } else if (ap.land_complete){
+    } else if (takeoff_state.running || takeoff_triggered) {
+        visualnav_state = VisualNav_Takeoff;
+    } else if (!ap.auto_armed || ap.land_complete) {
         visualnav_state = VisualNav_Landed;
     } else {
         visualnav_state = VisualNav_Flying;
@@ -193,39 +193,55 @@ void Copter::drift_run()
 
         motors.set_desired_spool_state(AP_Motors::DESIRED_SHUT_DOWN);
         wp_nav.init_loiter_target();
-        // multicopters do not stabilize roll/pitch/yaw when motors are stopped
-        attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-        pos_control.relax_alt_hold_controllers(get_throttle_pre_takeoff(channel_throttle->get_control_in())-throttle_average);
+        attitude_control.reset_rate_controller_I_terms();
+        attitude_control.set_yaw_target_to_current_heading();
+        pos_control.relax_alt_hold_controllers(0.0f);   // forces throttle output to go to zero
+        wp_nav.update_loiter(ekfGndSpdLimit, ekfNavVelGainScaler);
+        attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate, get_smoothing_gain());
+        pos_control.update_z_controller();
         break;
 
-    case VisualNav_NotAutoArmed:
-
-        motors.set_desired_spool_state(AP_Motors::DESIRED_SPIN_WHEN_ARMED);
-        wp_nav.init_loiter_target();
-        // Multicopters do not stabilize roll/pitch/yaw when not auto-armed (i.e. on the ground, pilot has never raised throttle)
-        attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-        pos_control.relax_alt_hold_controllers(get_throttle_pre_takeoff(channel_throttle->get_control_in())-throttle_average);
-        break;
-
-        // We will never take off in this flight mode.
     case VisualNav_Takeoff:
+        // set motors to full range
+        motors.set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
 
+        // initiate take-off
+        if (!takeoff_state.running) {
+            takeoff_timer_start(constrain_float(g.pilot_takeoff_alt,0.0f,1000.0f));
+            // indicate we are taking off
+            set_land_complete(false);
+            // clear i term when we're taking off
+            set_throttle_takeoff();
+        }
+
+        // get takeoff adjusted pilot and takeoff climb rates
+        takeoff_get_climb_rates(target_climb_rate, takeoff_climb_rate);
+
+        // run loiter controller
+        wp_nav.update_loiter(ekfGndSpdLimit, ekfNavVelGainScaler);
+
+        // call attitude controller
+        attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate, get_smoothing_gain());
+
+        // update altitude target and call position controller
+        pos_control.set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
+        pos_control.add_takeoff_climb_rate(takeoff_climb_rate, G_Dt);
+        pos_control.update_z_controller();
         break;
 
     case VisualNav_Landed:
-
-        wp_nav.init_loiter_target();
-        // call attitude controller
-        attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw_smooth(0, 0, 0, get_smoothing_gain());
-        // move throttle to between minimum and non-takeoff-throttle to keep us on the ground
-        attitude_control.set_throttle_out(get_throttle_pre_takeoff(channel_throttle->get_control_in()),false,g.throttle_filt);
-        // if throttle zero reset attitude and exit immediately
-        if (ap.throttle_zero) {
+        // set motors to spin-when-armed if throttle below deadzone, otherwise full range (but motors will only spin at min throttle)
+        if (target_climb_rate < 0.0f) {
             motors.set_desired_spool_state(AP_Motors::DESIRED_SPIN_WHEN_ARMED);
         } else {
             motors.set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
         }
-        pos_control.relax_alt_hold_controllers(get_throttle_pre_takeoff(channel_throttle->get_control_in())-throttle_average);
+        wp_nav.init_loiter_target();
+        attitude_control.reset_rate_controller_I_terms();
+        attitude_control.set_yaw_target_to_current_heading();
+        attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw(0, 0, 0, get_smoothing_gain());
+        pos_control.relax_alt_hold_controllers(0.0f);   // forces throttle output to go to zero
+        pos_control.update_z_controller();
         break;
 
     case VisualNav_Flying:
@@ -237,7 +253,7 @@ void Copter::drift_run()
         wp_nav.update_loiter(ekfGndSpdLimit, ekfNavVelGainScaler);
 
         // call attitude controller
-        attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
+        attitude_control.input_euler_angle_roll_pitch_euler_rate_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate, get_smoothing_gain());
 
         // adjust climb rate using rangefinder
         if (rangefinder_alt_ok()) {
@@ -249,5 +265,6 @@ void Copter::drift_run()
         pos_control.set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
         pos_control.update_z_controller();
         break;
-    }
+}
+
 }

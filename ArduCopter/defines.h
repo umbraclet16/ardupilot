@@ -250,7 +250,6 @@ enum SportModeState {
 // VisualNav states
 enum VisualNavModeState {
     VisualNav_MotorStopped,
-    VisualNav_NotAutoArmed,
     VisualNav_Takeoff,
     VisualNav_Flying,
     VisualNav_Landed
