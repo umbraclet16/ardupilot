@@ -163,10 +163,15 @@ void Copter::drift_run()
 
     // TODO: decision making: land or lifebuoy delivery?
     float decision_making_alt = 200.0f;
-    // if(target_in_image == LIFEBUOY_DELIVERY && curr_alt < decision_making_alt)
-    // 
-    // DELIVER THE LIFEBUOY!
-    //
+    if(target_in_image == LIFEBUOY_DELIVERY && curr_alt < decision_making_alt) {
+        // 
+        // DELIVER THE LIFEBUOY!
+        //
+
+        // unset visualnav flag when lifebuoy delivery is finished.
+        // If the flag is still set, the copter will change to visualnav mode again.
+        visualnav_enabled = false;
+    }
 
     // relax loiter target if we might be landed
     if (ap.land_complete_maybe) {

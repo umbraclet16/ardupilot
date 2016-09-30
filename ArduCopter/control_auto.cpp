@@ -22,13 +22,6 @@
 // auto_init - initialise auto controller
 bool Copter::auto_init(bool ignore_checks)
 {
-    //>>>>>>>>>>>>>>>>>>>>
-    // Unset visualnav flag if change from other mode to AUTO.
-    // This deals with the condition that the copter has just finished water collection,
-    // if the flag is still set, the copter will change to VisualNav mode again.
-    // TODO: maybe we should unset the flag in water collection mission handler?
-    visualnav_enabled = false;
-    //<<<<<<<<<<<<<<<<<<<<
     if ((position_ok() && mission.num_commands() > 1) || ignore_checks) {
         auto_mode = Auto_Loiter;
 
