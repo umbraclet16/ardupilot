@@ -93,9 +93,9 @@ void Copter::drift_run()
 
     // change back to AUTO mode if we are in radio failsafe.
     if (failsafe.radio) {
-        bool ret = set_mode(AUTO, MODE_REASON_UNKNOWN);
+        bool ret = set_mode(AUTO, MODE_REASON_RADIO_FAILSAFE);
         if(!ret) {
-            set_mode(LOITER, MODE_REASON_UNKNOWN);
+            set_mode(LOITER, MODE_REASON_RADIO_FAILSAFE);
         }
     }
 
@@ -151,7 +151,7 @@ void Copter::drift_run()
             target_climb_rate = ascend_velocity;
         }
         else{   // case 4
-            bool ret = set_mode(AUTO, MODE_REASON_UNKNOWN);
+            bool ret = set_mode(AUTO, MODE_REASON_UNKNOWN); // Mission failed, so we record reason as UNKNOWN(=0).
             if(!ret) {
                 set_mode(LOITER, MODE_REASON_UNKNOWN);
             }
@@ -186,9 +186,9 @@ void Copter::drift_run()
         // Set back to AUTO mode.
         if(curr_alt > routine_flight_alt - 100) {
             delivery_over_and_rise = false;
-            bool ret = set_mode(AUTO, MODE_REASON_UNKOWN);
+            bool ret = set_mode(AUTO, MODE_REASON_TX_COMMAND); // Mission finished, so we record reason as TX command(=1).
             if(!ret) {
-                set_mode(LOITER, MODE_REASON_UNKOWN);
+                set_mode(LOITER, MODE_REASON_TX_COMMAND);
         }
         }
     }

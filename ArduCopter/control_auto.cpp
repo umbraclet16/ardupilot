@@ -61,7 +61,13 @@ void Copter::auto_run()
     // so change to DRIFT(i.e. VisualNav) mode.
     if (visualnav_enabled) {
         if (target_in_image) {
-            set_mode(DRIFT, MODE_REASON_UNKNOWN);
+            enum mode_reason_t mode_reason;
+            // find lifebuoy delivery target, record as MODE_REASON_TX_COMMAND(=1).
+            if (target_in_image == 1) mode_reason = MODE_REASON_TX_COMMAND;
+            // find landing platform target, record as MODE_REASON_GCS_COMMAND(=2).
+            if (target_in_image == 2) mode_reason = MODE_REASON_GCS_COMMAND;
+
+            set_mode(DRIFT, mode_reason);
             return;
         }
     }
