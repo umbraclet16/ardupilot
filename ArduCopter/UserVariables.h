@@ -8,6 +8,11 @@
 
 bool visualnav_enabled = false;
 
+// Set this flag so relay will not be triggered more than 1 time,
+// and quad will rise up to route flight alt(8m) before change back
+// to AUTO mode.
+bool delivery_over_and_rise = false;
+
 // flag = 0: no target in the image;
 // flag = 1: find lifebuoy delivery target in the image;
 // flag = 2: find landing platform in the image.
