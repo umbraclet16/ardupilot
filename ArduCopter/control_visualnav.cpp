@@ -136,7 +136,7 @@ void Copter::drift_run()
     // TODO: parameters need to be optimized based on practical experiments.
     int16_t coord_near_center = 50;     // range: [-120, 120]
     float   descend_velocity  = -50;    // cm/s
-    float   ascend_velocity   = 100;    // cm/s
+    float   ascend_velocity   = 50;     // cm/s
     float   altitude_limit    = 1500;   // cm
     // <<<<<<<<<<<<<<<<<<<<
     if(target_in_image) {
@@ -163,14 +163,34 @@ void Copter::drift_run()
 
     // TODO: decision making: land or lifebuoy delivery?
     float decision_making_alt = 200.0f;
-    if(target_in_image == LIFEBUOY_DELIVERY && curr_alt < decision_making_alt) {
+    if(target_in_image == LIFEBUOY_DELIVERY && curr_alt < decision_making_alt && !delivery_over_and_rise) {
         // 
         // DELIVER THE LIFEBUOY!
+        // (TODO: maybe loiter for a few seconds before do the job?)
         //
 
-        // unset visualnav flag when lifebuoy delivery is finished.
+        // Unset visualnav flag when lifebuoy delivery is finished.
         // If the flag is still set, the copter will change to visualnav mode again.
         visualnav_enabled = false;
+        // Set this flag so relay will not be triggered again after the delivery.
+        delivery_over_and_rise = true;
+    }
+
+    // When lifebuoy delivery is over, rise up to routine flight altitude(8m),
+    // then set back to AUTO mode to continue other missions.
+    float routine_flight_alt = 800.0f;
+    if(delivery_over_and_rise) {
+        // No longer need visual info to nav during ascending procedure, so clear it.
+        wp_nav.set_pilot_desired_acceleration(0, 0);
+        target_climb_rate = ascend_velocity;
+        // Set back to AUTO mode.
+        if(curr_alt > routine_flight_alt - 100) {
+            delivery_over_and_rise = false;
+            bool ret = set_mode(AUTO, MODE_REASON_UNKOWN);
+            if(!ret) {
+                set_mode(LOITER, MODE_REASON_UNKOWN);
+        }
+        }
     }
 
     // relax loiter target if we might be landed
