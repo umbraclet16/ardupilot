@@ -110,6 +110,8 @@ void Copter::set_land_complete(bool b)
     bool disarm_on_land_configured = (g.throttle_behavior & THR_BEHAVE_DISARM_ON_LAND_DETECT) != 0;
     bool mode_disarms_on_land = mode_allows_arming(control_mode,false) && !mode_has_manual_throttle(control_mode);
 
+    //# mode_disarms_on_land is true for DRIFT mode; disarm_on_land_configured is false by default.
+    //# so I modified the initial value of 'g.throttle_behavior' to 4(disarm on land detection).
     if (ap.land_complete && motors.armed() && disarm_on_land_configured && mode_disarms_on_land) {
         init_disarm_motors();
     }
