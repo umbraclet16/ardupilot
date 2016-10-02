@@ -113,11 +113,11 @@ void Copter::drift_run()
     // TODO: this needs to be adjusted based on practical experiments!
     float x_accel, y_accel;
     if(curr_alt > 500) {    // max accel = _loiter_accel_cmss = 250 cm/s/s
-        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500;
-        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500;
+        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
+        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
     } else if(curr_alt > 200) {
-        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 2;
-        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 2;
+        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
+        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
     } else {
         x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
         y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
@@ -136,7 +136,7 @@ void Copter::drift_run()
     // TODO: parameters need to be optimized based on practical experiments.
     int16_t coord_near_center = 50;     // range: [-120, 120]
     float   descend_velocity  = -50;    // cm/s
-    float   ascend_velocity   = 50;     // cm/s
+    float   ascend_velocity   = 100;    // cm/s
     float   altitude_limit    = 1500;   // cm
     // <<<<<<<<<<<<<<<<<<<<
     if(target_in_image) {
