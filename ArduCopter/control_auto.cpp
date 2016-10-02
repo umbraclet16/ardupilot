@@ -58,7 +58,7 @@ void Copter::auto_run()
 {
     //>>>>>>>>>>>>>>>>>>>>
     // The copter is in the target area(landing/water collection), and target shows up in the image,
-    // so change to DRIFT(i.e. VisualNav) mode.
+    // so change to VisualNav mode.
     if (visualnav_enabled) {
         if (target_in_image) {
             enum mode_reason_t mode_reason;
@@ -73,7 +73,7 @@ void Copter::auto_run()
                 gcs_send_text(MAV_SEVERITY_CRITICAL, "Find landing target!");
             }
 
-            set_mode(DRIFT, mode_reason);
+            set_mode(VISUALNAV, mode_reason);
             return;
         }
     }

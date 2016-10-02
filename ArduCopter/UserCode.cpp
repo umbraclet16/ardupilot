@@ -155,7 +155,7 @@ void Copter::userhook_SlowLoop()
     // print target coord and alt info.
 //#define DEBUG_PRINT_ON_HUD
 #ifndef DEBUG_PRINT_ON_HUD
-    if (control_mode == DRIFT && !delivery_over_and_rise && !ap.land_complete) {
+    if (control_mode == VISUALNAV && !delivery_over_and_rise && !ap.land_complete) {
 #endif /*DEBUG_PRINT_ON_HUD*/
         const char *str_target = (target_in_image == 1 ? "delivery:" : "landing:");
         float alt = inertial_nav.get_altitude() / 100; // cm -> m

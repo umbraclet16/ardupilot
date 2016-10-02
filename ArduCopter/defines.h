@@ -109,6 +109,8 @@ enum control_mode_t {
     AVOID_ADSB =   19,  // automatic avoidance of obstacles in the macro scale - e.g. full-sized aircraft
     GUIDED_NOGPS = 20,  // guided mode but only accepts attitude and altitude
 };
+//# replace DRIFT mode with VISUALNAV mode.
+#define VISUALNAV DRIFT
 
 enum mode_reason_t {
     MODE_REASON_UNKNOWN=0,
