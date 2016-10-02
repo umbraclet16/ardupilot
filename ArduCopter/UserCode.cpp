@@ -147,9 +147,51 @@ void Copter::userhook_MediumLoop()
 #endif
 
 #ifdef USERHOOK_SLOWLOOP
+#include <string.h>
+//#include <string>
+//#include <cstring>
+//using std::string;
 void Copter::userhook_SlowLoop()
 {
     // put your 3.3Hz code here
+    // If in visualnav mode, and delivery/landing is not finished,
+    // print target coord and alt info.
+//#define DEBUG_PRINT_ON_HUD
+#ifndef DEBUG_PRINT_ON_HUD
+    if (control_mode == DRIFT && !delivery_over_and_rise && !ap.land_complete) {
+#endif /*DEBUG_PRINT_ON_HUD*/
+        const char *str0 = (target_in_image == 1 ? "delivery:" : "landing:");
+        const char *str1 = "x=";
+        char str2[4];
+        sprintf(str2,"%d",target_coord_x);
+        const char *str3 = ",y=";
+        char str4[4];
+        sprintf(str4,"%d",target_coord_y);
+        const char *str5 = ",z=";
+        char str_send[20];
+        char str6[4];
+        int16_t alt = (int16_t)inertial_nav.get_altitude();
+        sprintf(str6,"%d",alt);
+        strcpy(str_send,str0);
+        strcat(str_send,str1);
+        strcat(str_send,str2);
+        strcat(str_send,str3);
+        strcat(str_send,str4);
+        strcat(str_send,str5);
+        strcat(str_send,str6);
+
+        //string str1 = "x=";
+        //CString str2; str2.Format("%d",target_coord_x);
+        //string str3 = ",y=";
+        //CString str4; str4.Format("%d",target_coord_y);
+        //string str = str1 + str2 + str3 + str4;
+        //char str_send[20];
+        //strcpy(str_send,str);
+
+        gcs_send_text(MAV_SEVERITY_CRITICAL,str_send);
+#ifndef DEBUG_PRINT_ON_HUD
+    }
+#endif /*DEBUG_PRINT_ON_HUD*/
 }
 #endif
 
