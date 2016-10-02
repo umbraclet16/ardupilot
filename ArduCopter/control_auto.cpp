@@ -65,12 +65,12 @@ void Copter::auto_run()
             // find lifebuoy delivery target, record as MODE_REASON_TX_COMMAND(=1).
             if (target_in_image == 1) {
                 mode_reason = MODE_REASON_TX_COMMAND;
-                gcs_send_text(MAV_SEVERITY_INFO, "Find delivery target!");
+                gcs_send_text(MAV_SEVERITY_CRITICAL, "Find delivery target!");
             }
             // find landing platform target, record as MODE_REASON_GCS_COMMAND(=2).
             if (target_in_image == 2) {
                 mode_reason = MODE_REASON_GCS_COMMAND;
-                gcs_send_text(MAV_SEVERITY_INFO, "Find landing target!");
+                gcs_send_text(MAV_SEVERITY_CRITICAL, "Find landing target!");
             }
 
             set_mode(DRIFT, mode_reason);
