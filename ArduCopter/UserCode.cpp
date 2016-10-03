@@ -176,5 +176,10 @@ void Copter::userhook_SlowLoop()
 void Copter::userhook_SuperSlowLoop()
 {
     // put your 1Hz code here
+    if (control_mode == VISUALNAV) {
+        if (delivery_over_and_rise) {
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"Delivery over, rising...");
+        }
+    }
 }
 #endif
