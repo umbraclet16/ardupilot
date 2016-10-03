@@ -74,6 +74,7 @@ void Copter::auto_run()
             }
 
             set_mode(VISUALNAV, mode_reason);
+            AP_Notify::events.user_mode_change = 1;
             return;
         }
     }

@@ -97,6 +97,7 @@ void Copter::drift_run()
         if(!ret) {
             set_mode(LOITER, MODE_REASON_RADIO_FAILSAFE);
         }
+        AP_Notify::events.user_mode_change = 1;
     }
 
     // check the validity of input target coord. If invalid or target not found, then set to 0.
@@ -155,6 +156,7 @@ void Copter::drift_run()
             if(!ret) {
                 set_mode(LOITER, MODE_REASON_UNKNOWN);
             }
+            AP_Notify::events.user_mode_change = 1;
         }
     }
 
@@ -189,7 +191,8 @@ void Copter::drift_run()
             bool ret = set_mode(AUTO, MODE_REASON_TX_COMMAND); // Mission finished, so we record reason as TX command(=1).
             if(!ret) {
                 set_mode(LOITER, MODE_REASON_TX_COMMAND);
-        }
+            }
+            AP_Notify::events.user_mode_change = 1;
         }
     }
 
