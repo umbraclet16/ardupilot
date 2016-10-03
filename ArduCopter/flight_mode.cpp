@@ -340,6 +340,8 @@ bool Copter::mode_allows_arming(control_mode_t mode, bool arming_from_gcs) {
     if (mode_has_manual_throttle(mode) || mode == LOITER || mode == ALT_HOLD || mode == POSHOLD || mode == DRIFT || mode == SPORT || mode == THROW || (arming_from_gcs && (mode == GUIDED || mode == GUIDED_NOGPS))) {
         return true;
     }
+    //# allow arm in AUTO
+    if (mode == AUTO) return true;
     return false;
 }
 
