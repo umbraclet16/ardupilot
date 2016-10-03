@@ -112,19 +112,21 @@ void Copter::drift_run()
     //       Then we should call _pos_control.update_xy_controller() rather than wp_nav.update_loiter().
     // >>>>>>>>>>>>>>>>>>>>
     // TODO: this needs to be adjusted based on practical experiments!
-    float x_accel, y_accel;
+    float control_roll, control_pitch;
+    // coordinate system definition: x-axis points to the right, y-axis points to the front!
     if(curr_alt > 500) {    // max accel = _loiter_accel_cmss = 250 cm/s/s
-        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
-        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
+        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
+        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
     } else if(curr_alt > 200) {
-        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
-        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
+        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
+        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
     } else {
-        x_accel = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
-        y_accel = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
+        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
+        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
     }
 
-    wp_nav.set_pilot_desired_acceleration(x_accel, y_accel);
+    // CATIOUS: should use the opposite of control_pitch!!!!!!
+    wp_nav.set_pilot_desired_acceleration(control_roll, -control_pitch);
     // <<<<<<<<<<<<<<<<<<<<
 
     // update _pos_target.z:
