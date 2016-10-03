@@ -150,6 +150,19 @@ void Copter::userhook_MediumLoop()
 #include <string.h>
 void Copter::userhook_SlowLoop()
 {
+    static uint32_t cnt = 0;
+    cnt++;
+    cnt %= 15;
+    // change mode every 5s
+    if (!cnt) {
+        if(control_mode == STABILIZE) {
+            set_mode(DRIFT,MODE_REASON_TX_COMMAND);
+        }
+        else if(control_mode == DRIFT) {
+            set_mode(STABILIZE,MODE_REASON_TX_COMMAND);
+        }
+        AP_Notify::events.user_mode_change = 1;
+    }
     // put your 3.3Hz code here
     // If in visualnav mode, and delivery/landing is not finished,
     // print target coord and alt info.
