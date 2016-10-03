@@ -157,7 +157,7 @@ void Copter::userhook_SlowLoop()
 #ifndef DEBUG_PRINT_ON_HUD
     if (control_mode == VISUALNAV && !delivery_over_and_rise && !ap.land_complete) {
 #endif /*DEBUG_PRINT_ON_HUD*/
-        const char *str_target = (target_in_image == 1 ? "delivery:" : "landing:");
+        const char *str_target = (target_in_image == 1 ? "delivery:" : (target_in_image == 2 ? "landing:" : "lost target!"));
         float alt = inertial_nav.get_altitude() / 100; // cm -> m
         char str[30];
         sprintf(str,"x=%d,y=%d,alt=%.1fm",target_coord_x,target_coord_y,alt);
