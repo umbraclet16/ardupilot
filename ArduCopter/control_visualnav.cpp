@@ -198,6 +198,8 @@ void Copter::drift_run()
         // Set back to AUTO mode.
         if(curr_alt > routine_flight_alt - 100) {
             delivery_over_and_rise = false;
+            // Increase wp speed to 4m/s.
+            wp_nav.set_speed_xy(4 * 100.0f);
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Setting back to AUTO...");
             bool ret = set_mode(AUTO, MODE_REASON_TX_COMMAND); // Mission finished, so we record reason as TX command(=1).
             if(!ret) {
