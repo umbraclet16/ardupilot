@@ -1,6 +1,7 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
 #include "Copter.h"
+#include "imav_debug.h"
 
 #ifdef USERHOOK_INIT
 void Copter::userhook_init()
@@ -138,9 +139,7 @@ void Copter::userhook_MediumLoop()
         target_coord_x  = _array[1];
         target_coord_y  = _array[2];
     }
-#define DEBUG_VISUALNAV
-#ifdef DEBUG_VISUALNAV
-    // debug
+#ifdef DEBUG_SERIAL_DATA_PACKET_PARSING
     hal.uartD->printf("target_in_image:%d, target_coord_x:%d, target_coord_y:%d\n",target_in_image, target_coord_x, target_coord_y);
 #endif
 }
@@ -153,7 +152,6 @@ void Copter::userhook_SlowLoop()
     // put your 3.3Hz code here
     // If in visualnav mode, and delivery/landing is not finished,
     // print target coord and alt info.
-//#define DEBUG_PRINT_ON_HUD
 #ifndef DEBUG_PRINT_ON_HUD
     if (control_mode == VISUALNAV && !delivery_over_and_rise && !ap.land_complete) {
 #endif /*DEBUG_PRINT_ON_HUD*/
