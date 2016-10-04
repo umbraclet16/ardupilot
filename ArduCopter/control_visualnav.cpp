@@ -58,6 +58,11 @@
 //bool Copter::visualnav_init(bool ignore_checks)
 bool Copter::drift_init(bool ignore_checks)
 {
+    // set visualnav_enabled to true, so we can switch to DRIFT with rc for flightmode test.
+    if (!visualnav_enabled) {
+        visualnav_enabled = true;
+    }
+
     if (position_ok() || ignore_checks) {
 
         // set target to current position
