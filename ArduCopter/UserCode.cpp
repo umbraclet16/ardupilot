@@ -50,7 +50,7 @@ int mergeBytes(uint8_t a, uint8_t b)    //# we must use uint8_t as parameters. i
 
 bool _term_complete()
 {
-    //hal.uartE->printf("_term_number=%d,_term_offset=%d\n",_term_number,_term_offset);
+    //hal.uartD->printf("_term_number=%d,_term_offset=%d\n",_term_number,_term_offset);
     int16_t temp;
     uint8_t low_byte;
     uint8_t high_byte;
@@ -114,7 +114,7 @@ bool _decode(char c)
 
 bool _read(void)
 {
-    AP_HAL::UARTDriver *port = hal.uartE;   // serial 4
+    AP_HAL::UARTDriver *port = hal.uartD;   // telem 2
 
     int16_t numc;
     bool parsed = false;
@@ -132,7 +132,7 @@ bool _read(void)
 void Copter::userhook_MediumLoop()
 {
     // put your 10Hz code here
-    // read from serial 4
+    // read from telem 2
     if (_read()) {
         target_in_image = _array[0];
         target_coord_x  = _array[1];
@@ -141,7 +141,7 @@ void Copter::userhook_MediumLoop()
 #define DEBUG_VISUALNAV
 #ifdef DEBUG_VISUALNAV
     // debug
-    hal.uartE->printf("target_in_image:%d, target_coord_x:%d, target_coord_y:%d\n",target_in_image, target_coord_x, target_coord_y);
+    hal.uartD->printf("target_in_image:%d, target_coord_x:%d, target_coord_y:%d\n",target_in_image, target_coord_x, target_coord_y);
 #endif
 }
 #endif
