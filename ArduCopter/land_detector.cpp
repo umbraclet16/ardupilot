@@ -46,24 +46,45 @@ void Copter::update_land_detector()
         // if disarmed, always landed.
         set_land_complete(true);
     } else if (ap.land_complete) {
-#if FRAME_CONFIG == HELI_FRAME
-        // if rotor speed and collective pitch are high then clear landing flag
-        if (motors.get_throttle() > get_non_takeoff_throttle() && !motors.limit.throttle_lower && motors.rotor_runup_complete()) {
-#else
         // if throttle output is high then clear landing flag
         if (motors.get_throttle() > get_non_takeoff_throttle()) {
-#endif
             set_land_complete(false);
         }
-    } else {
+    //>>>>>>>>>>>>>>>>>>>>
+    // Detect land for visualnav mode. Special landing condition: moving and rocking platform.
+    } else if (control_mode == VISUALNAV) {
+        //# TODO: 1.if this doesn't work, only keeps motor_at_lower_limit;
+        //# 2.if it still doesn't work, maybe we can try to increase the limit to 30% hover throttle.
+        // (Copter descends with a speed of around 25cm/s when near ground, which requires throttle near hover throttle,
+        // so I believe it's safe to say the copter is on ground when throttle is much lower than hover throttle.)
+        //# 3.still doesn't work? Try only check rangefinder(reads only >0.2m?),
+        //# or vertical speed(not likely to work due to the vibration...).
 
-#if FRAME_CONFIG == HELI_FRAME
-        // check that collective pitch is on lower limit (should be constrained by LAND_COL_MIN)
-        bool motor_at_lower_limit = motors.limit.throttle_lower;
-#else
         // check that the average throttle output is near minimum (less than 12.5% hover throttle)
         bool motor_at_lower_limit = motors.limit.throttle_lower && attitude_control.is_throttle_mix_min();
-#endif
+
+        // check that vertical speed is within 1m/s of zero
+        bool descent_rate_low = fabsf(inertial_nav.get_velocity_z()) < 100;
+
+        // if we have a healthy rangefinder only allow landing detection below 2 meters
+        bool rangefinder_check = (!rangefinder_alt_ok() || rangefinder_state.alt_cm_filt.get() < LAND_RANGEFINDER_MIN_ALT_CM);
+
+        if (motor_at_lower_limit && descent_rate_low && rangefinder_check) {
+            // landed criteria met - increment the counter and check if we've triggered
+            if( land_detector_count < ((float)LAND_DETECTOR_TRIGGER_SEC)*scheduler.get_loop_rate_hz()) {
+                land_detector_count++;
+            } else {
+                set_land_complete(true);
+                gcs_send_text(MAV_SEVERITY_CRITICAL,"Landed.");
+            }
+        } else {
+            // we've sensed movement up or down so reset land_detector
+            land_detector_count = 0;
+        }
+    //<<<<<<<<<<<<<<<<<<<<
+    } else {
+        // check that the average throttle output is near minimum (less than 12.5% hover throttle)
+        bool motor_at_lower_limit = motors.limit.throttle_lower && attitude_control.is_throttle_mix_min();
 
         // check that the airframe is not accelerating (not falling or breaking after fast forward flight)
         bool accel_stationary = (land_accel_ef_filter.get().length() <= LAND_DETECTOR_ACCEL_MAX);
@@ -80,6 +101,7 @@ void Copter::update_land_detector()
                 land_detector_count++;
             } else {
                 set_land_complete(true);
+                gcs_send_text(MAV_SEVERITY_CRITICAL,"Landed.");
             }
         } else {
             // we've sensed movement up or down so reset land_detector
