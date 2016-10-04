@@ -26,6 +26,10 @@ void Copter::userhook_50Hz()
 #endif
 
 #ifdef USERHOOK_MEDIUMLOOP
+static int16_t mergeBytes(uint8_t a, uint8_t b);
+static bool _term_complete(void);
+static bool _decode(char c);
+static bool _read(void);
 //>>>>>>>>>>>>>>>>>>>>
 // I don't want to define more variables in Copter class, so make them static.
 static char    _term[5];            ///< buffer for the current term within the current sentence
@@ -43,13 +47,13 @@ static int16_t _array[3];
  * Returnvalue:
  * int Merged bytes
  */
-int mergeBytes(uint8_t a, uint8_t b)    //# we must use uint8_t as parameters. int8_t will cause error!!!
+static int16_t mergeBytes(uint8_t a, uint8_t b)    //# we must use uint8_t as parameters. int8_t will cause error!!!
 {
-	int c = a;                          //# expand high-byte to 16 bits before shifting!!!
+	int16_t c = a;                          //# expand high-byte to 16 bits before shifting!!!
 	return (c << 8) | b;
 }
 
-bool _term_complete()
+static bool _term_complete()
 {
     //hal.uartD->printf("_term_number=%d,_term_offset=%d\n",_term_number,_term_offset);
     int16_t temp;
@@ -83,7 +87,7 @@ bool _term_complete()
     return false;
 }
 
-bool _decode(char c)
+static bool _decode(char c)
 {
     bool valid_sentence = false;
 
@@ -113,7 +117,7 @@ bool _decode(char c)
     return valid_sentence;
 }
 
-bool _read(void)
+static bool _read(void)
 {
     AP_HAL::UARTDriver *port = hal.uartD;   // telem 2
 
