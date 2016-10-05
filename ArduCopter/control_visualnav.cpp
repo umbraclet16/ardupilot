@@ -140,11 +140,34 @@ void Copter::drift_run()
     float   descend_velocity  = -50;    // cm/s
     float   ascend_velocity   = 100;    // cm/s
     float   altitude_limit    = 1500;   // cm
+    float decision_making_alt = 200.0f;
     // <<<<<<<<<<<<<<<<<<<<
     if(target_in_image) {
         // case 1
         if(abs(target_coord_x) <= coord_near_center && abs(target_coord_y) <= coord_near_center) {
             target_climb_rate = descend_velocity;
+
+            // TODO: decision making: land or lifebuoy delivery?
+            if (curr_alt < decision_making_alt) {
+                // I. deal with lifebuoy delivery.
+                if (target_in_image == LIFEBUOY_DELIVERY && !delivery_over_and_rise) {
+                    //
+                    // DELIVER THE LIFEBUOY!
+                    // (TODO: maybe loiter for a few seconds before do the job?)
+                    //
+
+                    // Unset visualnav flag when lifebuoy delivery is finished.
+                    // If the flag is still set, the copter will change to visualnav mode again.
+                    visualnav_enabled = false;
+                    // Set this flag so relay will not be triggered again after the delivery.
+                    delivery_over_and_rise = true;
+                }
+
+                // II. deal with landing. Cut descent speed by half.
+                if (target_in_image == LANDING_PLATFORM && !ap.land_complete) {
+                    target_climb_rate = descend_velocity / 2;
+                }
+            }
         } else{ // case 2
             target_climb_rate = 0;
         }
@@ -164,28 +187,6 @@ void Copter::drift_run()
     // constrain target_climb_rate
     target_climb_rate = constrain_float(target_climb_rate, -g.pilot_velocity_z_max, g.pilot_velocity_z_max);
 
-    // TODO: decision making: land or lifebuoy delivery?
-    float decision_making_alt = 200.0f;
-    if (curr_alt < decision_making_alt) {
-        // I. deal with lifebuoy delivery.
-        if (target_in_image == LIFEBUOY_DELIVERY && !delivery_over_and_rise) {
-            //
-            // DELIVER THE LIFEBUOY!
-            // (TODO: maybe loiter for a few seconds before do the job?)
-            //
-
-            // Unset visualnav flag when lifebuoy delivery is finished.
-            // If the flag is still set, the copter will change to visualnav mode again.
-            visualnav_enabled = false;
-            // Set this flag so relay will not be triggered again after the delivery.
-            delivery_over_and_rise = true;
-        }
-
-        // II. deal with landing. Cut descent speed by half.
-        if (target_in_image == LANDING_PLATFORM && !ap.land_complete) {
-            target_climb_rate = descend_velocity / 2;
-        }
-    }
 
     // When lifebuoy delivery is over, rise up to routine flight altitude(8m),
     // then set back to AUTO mode to continue other missions.
