@@ -25,7 +25,8 @@
  * I modified DO_PARACHUTE() in commands_logic.cpp to set flag visualnav_enabled.
  * If more do_command is needed, DO_GRIPPER() can be modified.
  *
- * AUTO mode desired flight status: altitude: 8~10m. velocity: 3m/s? gimbal is needed!
+ * AUTO mode desired flight status:
+ *      altitude: 8m. velocity: 2m/s. gimbal is preferred but we don't have...
  * 
  * We may not want to modify MissionPlanner, so I just replace Drift mode with this new mode
  * by removing control_drift.cpp and defining drift_init() and drift_run() in this file,
@@ -35,19 +36,12 @@
  *
  * the baudrate and format of UART input:
  * baudrate: 57600
- * Format: target_in_image(1 bit), target_coord_x(int), target_coord_y(int)
+ * Format: $ target_in_image(1 bit) , x_lowByte x_highByte , y_lowByte y_highByte *
  *
- * I think it's good to read UART input regularly in a userhook(100/50/10Hz?),
+ * Read UART input regularly in userhook_MediumLoop(10Hz),
  * what's the frequency of UART input???    Around 5Hz.
- *
  * what's the delay of target recognition???    0.X s.
  *
- * TODO: how does the controller recognize LANDING?
- * We must lower RC throttle to lower limit, then hope update_land_detector() works fine.
- * But I worry that the moving platform cannot meet the acceleration requirement
- * (<=1m/s/s, see land_detector.cpp line64).
- * If so, we may need to call Copter::init_disarm_motors() in motors.cpp manually.
- * Or, the easiest way is just lower the throttle and change to STABILIZE mode!
  */
 
 
