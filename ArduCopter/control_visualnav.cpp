@@ -113,9 +113,16 @@ void Copter::drift_run()
     // TODO: this needs to be adjusted based on practical experiments!
     float control_roll, control_pitch;
     // coordinate system definition: x-axis points to the right, y-axis points to the front!
-    if(curr_alt > 500) {    // max accel = _loiter_accel_cmss = 250 cm/s/s
-        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
-        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
+    // max accel = _loiter_accel_cmss = 250 cm/s/s
+    // accel = 2m/s/s, euler_max = arctan(2/g) = 11.3 deg;
+    // accel = 3m/s/s, euler_max = arctan(3/g) = 16.7 deg;
+    // due to air resistance, max euler angle should be larger than calculated.
+    // TODO: consider correcting target_coords based on geometric relationship,
+    // now that we have no gimbal and attitude of the copter affects the coords.
+    // tan(10) = 0.176; tan(15) = 0.268; tan(20) = 0.364.
+    if(curr_alt > 500) {
+        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 2;
+        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 2;
     } else if(curr_alt > 200) {
         control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
         control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
