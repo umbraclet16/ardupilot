@@ -183,16 +183,5 @@ void Copter::userhook_SuperSlowLoop()
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Delivery over, rising...");
         }
     }
-    // test relay
-    static uint16_t cnt_relay;
-    cnt_relay++;
-    cnt_relay %= 3;
-    if(!cnt_relay) {
-        ServoRelayEvents.do_set_relay(0,2);  // toggle relay 1 every 3s
-        ServoRelayEvents.do_set_relay(1,2);  // toggle relay 2 every 3s
-        //ServoRelayEvents.do_set_servo();
-        //ServoRelayEvents.do_repeat_relay();
-        //ServoRelayEvents.do_repeat_servo();
-    }
 }
 #endif
