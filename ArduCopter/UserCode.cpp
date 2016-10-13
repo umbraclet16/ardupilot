@@ -183,5 +183,16 @@ void Copter::userhook_SuperSlowLoop()
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Delivery over, rising...");
         }
     }
+    // test servo
+    static uint16_t cnt_servo;
+    cnt_servo++;
+    cnt_servo %= 4;
+    // change output of RC9(AUX1) every 2s
+    if (!cnt_servo) {
+        ServoRelayEvents.do_set_servo(9,1200);  // set output to 1200 when deliver the lifebuoy
+    }
+    if (cnt_servo == 2) {
+        ServoRelayEvents.do_set_servo(9,2000);  // 2000 is a good value before the delivery
+    }
 }
 #endif
