@@ -144,8 +144,8 @@ void Copter::drift_run()
     // >>>>>>>>>>>>>>>>>>>>
     // TODO: parameters need to be optimized based on practical experiments.
     int16_t coord_near_center = 50;     // range: [-120, 120]
-    float   descend_velocity  = -50;    // cm/s
-    float   ascend_velocity   = 100;    // cm/s
+    float   descend_velocity  = -30;    // cm/s
+    float   ascend_velocity   = 50;     // cm/s
     float   altitude_limit    = 1500;   // cm
     float decision_making_alt = 200.0f;
     // <<<<<<<<<<<<<<<<<<<<
