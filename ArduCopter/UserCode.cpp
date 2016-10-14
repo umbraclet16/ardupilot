@@ -148,6 +148,17 @@ void Copter::userhook_MediumLoop()
         serial_no_input_cnt++;
     }
 
+    // if we haven't received new data from NanoPi for 2s, there are 2 possible cases:
+    // 1.NanoPi is not doing anything because nanopi_target = 0;
+    // 2.the program on NanoPi is severly stuck.
+    // Under either circumstance, we should clear target info.
+    if (serial_no_input_cnt >= 20 && target_in_image) {
+        target_in_image = 0;
+        target_coord_x  = 0;
+        target_coord_y  = 0;
+    }
+
+
 #ifdef DEBUG_SERIAL_DATA_PACKET_PARSING
     hal.uartD->printf("target_in_image:%d, target_coord_x:%d, target_coord_y:%d\n",target_in_image, target_coord_x, target_coord_y);
 #endif
