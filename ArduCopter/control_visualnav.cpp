@@ -120,15 +120,12 @@ void Copter::drift_run()
     // TODO: consider correcting target_coords based on geometric relationship,
     // now that we have no gimbal and attitude of the copter affects the coords.
     // tan(10) = 0.176; tan(15) = 0.268; tan(20) = 0.364.
-    if(curr_alt > 500) {
-        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 2;
-        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 2;
-    } else if(curr_alt > 200) {
+    if(curr_alt > 400) {
         control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
         control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
-    } else {
-        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
-        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
+    } else {    // stop visual navigation below 4m
+        control_roll  = 0;
+        control_pitch = 0;
     }
 
     // CATIOUS: should use the opposite of control_pitch!!!!!!
