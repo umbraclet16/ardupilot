@@ -27,6 +27,12 @@ int16_t target_coord_y;
 // record the time(in 0.1s) that we fail to update coords from serial port.
 uint8_t serial_no_input_cnt = 0;
 
+// tell NanoPi which program to run:
+// nanopi_target = 1, look for delivery target;
+// nanopi_target = 2, look for landing target;
+// nanopi_target = 0, NanoPi will do nothing.
+uint8_t nanopi_target = 0;
+
 #if WII_CAMERA == 1
 WiiCamera           ircam;
 int                 WiiRange=0;
