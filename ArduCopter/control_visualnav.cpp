@@ -134,17 +134,17 @@ void Copter::drift_run()
     // <<<<<<<<<<<<<<<<<<<<
 
     // update _pos_target.z:
-    // 1. if target is near the center of the image, descend at a speed of 50 cm/s;
+    // 1. if target is near the center of the image, descend at a speed of 30 cm/s;
     // 2. if target is far from the center but still in the image, keep current altitude;
     // 3. if lose target, ascend until target appears in the image again;
-    // 4. if reach an altitude of 15 m and still cannot find target, mission FAILED,
+    // 4. if reach an altitude of 10 m and still cannot find target, mission FAILED,
     //    return to AUTO mode. TODO: maybe reload last waypoint?
     // >>>>>>>>>>>>>>>>>>>>
     // TODO: parameters need to be optimized based on practical experiments.
     int16_t coord_near_center = 50;     // range: [-120, 120]
     float   descend_velocity  = -30;    // cm/s
     float   ascend_velocity   = 50;     // cm/s
-    float   altitude_limit    = 1500;   // cm
+    float   altitude_limit    = 1000;   // cm
     float   delivery_alt      = 200.0f;
     // <<<<<<<<<<<<<<<<<<<<
     if(target_in_image) {
