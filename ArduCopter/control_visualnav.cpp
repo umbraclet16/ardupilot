@@ -199,6 +199,10 @@ void Copter::drift_run()
         // Set back to AUTO mode.
         if(curr_alt > routine_flight_alt - 100) {
             delivery_over_and_rise = false;
+            // Tell NanoPi to stop looking for target.
+            hal.uartD->printf("00000"); // send '0' to NanoPi so it does nothing
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"Stop NanoPi program!");
+            nanopi_target = 0;
             // Increase wp speed to 4m/s.
             wp_nav.set_speed_xy(4 * 100.0f);
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Setting back to AUTO...");
