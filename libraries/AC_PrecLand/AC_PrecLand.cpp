@@ -20,7 +20,7 @@ const AP_Param::GroupInfo AC_PrecLand::var_info[] = {
     // @Description: Precision Land Type
     // @Values: 0:None, 1:CompanionComputer, 2:IRLock
     // @User: Advanced
-    AP_GROUPINFO("TYPE",    1, AC_PrecLand, _type, 0),
+    AP_GROUPINFO("TYPE",    1, AC_PrecLand, _type, 2),
 
     AP_GROUPEND
 };
