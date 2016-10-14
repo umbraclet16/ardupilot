@@ -560,24 +560,24 @@ void Copter::do_parachute(const AP_Mission::Mission_Command& cmd)
     // set wp velocity to 2m/s before searching for the target
     wp_nav.set_speed_xy(2 * 100.0f);
 
-    /*
-     *switch (cmd.p1) {
-     *    case PARACHUTE_DISABLE:
-     *        parachute.enabled(false);
-     *        Log_Write_Event(DATA_PARACHUTE_DISABLED);
-     *        break;
-     *    case PARACHUTE_ENABLE:
-     *        parachute.enabled(true);
-     *        Log_Write_Event(DATA_PARACHUTE_ENABLED);
-     *        break;
-     *    case PARACHUTE_RELEASE:
-     *        parachute_release();
-     *        break;
-     *    default:
-     *        // do nothing
-     *        break;
-     *}
-     */
+    AP_HAL::UARTDriver *port = hal.uartD;   // telem 2
+    switch (cmd.p1) {
+        case 1:
+            port->printf("11111"); // send '1' to NanoPi to start recognizing delivery target
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"Start looking for delivery target!");
+            nanopi_target = 1;
+            break;
+        case 2:
+            port->printf("22222"); // send '2' to NanoPi to start recognizing landing platform
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"Start looking for landing platform!");
+            nanopi_target = 2;
+            break;
+        default:
+            port->printf("00000"); // send '0' to NanoPi so it does nothing
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"Stop NanoPi program!");
+            nanopi_target = 0;
+            break;
+    }
 }
 #endif
 
