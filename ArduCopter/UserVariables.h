@@ -24,6 +24,9 @@ uint8_t target_in_image = NO_TARGET_IN_IMAGE;
 int16_t target_coord_x;
 int16_t target_coord_y;
 
+// record the time(in 0.1s) that we fail to update coords from serial port.
+uint8_t serial_no_input_cnt = 0;
+
 #if WII_CAMERA == 1
 WiiCamera           ircam;
 int                 WiiRange=0;

@@ -142,7 +142,12 @@ void Copter::userhook_MediumLoop()
         target_in_image = _array[0];
         target_coord_x  = _array[1];
         target_coord_y  = _array[2];
+
+        serial_no_input_cnt = 0;
+    } else {
+        serial_no_input_cnt++;
     }
+
 #ifdef DEBUG_SERIAL_DATA_PACKET_PARSING
     hal.uartD->printf("target_in_image:%d, target_coord_x:%d, target_coord_y:%d\n",target_in_image, target_coord_x, target_coord_y);
 #endif
