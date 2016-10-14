@@ -154,14 +154,16 @@ void Copter::drift_run()
         if(abs(target_coord_x) <= coord_near_center && abs(target_coord_y) <= coord_near_center) {
             target_climb_rate = descend_velocity;
 
-            // TODO: decision making: land or lifebuoy delivery?
+            // decision making: land or lifebuoy delivery?
             if (curr_alt < decision_making_alt) {
                 // I. deal with lifebuoy delivery.
                 if (target_in_image == LIFEBUOY_DELIVERY && !delivery_over_and_rise) {
-                    //
                     // DELIVER THE LIFEBUOY!
                     // (TODO: maybe loiter for a few seconds before do the job?)
-                    //
+                    ServoRelayEvents.do_set_servo(9,1200);  // set servo9(AUX1) to 1200 to deliver the lifebuoy
+                    /// TODO: We don't set output to 2000 when powering on pixhawk,
+                    /// because when there's no output, the actuator just stays where it is.
+                    /// But cannot guarantee this now that the actuator holds a 200g lifebuoy...
 
                     // Unset visualnav flag when lifebuoy delivery is finished.
                     // If the flag is still set, the copter will change to visualnav mode again.
