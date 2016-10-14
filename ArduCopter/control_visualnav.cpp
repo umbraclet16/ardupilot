@@ -99,9 +99,10 @@ void Copter::drift_run()
         AP_Notify::events.user_mode_change = 1;
     }
 
-    // check the validity of input target coord. If invalid or target not found, then set to 0.
-    if (abs(target_coord_x) > COORD_RANGE_LIMIT_X || !target_in_image) target_coord_x = 0;
-    if (abs(target_coord_y) > COORD_RANGE_LIMIT_Y || !target_in_image) target_coord_y = 0;
+    // check the validity of input target coord.
+    // If invalid or target not found or outdated(not updated for over 0.5s), then set to 0.
+    if (abs(target_coord_x) > COORD_RANGE_LIMIT_X || !target_in_image || serial_no_input_cnt >= 5) target_coord_x = 0;
+    if (abs(target_coord_y) > COORD_RANGE_LIMIT_Y || !target_in_image || serial_no_input_cnt >= 5) target_coord_y = 0;
 
     const float curr_alt = inertial_nav.get_altitude();
     // update _pos_target.x/y by simulating pilot roll and pitch input(set _pilot_accel_fwd/rgt_cmss)
