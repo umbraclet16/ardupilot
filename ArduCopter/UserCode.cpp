@@ -183,6 +183,9 @@ void Copter::userhook_SlowLoop()
 void Copter::userhook_SuperSlowLoop()
 {
     // put your 1Hz code here
+    // send 'nanopi_target' to NanoPi regularly to make sure it's looking for the correct target
+    hal.uartD->printf("%d",nanopi_target);
+
     if (control_mode == VISUALNAV) {
         if (delivery_over_and_rise) {
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Delivery over, rising...");
