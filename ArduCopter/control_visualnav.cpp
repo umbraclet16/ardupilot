@@ -147,16 +147,15 @@ void Copter::drift_run()
     float   descend_velocity  = -30;    // cm/s
     float   ascend_velocity   = 50;     // cm/s
     float   altitude_limit    = 1500;   // cm
-    float decision_making_alt = 200.0f;
+    float   delivery_alt      = 200.0f;
     // <<<<<<<<<<<<<<<<<<<<
     if(target_in_image) {
         // case 1
         if(abs(target_coord_x) <= coord_near_center && abs(target_coord_y) <= coord_near_center) {
             target_climb_rate = descend_velocity;
 
-            // decision making: land or lifebuoy delivery?
-            if (curr_alt < decision_making_alt) {
-                // I. deal with lifebuoy delivery.
+            // deliver the lifebuoy
+            if (curr_alt < delivery_alt) {
                 if (target_in_image == LIFEBUOY_DELIVERY && !delivery_over_and_rise) {
                     // DELIVER THE LIFEBUOY!
                     // (TODO: maybe loiter for a few seconds before do the job?)
@@ -170,11 +169,6 @@ void Copter::drift_run()
                     visualnav_enabled = false;
                     // Set this flag so relay will not be triggered again after the delivery.
                     delivery_over_and_rise = true;
-                }
-
-                // II. deal with landing. Cut descent speed by half.
-                if (target_in_image == LANDING_PLATFORM && !ap.land_complete) {
-                    target_climb_rate = descend_velocity / 2;
                 }
             }
         } else{ // case 2
