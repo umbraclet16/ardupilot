@@ -202,5 +202,26 @@ void Copter::userhook_SuperSlowLoop()
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Delivery over, rising...");
         }
     }
+
+    // test: send nanopi_target to uartD
+    static uint8_t nanopi_target_cnt;
+    nanopi_target_cnt++;
+    nanopi_target_cnt %= 9;
+    switch (nanopi_target_cnt) {    // change every 3s
+        case 1:
+            nanopi_target = 1;
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"nanopi_target now is 1");
+            break;
+
+        case 4:
+            nanopi_target = 2;
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"nanopi_target now is 2");
+            break;
+
+        case 7:
+            nanopi_target = 0;
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"nanopi_target now is 0");
+            break;
+    }
 }
 #endif
