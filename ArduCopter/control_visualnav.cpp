@@ -102,6 +102,7 @@ void Copter::drift_run()
     // change to LAND mode if ir-lock finds target
     if (precland.target_acquired()) {
         set_mode(LAND, MODE_REASON_MISSION_END);
+        AP_Notify::events.user_mode_change = 1;
     }
 
     // check the validity of input target coord.
