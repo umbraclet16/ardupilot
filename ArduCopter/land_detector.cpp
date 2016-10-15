@@ -51,8 +51,8 @@ void Copter::update_land_detector()
             set_land_complete(false);
         }
     //>>>>>>>>>>>>>>>>>>>>
-    // Detect land for visualnav mode. Special landing condition: moving and rocking platform.
-    } else if (control_mode == VISUALNAV) {
+    // Detect land for visualnav/land mode. Special landing condition: moving and rocking platform.
+    } else if (control_mode == VISUALNAV || control_mode == LAND) {
         //# TODO: 1.if this doesn't work, only keeps motor_at_lower_limit;
         //# 2.if it still doesn't work, maybe we can try to increase the limit to 30% hover throttle.
         // (Copter descends with a speed of around 25cm/s when near ground, which requires throttle near hover throttle,
