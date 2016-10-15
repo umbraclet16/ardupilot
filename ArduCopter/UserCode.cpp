@@ -202,5 +202,29 @@ void Copter::userhook_SuperSlowLoop()
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Delivery over, rising...");
         }
     }
+
+    // debug reading from IR-Lock
+    bool irlock_healthy  = copter.precland.healthy();
+    bool target_acquired = copter.precland.target_acquired();
+    char str[30];
+    strcpy(str,"irlock_healthy=");
+    if (irlock_healthy) {
+        strcat(str,"1");
+    } else {
+        strcat(str,"0");
+    }
+    strcat(str,",target_acquired=");
+    if (target_acquired) {
+        strcat(str,"1");
+    } else {
+        strcat(str,"0");
+    }
+    static uint8_t irlock_cnt;
+    irlock_cnt++;
+    irlock_cnt %= 10;
+    if (!irlock_cnt) {
+        gcs_send_text(MAV_SEVERITY_CRITICAL,str);
+    }
+
 }
 #endif
