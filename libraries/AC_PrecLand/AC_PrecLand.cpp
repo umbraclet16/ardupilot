@@ -13,7 +13,10 @@ const AP_Param::GroupInfo AC_PrecLand::var_info[] = {
     // @Description: Precision Land enabled/disabled and behaviour
     // @Values: 0:Disabled, 1:Enabled Always Land, 2:Enabled Strict
     // @User: Advanced
-    AP_GROUPINFO_FLAGS("ENABLED", 0, AC_PrecLand, _enabled, 0, AP_PARAM_FLAG_ENABLE),
+    //# Notice that the last argument of AP_GROUPINFO_FLAGS is AP_PARAM_FLAG_ENABLE,
+    //# meaning that if the value of this parameter is 0(i.e. disabled),
+    //# other parameters in this group will be hidden and not showing up in full parameter list of GCS
+    AP_GROUPINFO_FLAGS("ENABLED", 0, AC_PrecLand, _enabled, 2, AP_PARAM_FLAG_ENABLE),
 
     // @Param: TYPE
     // @DisplayName: Precision Land Type
