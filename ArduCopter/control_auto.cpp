@@ -57,6 +57,11 @@ bool Copter::auto_init(bool ignore_checks)
 void Copter::auto_run()
 {
     //>>>>>>>>>>>>>>>>>>>>
+    // The copter is in landing area, and pixy finds the target, so change to Land mode directly in case nanopi
+    // fails to detect the landing platform.
+    if (visualnav_enabled && nanopi_target == 2 && copter.precland.target_acquired())
+    //<<<<<<<<<<<<<<<<<<<<
+    //>>>>>>>>>>>>>>>>>>>>
     // The copter is in the target area(landing/water collection), and target shows up in the image,
     // so change to VisualNav mode.
     if (visualnav_enabled) {
