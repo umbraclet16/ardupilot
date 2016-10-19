@@ -94,16 +94,19 @@ void Copter::drift_run()
     if (failsafe.radio) {
         bool ret = set_mode(AUTO, MODE_REASON_RADIO_FAILSAFE);
         if(!ret) {
-            set_mode(LOITER, MODE_REASON_RADIO_FAILSAFE);
+            set_mode(ALT_HOLD, MODE_REASON_RADIO_FAILSAFE);
         }
         AP_Notify::events.user_mode_change = 1;
     }
 
     // change to LAND mode if ir-lock finds target
-    if (precland.target_acquired()) {
-        set_mode(LAND, MODE_REASON_MISSION_END);
-        AP_Notify::events.user_mode_change = 1;
-    }
+    /*
+     *if (precland.target_acquired()) {
+     *    set_mode(LAND, MODE_REASON_MISSION_END);
+     *    gcs_send_text(MAV_SEVERITY_CRITICAL, "Find landing platform! Landing...");
+     *    AP_Notify::events.user_mode_change = 1;
+     *}
+     */
 
     // check the validity of input target coord.
     // If invalid or target not found or outdated(not updated for over 0.5s), then set to 0.

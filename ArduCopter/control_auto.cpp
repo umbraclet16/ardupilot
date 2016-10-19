@@ -78,10 +78,12 @@ void Copter::auto_run()
                 gcs_send_text(MAV_SEVERITY_CRITICAL, "Find delivery target!");
             }
             // find landing platform target, record as MODE_REASON_GCS_COMMAND(=2).
-            if (target_in_image == 2) {
-                mode_reason = MODE_REASON_GCS_COMMAND;
-                gcs_send_text(MAV_SEVERITY_CRITICAL, "Find landing target!");
-            }
+            /*
+             *if (target_in_image == 2) {
+             *    mode_reason = MODE_REASON_GCS_COMMAND;
+             *    gcs_send_text(MAV_SEVERITY_CRITICAL, "Find landing target!");
+             *}
+             */
 
             set_mode(VISUALNAV, mode_reason);
             AP_Notify::events.user_mode_change = 1;
