@@ -555,7 +555,11 @@ void Copter::do_nav_delay(const AP_Mission::Mission_Command& cmd)
 void Copter::do_parachute(const AP_Mission::Mission_Command& cmd)
 {
     // set flag to enable visualnav
-    visualnav_enabled = true;
+    if (cmd.p1) {
+        visualnav_enabled = true;
+    } else {
+        visualnav_enabled = false;
+    }
 
     // set wp velocity to 2m/s before searching for the target
     wp_nav.set_speed_xy(2 * 100.0f);
