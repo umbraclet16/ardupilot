@@ -212,8 +212,6 @@ void Copter::drift_run()
             hal.uartD->printf("00000"); // send '0' to NanoPi so it does nothing
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Stop NanoPi program!");
             nanopi_target = 0;
-            // Increase wp speed to 4m/s.
-            wp_nav.set_speed_xy(4 * 100.0f);
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Setting back to AUTO...");
             bool ret = set_mode(AUTO, MODE_REASON_TX_COMMAND); // Mission finished, so we record reason as TX command(=1).
             if(!ret) {
