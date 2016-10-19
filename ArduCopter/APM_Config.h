@@ -32,7 +32,7 @@
 // use DO_PARACHUTE to set flag visualnav_enabled. We don't reset the flag because it's reset in auto_init().
 #define PARACHUTE               ENABLED
 // use DO_GRIPPER... to do what? Undetermined
-#define EPM_ENABLED             ENABLED
+//#define EPM_ENABLED             ENABLED
 //!!!!! we can also use DO_SET/REPEAT_RELAY/SERVO, DO_SET_ROI .etc for triggering our missions!
 //<<<<<<<<<<<<<<<<<<<<
 //#define CLI_ENABLED           DISABLED            // disable the CLI (command-line-interface) to save 21K of flash space
