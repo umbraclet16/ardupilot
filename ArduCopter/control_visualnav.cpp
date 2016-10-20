@@ -130,7 +130,10 @@ void Copter::drift_run()
     // TODO: consider correcting target_coords based on geometric relationship,
     // now that we have no gimbal and attitude of the copter affects the coords.
     // tan(10) = 0.176; tan(15) = 0.268; tan(20) = 0.364.
-    if(curr_alt > 400) {
+    if(curr_alt > 1200) {
+        control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 2;
+        control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 2;
+    } else if (curr_alt > 800) {
         control_roll  = (float)target_coord_x / COORD_RANGE_LIMIT_X * 4500 / 4;
         control_pitch = (float)target_coord_y / COORD_RANGE_LIMIT_Y * 4500 / 4;
     } else {    // stop visual navigation below 4m
@@ -153,8 +156,8 @@ void Copter::drift_run()
     int16_t coord_near_center = 50;     // range: [-120, 120]
     float   descend_velocity  = -30;    // cm/s
     float   ascend_velocity   = 50;     // cm/s
-    float   altitude_limit    = 1000;   // cm
-    float   delivery_alt      = 200.0f;
+    float   altitude_limit    = 3000;   // cm
+    float   delivery_alt      = 800.0f;
     // <<<<<<<<<<<<<<<<<<<<
     if(target_in_image) {
         // case 1
@@ -200,7 +203,7 @@ void Copter::drift_run()
 
     // When lifebuoy delivery is over, rise up to routine flight altitude(8m),
     // then set back to AUTO mode to continue other missions.
-    float routine_flight_alt = 800.0f;
+    float routine_flight_alt = 3000.0f;
     if(delivery_over_and_rise) {
         // No longer need visual info to nav during ascending procedure, so clear it.
         wp_nav.set_pilot_desired_acceleration(0, 0);
@@ -215,7 +218,7 @@ void Copter::drift_run()
             gcs_send_text(MAV_SEVERITY_CRITICAL,"Setting back to AUTO...");
             bool ret = set_mode(AUTO, MODE_REASON_TX_COMMAND); // Mission finished, so we record reason as TX command(=1).
             if(!ret) {
-                set_mode(LOITER, MODE_REASON_TX_COMMAND);
+                set_mode(ALT_HOLD, MODE_REASON_TX_COMMAND);
             }
             AP_Notify::events.user_mode_change = 1;
         }
