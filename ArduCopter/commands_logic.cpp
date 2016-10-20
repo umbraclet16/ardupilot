@@ -561,8 +561,8 @@ void Copter::do_parachute(const AP_Mission::Mission_Command& cmd)
         visualnav_enabled = false;
     }
 
-    // set wp velocity to 2m/s before searching for the target
-    wp_nav.set_speed_xy(2 * 100.0f);
+    // set wp velocity to 1m/s before searching for the target
+    wp_nav.set_speed_xy(1 * 100.0f);
 
     AP_HAL::UARTDriver *port = hal.uartD;   // telem 2
     switch (cmd.p1) {
